@@ -1,0 +1,36 @@
+<%- layout('layout') %>
+
+<table style="position:relative; top:20%" align="center" width="40%" height="50%" border="1">
+    <tr>
+        <td width=50% align=center colspan="2"><img src="images/login_logo.jpg"></td>
+    </tr>
+    <tr>
+        <td align=center colspan="2"><img src="images/login_logo2.jpg"></td>
+    </tr>
+    <form action="/login" method="post">
+        <tr>
+            <td width=50% align="center"><label class="custom-control custom-radio">사용자&nbsp;<input type="radio" name="userType" value="member" class="custom-control-input" checked="checked"></label></td>
+            <td align="center"><label class="custom-control custom-radio">A/S담당자&nbsp;<input type="radio" name="userType" value="admin "></label></td>
+        </tr>
+        <tr>
+            <td width=50% align=center style="width:220px">아이디</td>
+            <td><input type='text' name="id"></td>
+        </tr>
+        <tr>
+            <td width=50% align=center style="width:220px">비밀번호</td>
+            <td><input type="password" name="password"></td>
+        </tr>
+        <tr style="height:40px">
+            <td colspan="2" align="center"><input style="width:350px" type="submit" value='로그인' class="btn btn-lg btn-success"></td>
+        </tr>
+    </form>
+</table>
+<input type="hidden" id="errorMessage" name="errorMessage" value="<%=errorMessage%>">
+<script>
+    var errMsg = document.getElementById('errorMessage');
+    if(errMsg.value=='id'){
+        alert('id를 확인하세요!!');
+    }else if(errMsg.value=='pwd'){
+        alert('비밀번호를 확인하세요!!');
+    }
+</script>
