@@ -8,11 +8,11 @@ var page_unit = paging.getPage();//페이지 단위
 //db
 var mysql = require('mysql');
 var DBoption = {
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: 'my4595',
-    database: 'woojung_tech'
+    host:'ndy766.cpaacnjpvo5o.ap-northeast-2.rds.amazonaws.com',
+    port:3306,
+    user:'ndy766',
+    password:'shel45951!',
+    database:'ndy766'
 };
 var conn = mysql.createConnection(DBoption);
 conn.connect();
@@ -58,11 +58,11 @@ router.get('/getAllList', function (req, res) {
 
     currentPageGroup = Number(req.session.pagingBean.current_pageGroup);
     var flag;
-    if(req.query.flag!=null && req.query.flag!=undefined && req.query.flag!=''){
-        flag = req.query.flag;
-        if(flag == '0'){
-            currentPageGroup--;
             currentPage=currentPageGroup*page_unit;
+            if(req.query.flag!=null && req.query.flag!=undefined && req.query.flag!=''){
+                flag = req.query.flag;
+                if(flag == '0'){
+                    currentPageGroup--;
         }else{
             currentPageGroup++;
             currentPage=(currentPageGroup*page_unit)-9;

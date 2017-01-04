@@ -8,11 +8,11 @@ var engine = require('ejs-locals');//ejs layout 사용
 var session = require('express-session');//session
 var MySQLsession = require('express-mysql-session')(session);//session Store
 var DBoption = {
-  host:'localhost',
+  host:'ndy766.cpaacnjpvo5o.ap-northeast-2.rds.amazonaws.com',
   port:3306,
-  user:'root',
-  password:'my4595',
-  database:'woojung_tech'
+  user:'ndy766',
+  password:'shel45951!',
+  database:'ndy766'
 };
 var sessionStore = new MySQLsession(DBoption);
 
@@ -21,7 +21,7 @@ var sessionStore = new MySQLsession(DBoption);
 var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
-var AS = require('./routes/AS')
+var AS = require('./routes/AS');
 
 var app = express();
 
