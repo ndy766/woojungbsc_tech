@@ -32,6 +32,10 @@ var mailOptions = {
     html: ''
 };
 
+//filesystem
+var fs = require('fs');
+
+
 //page ◀, ▶ 처리
 router.get('/getAllListHelpedPagingGroup', function(req, res){
    // flag == 0 ◀ / flag == 1 ▶
@@ -128,11 +132,12 @@ router.post('/create', function (req, res) {
         customer: req.body.customer,
         content: req.body.content,
         state: state,
-        receipt_date: req.body.receipt_date
+        receipt_date: req.body.receipt_date,
+        customer_email:req.body.customer_email
     }
     conn.query(sql, complaint, function (err, result) {
         //mail도 보내야함
-        mailOptions.to = req.body.customer_email;
+        mailOptions.to =complaint.customer_email;
         mailOptions.subject = '[(주)우정비에스씨]A/S신청 완료 되었습니다.';
         mailOptions.html =
             '<font face="맑은고딕">'+
@@ -222,7 +227,7 @@ router.post('/confirmVisit', function (req, res) {
                 var sql3 = 'SELECT * FROM complaint WHERE no=' + no;
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
-                    mailOptions.to = req.body.customer_email;
+                    mailOptions.to = complaint.customer_email;
                     mailOptions.subject = '[(주)우정비에스씨]A/S방문 일자가 확정 되었습니다.';
                     mailOptions.html =
                         '<font face="맑은고딕">'+
@@ -302,7 +307,7 @@ router.post('/confirmReVisit', function (req, res) {
                 var sql3 = 'SELECT * FROM complaint WHERE no=' + no;
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
-                    mailOptions.to = req.body.customer_email;
+                    mailOptions.to = complaint.customer_email;
                     mailOptions.subject = '[(주)우정비에스씨]A/S 재방문 일자가 확정 되었습니다.';
                     mailOptions.html =
                         '<font face="맑은고딕">'+
@@ -349,9 +354,9 @@ router.post('/confirmReVisit', function (req, res) {
 
 //AS 완료하기
 //해당 AS가 재방문을 거쳤는지 안거쳤는지에 따라서 메일이 달라짐
-router.post('/complete', function(req, res){
-    var no = req.body.no;
-    var customer_email = req.body.customer_email;
+router.get('/complete', function(req, res){
+    var no = req.query.no;
+    //var customer_email = req.body.customer_email;
     var date = new Date();
     var complete_date = date.getFullYear()+'년 '+(date.getMonth()+1)+'월 '+date.getDate()+'일';
     var state = 'A/S 완료';
@@ -372,7 +377,7 @@ router.post('/complete', function(req, res){
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
 
-                    mailOptions.to = customer_email;
+                    mailOptions.to = complaint.customer_email;
                     mailOptions.subject = '[(주)우정비에스씨]A/S 처리가 완료 되었습니다.';
                     mailOptions.html =
                         '<font face="맑은고딕">'+

@@ -60,13 +60,12 @@
             <td style="background-color:#FF1291" height="40px" align="center">담당자 전화번호</td><td align="center" colspan="3"><%=complaint.charger_phone%></td>
         </tr>
         <tr>
-            <td style="background-color:#FF1291" height="40px" align="center">고객 이메일</td><td align="center" colspan="3"><input id='customer_email' style="width:97%;" type="text" name="customer_email"></td>
+            <td style="background-color:#FF1291" height="40px" align="center">고객 이메일</td><td align="center" colspan="3"><%=complaint.customer_email%></td>
         </tr>
     </table>
     <br></br>
-    <div><a href="/AS/getAllList"><button class="btn btn-info">목록으로</button></a>&nbsp;&nbsp;<button onclick='send();' class="btn btn-success">A/S완료 & 메일전송</button></div>
+    <div><a href="/AS/getAllList"><button class="btn btn-info">목록으로</button></a>&nbsp;&nbsp;<a href="/AS/complete?no=<%=complaint.no%>"><button class="btn btn-success">A/S완료 & 메일전송</button></a></div>
     <img src="/images/as_mail_bottom.jpg" width="40%">
-    <input type="hidden" value="<%=complaint.no%>" id="hid">
 </div>
 
 
