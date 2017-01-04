@@ -1,5 +1,24 @@
 <%- layout('layout') %>
 
+<script>
+    function send(e){
+        var frm = document.createElement('form');
+
+        var hid = document.getElementById('hid'); //no
+        var email = document.getElementById('customer_email');
+
+        frm.setAttribute('method', 'post');
+        frm.setAttribute('action', '/AS/complete');
+
+        hid.setAttribute('name', 'no');
+        email.setAttribute('name', 'customer_email');
+
+        frm.appendChild(hid);
+        frm.appendChild(email);
+        frm.submit();
+    }
+</script>
+
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -35,20 +54,19 @@
             <td style="background-color:#FF1291" height="40px" align="center">담당자</td><td align="center"><%=complaint.charger%></td><td align="center" style="background-color:#FF1291">방문일</td><td align="center"><%=complaint.visit_date%></td>
         </tr>
         <tr>
-            <td style="background-color:#FF1291" height="40px" align="center">고객 이메일</td><td align="center" colspan="3"><input style="width:97%;" type="text" name="customer_email"></td>
+            <td style="background-color:#FF1291" height="40px" align="center">고객 이메일</td><td align="center" colspan="3"><input id='customer_email' style="width:97%;" type="text" name="customer_email"></td>
         </tr>
     </table>
     <br></br>
-    <div><a href="/AS/getAllList"><button class="btn btn-info">목록으로</button></a>&nbsp;&nbsp;<a href="/AS/confirmReVisitForm?no=<%=complaint.no%>"><button class="btn btn-primary">재방문 일자 확정</button></a>&nbsp;&nbsp;&nbsp;<a href="/AS/complete?no=<%=complaint.no%>"><button class="btn btn-success">A/S완료 & 메일전송</button></a></div>
+    <div><a href="/AS/getAllList"><button class="btn btn-info">목록으로</button></a>&nbsp;&nbsp;<a id='send' href="/AS/confirmReVisitForm?no=<%=complaint.no%>"><button id='sendBtn' class="btn btn-primary">재방문 일자 확정</button></a>&nbsp;&nbsp;&nbsp;<button onclick='send();' class="btn btn-success">A/S완료 & 메일전송</button></div>
     <img src="/images/as_mail_bottom.jpg" width="40%">
+    <input type="hidden" value="<%=complaint.no%>" id="hid">
 </div>
 
 <!-- <div align=center>
 <img src=as_mail_bottom.jpg>
 </div> -->
-<script>
 
-</script>
 
 
 

@@ -135,6 +135,7 @@ router.post('/create', function (req, res) {
         mailOptions.to = req.body.customer_email;
         mailOptions.subject = '[(주)우정비에스씨]A/S신청 완료 되었습니다.';
         mailOptions.html =
+            '<font face="맑은고딕">'+
             '<div>' +
             '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top.jpg"><br>' +
             '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;left:1%;" width="460px">' +
@@ -149,7 +150,8 @@ router.post('/create', function (req, res) {
             '</tr>' +
             '</table>' +
             '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg">' +
-            '</div>';
+            '</div>' +
+            '</font>';
         transporter.sendMail(mailOptions, function (err, result) {
             if (err) {
                 return console.log(err);
@@ -223,6 +225,7 @@ router.post('/confirmVisit', function (req, res) {
                     mailOptions.to = req.body.customer_email;
                     mailOptions.subject = '[(주)우정비에스씨]A/S방문 일자가 확정 되었습니다.';
                     mailOptions.html =
+                        '<font face="맑은고딕">'+
                         '<div>' +
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top2.jpg"><br>' +
                         '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;left:1%;" width="460px">' +
@@ -243,7 +246,8 @@ router.post('/confirmVisit', function (req, res) {
                         '</tr>' +
                         '</table>' +
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg">' +
-                        '</div>';
+                        '</div>' +
+                        '</font>';
                     transporter.sendMail(mailOptions, function (err, result) {
                         if (err) {
                             return console.log(err);
@@ -301,6 +305,7 @@ router.post('/confirmReVisit', function (req, res) {
                     mailOptions.to = req.body.customer_email;
                     mailOptions.subject = '[(주)우정비에스씨]A/S 재방문 일자가 확정 되었습니다.';
                     mailOptions.html =
+                        '<font face="맑은고딕">'+
                         '<div>' +
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top3.jpg"><br>' +
                         '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;left:1%;" width="460px">' +
@@ -324,7 +329,8 @@ router.post('/confirmReVisit', function (req, res) {
                         '</tr>' +
                         '</table>' +
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg">' +
-                        '</div>';
+                        '</div>' +
+                        '</font>';
                     transporter.sendMail(mailOptions, function (err, result) {
                         if (err) {
                             return console.log(err);
@@ -343,8 +349,9 @@ router.post('/confirmReVisit', function (req, res) {
 
 //AS 완료하기
 //해당 AS가 재방문을 거쳤는지 안거쳤는지에 따라서 메일이 달라짐
-router.get('/complete', function(req, res){
-    var no = req.query.no;
+router.post('/complete', function(req, res){
+    var no = req.body.no;
+    var customer_email = req.body.customer_email;
     var date = new Date();
     var complete_date = date.getFullYear()+'년 '+(date.getMonth()+1)+'월 '+date.getDate()+'일';
     var state = 'A/S 완료';
@@ -365,12 +372,13 @@ router.get('/complete', function(req, res){
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
 
-                    mailOptions.to = req.body.customer_email;
+                    mailOptions.to = customer_email;
                     mailOptions.subject = '[(주)우정비에스씨]A/S 처리가 완료 되었습니다.';
                     mailOptions.html =
-                        '<div>' +
-                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top4.jpg"><br>' +
-                        '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;left:1%;" width="460px">' +
+                        '<font face="맑은고딕">'+
+                        '<div style="width:462px; border: 1px solid black; height: 100%;">' +
+                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top4.jpg" width="460px"><br>' +
+                        '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;" width="460px">' +
                         ' <tr>' +
                         '<td style="background-color:#FF1291" height="40px" align="center"><b>접수자</b></td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:#FF1291"><b>제품명</b></td><td align="center">' + complaint.product + '</td>' +
                         '</tr>' +
@@ -381,8 +389,9 @@ router.get('/complete', function(req, res){
                         '<td style="background-color:#FF1291" height="40px" align="center"><b>접수번호</b></td><td align="center">WJ - ' + complaint.no + '</td><td align="center" style="background-color:#FF1291"><b>완료일</b></td><td align="center">' + complaint.complete_date + '</td>' +
                         '</tr>' +
                         '</table>' +
-                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg">' +
-                        '</div>';
+                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
+                        '</div>' +
+                        '</font>';
                     transporter.sendMail(mailOptions, function (err, result) {
                         if (err) {
                             return console.log(err);
