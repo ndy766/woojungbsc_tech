@@ -49,20 +49,23 @@ router.get('/getAllList', function (req, res) {
     var currentPageGroup = 1;
 
 
+
     currentPage = Number(req.session.pagingBean.current_page);
+
 
     if(req.query.page != null && req.query.page != undefined && req.query.page!=''){
         currentPage = req.query.page;
         req.session.pagingBean.current_page = currentPage;
     };
 
+
     currentPageGroup = Number(req.session.pagingBean.current_pageGroup);
     var flag;
+    if(req.query.flag!=null && req.query.flag!=undefined && req.query.flag!=''){
+        flag = req.query.flag;
+        if(flag == '0'){
+            currentPageGroup--;
             currentPage=currentPageGroup*page_unit;
-            if(req.query.flag!=null && req.query.flag!=undefined && req.query.flag!=''){
-                flag = req.query.flag;
-                if(flag == '0'){
-                    currentPageGroup--;
         }else{
             currentPageGroup++;
             currentPage=(currentPageGroup*page_unit)-9;
@@ -70,6 +73,7 @@ router.get('/getAllList', function (req, res) {
         req.session.pagingBean.current_page = currentPage;
         req.session.pagingBean.current_pageGroup = currentPageGroup;
     };
+
 
     if(currentPage<1 || currentPageGroup<1) {
         currentPage=1;
@@ -79,7 +83,7 @@ router.get('/getAllList', function (req, res) {
     };
 
 
-
+    console.log('cur_page : '+currentPage);
 
     var sql = 'SELECT * FROM complaint ORDER BY no DESC LIMIT '+((currentPage*page_unit)-10)+','+page_unit;
 
