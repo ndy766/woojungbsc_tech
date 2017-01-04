@@ -23,11 +23,11 @@ var stringify=require('node-stringify');
 
 //mail service
 var nodemailer = require('nodemailer');
-var transporter = nodemailer.createTransport('smtps://ndy766:shel4595@smtp.gmail.com');
+var transporter = nodemailer.createTransport('smtps://woojungcscenter:woojung8302@smtp.gmail.com');
 
 var mailOptions = {
     from: '우정BSC',
-    to: 'ndy766@naver.com, ndy766@daum.net',
+    to: 'ndy766@naver.com',
     subject: '',
     html: ''
 };
@@ -132,22 +132,23 @@ router.post('/create', function (req, res) {
     }
     conn.query(sql, complaint, function (err, result) {
         //mail도 보내야함
-        mailOptions.subject = 'A/S신청 완료 되었습니다.';
+        mailOptions.to = req.body.customer_email;
+        mailOptions.subject = '[(주)우정비에스씨]A/S신청 완료 되었습니다.';
         mailOptions.html =
             '<div>' +
-            '<img src="http://localhost:3000/images/as_mail_top.jpg"><br>' +
+            '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top.jpg"><br>' +
             '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;left:1%;" width="460px">' +
             ' <tr>' +
-            '<td style="background-color:lightblue" height="40px" align="center">접수자</td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:lightblue">제품명</td><td align="center">' + complaint.product + '</td>' +
+            '<td style="background-color:#FF1291" height="40px" align="center"><b>접수자</b></td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:#FF1291"><b>제품명</b></td><td align="center">' + complaint.product + '</td>' +
             '</tr>' +
             ' <tr>' +
-            '<td style="background-color:lightblue" height="40px" align="center">접수내용</td><td align="center" colspan="3">' + complaint.content + '</td>' +
+            '<td style="background-color:#FF1291" height="40px" align="center"><b>접수내용</b></td><td align="center" colspan="3">' + complaint.content + '</td>' +
             '</tr>' +
             ' <tr>' +
-            '<td style="background-color:lightblue" height="40px" align="center">접수번호</td><td align="center">WJ - ' + req.body.no + '</td><td align="center" style="background-color:lightblue">접수일</td><td align="center">' + complaint.receipt_date + '</td>' +
+            '<td style="background-color:#FF1291" height="40px" align="center"><b>접수번호</b></td><td align="center">WJ - ' + req.body.no + '</td><td align="center" style="background-color:#FF1291"><b>접수일</b></td><td align="center">' + complaint.receipt_date + '</td>' +
             '</tr>' +
             '</table>' +
-            '<img src="http://localhost:3000/images/as_mail_bottom.jpg">' +
+            '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg">' +
             '</div>';
         transporter.sendMail(mailOptions, function (err, result) {
             if (err) {
@@ -200,6 +201,7 @@ router.post('/confirmVisit', function (req, res) {
     var no = req.body.no;
     var visit_date = req.body.visit_date;
     var charger = req.body.charger;
+    var charger_phone = req.body.charger_phone;
     var state = 'A/S 방문일자 확정';
 
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
@@ -208,6 +210,7 @@ router.post('/confirmVisit', function (req, res) {
         complaint.visit_date = visit_date;
         complaint.charger = charger;
         complaint.state = state;
+        complaint.charger_phone = charger_phone;
         var sql2 = 'UPDATE complaint SET ? WHERE no=' + no;
         if (err) {
             console.log('error발생 : ' + err);
@@ -217,25 +220,29 @@ router.post('/confirmVisit', function (req, res) {
                 var sql3 = 'SELECT * FROM complaint WHERE no=' + no;
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
-                    mailOptions.subject = 'A/S방문 일자가 확정 되었습니다.';
+                    mailOptions.to = req.body.customer_email;
+                    mailOptions.subject = '[(주)우정비에스씨]A/S방문 일자가 확정 되었습니다.';
                     mailOptions.html =
                         '<div>' +
-                        '<img src="http://localhost:3000/images/as_mail_top2.jpg"><br>' +
+                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top2.jpg"><br>' +
                         '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;left:1%;" width="460px">' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수자</td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:lightblue">제품명</td><td align="center">' + complaint.product + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수자</b></td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:#FF1291"><b>제품명</b></td><td align="center">' + complaint.product + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수내용</td><td align="center" colspan="3">' + complaint.content + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수내용</b></td><td align="center" colspan="3">' + complaint.content + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수번호</td><td align="center">WJ - ' + complaint.no + '</td><td align="center" style="background-color:lightblue">접수일</td><td align="center">' + complaint.receipt_date + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수번호</b></td><td align="center">WJ - ' + complaint.no + '</td><td align="center" style="background-color:#FF1291"><b>접수일</b></td><td align="center">' + complaint.receipt_date + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">담당자</td><td align="center">' + complaint.charger + '</td><td align="center" style="background-color:lightblue">방문일</td><td align="center">' + complaint.visit_date + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>담당자</b></td><td align="center">' + complaint.charger + '</td><td align="center" style="background-color:#FF1291"><b>방문일</b></td><td align="center">' + complaint.visit_date + '</td>' +
+                        '</tr>' +
+                        ' <tr>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>담당자 전화번호</b></td><td align="center" colspan="3">' + complaint.charger_phone + '</td>' +
                         '</tr>' +
                         '</table>' +
-                        '<img src="http://localhost:3000/images/as_mail_bottom.jpg">' +
+                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg">' +
                         '</div>';
                     transporter.sendMail(mailOptions, function (err, result) {
                         if (err) {
@@ -291,31 +298,32 @@ router.post('/confirmReVisit', function (req, res) {
                 var sql3 = 'SELECT * FROM complaint WHERE no=' + no;
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
-                    mailOptions.subject = 'A/S 재방문 일자가 확정 되었습니다.';
+                    mailOptions.to = req.body.customer_email;
+                    mailOptions.subject = '[(주)우정비에스씨]A/S 재방문 일자가 확정 되었습니다.';
                     mailOptions.html =
                         '<div>' +
-                        '<img src="http://localhost:3000/images/as_mail_top3.jpg"><br>' +
+                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top3.jpg"><br>' +
                         '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;left:1%;" width="460px">' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수자</td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:lightblue">제품명</td><td align="center">' + complaint.product + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수자</b></td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:#FF1291"><b>제품명</b></td><td align="center">' + complaint.product + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수내용</td><td align="center" colspan="3">' + complaint.content + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수내용</b></td><td align="center" colspan="3">' + complaint.content + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">사유</td><td align="center" colspan="3">' + complaint.revisit_reason + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>사유</b></td><td align="center" colspan="3">' + complaint.revisit_reason + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수번호</td><td align="center">WJ - ' + complaint.no + '</td><td align="center" style="background-color:lightblue">접수일</td><td align="center">' + complaint.receipt_date + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수번호</b></td><td align="center">WJ - ' + complaint.no + '</td><td align="center" style="background-color:#FF1291"><b>접수일</b></td><td align="center">' + complaint.receipt_date + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">담당자</td><td align="center">' + complaint.charger + '</td><td align="center" style="background-color:lightblue">재방문일</td><td align="center">' + complaint.revisit_date + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>담당자</b></td><td align="center">' + complaint.charger + '</td><td align="center" style="background-color:#FF1291"><b>재방문일</b></td><td align="center">' + complaint.revisit_date + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">담당자 전화번호</td><td align="center" colspan="3">' + complaint.charger_phone + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>담당자 전화번호</b></td><td align="center" colspan="3">' + complaint.charger_phone + '</td>' +
                         '</tr>' +
                         '</table>' +
-                        '<img src="http://localhost:3000/images/as_mail_bottom.jpg">' +
+                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg">' +
                         '</div>';
                     transporter.sendMail(mailOptions, function (err, result) {
                         if (err) {
@@ -357,22 +365,23 @@ router.get('/complete', function(req, res){
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
 
-                    mailOptions.subject = 'A/S 처리가 완료 되었습니다.';
+                    mailOptions.to = req.body.customer_email;
+                    mailOptions.subject = '[(주)우정비에스씨]A/S 처리가 완료 되었습니다.';
                     mailOptions.html =
                         '<div>' +
-                        '<img src="http://localhost:3000/images/as_mail_top4.jpg"><br>' +
+                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top4.jpg"><br>' +
                         '<table class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;left:1%;" width="460px">' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수자</td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:lightblue">제품명</td><td align="center">' + complaint.product + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수자</b></td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:#FF1291"><b>제품명</b></td><td align="center">' + complaint.product + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수내용</td><td align="center" colspan="3">' + complaint.content + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수내용</b></td><td align="center" colspan="3">' + complaint.content + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="background-color:lightblue" height="40px" align="center">접수번호</td><td align="center">WJ - ' + complaint.no + '</td><td align="center" style="background-color:lightblue">완료일</td><td align="center">' + complaint.complete_date + '</td>' +
+                        '<td style="background-color:#FF1291" height="40px" align="center"><b>접수번호</b></td><td align="center">WJ - ' + complaint.no + '</td><td align="center" style="background-color:#FF1291"><b>완료일</b></td><td align="center">' + complaint.complete_date + '</td>' +
                         '</tr>' +
                         '</table>' +
-                        '<img src="http://localhost:3000/images/as_mail_bottom.jpg">' +
+                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg">' +
                         '</div>';
                     transporter.sendMail(mailOptions, function (err, result) {
                         if (err) {
