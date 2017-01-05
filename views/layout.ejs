@@ -20,6 +20,19 @@
       cursor: pointer;
     }
   </style>
+
+  <script>
+    $(function() {
+      $( ".date_picker" ).datepicker({
+        dateFormat:'yy년 m월 d일',
+        changeMonth: true,
+        dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+        dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
+        monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+      });
+    });
+  </script>
 </head>
 <body>
 
@@ -27,6 +40,9 @@
   <div class="navbar-inner">
     <div class="container">
       <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
       </button>
       <a class="brand" href="/login">Woojung</a>
       <div class="nav-collapse collapse">
@@ -44,5 +60,20 @@
 </div>
 
 <%- body %>
+
+<!--추가-->
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-transition.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-alert.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-modal.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-dropdown.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-scrollspy.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-tab.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-tooltip.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-popover.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-button.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-collapse.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-carousel.js"></script>
+<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-typeahead.js"></script>
+
 </body>
 </html>

@@ -149,7 +149,7 @@ router.post('/create', function (req, res) {
             '<font face="맑은고딕" color="#474747">' +
             '<div align="center">' +
             '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top.jpg" width="460px"><br>' +
-            '<table align="center" class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;left:1%;" width="460px">' +
+            '<table align="center" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;" width="460px">' +
             ' <tr>' +
             '<td style="background-color:#F6F6F6" height="40px" align="center"><b>접수자</b></td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:#F6F6F6"><b>제품명</b></td><td align="center">' + complaint.product + '</td>' +
             '</tr>' +
@@ -238,7 +238,7 @@ router.post('/confirmVisit', function (req, res) {
                         '<font face="맑은고딕" color="#474747">' +
                         '<div align="center">' +
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top2.jpg" width="460px"><br>' +
-                        '<table  align="center" class="table-bordered" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;left:1%;" width="460px">' +
+                        '<table  align="center" class="table-bordered" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;" width="460px">' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6" height="40px" align="center"><b>접수자</b></td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:#F6F6F6"><b>제품명</b></td><td align="center">' + complaint.product + '</td>' +
                         '</tr>' +
@@ -318,7 +318,7 @@ router.post('/confirmReVisit', function (req, res) {
                         '<font face="맑은고딕" color="#474747">' +
                         '<div align="center">' +
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top3.jpg" width="460px"><br>' +
-                        '<table  align="center" class="table-bordered" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;left:1%;" width="460px">' +
+                        '<table  align="center" class="table-bordered" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;" width="460px">' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6" height="40px" align="center"><b>접수자</b></td><td align="center">' + complaint.customer + '</td><td align="center" style="background-color:#F6F6F6"><b>제품명</b></td><td align="center">' + complaint.product + '</td>' +
                         '</tr>' +
