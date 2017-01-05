@@ -22,11 +22,13 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var AS = require('./routes/AS');
+var inspection = require('./routes/inspection');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// app.set('views', path.join(__dirname, 'views'));
+app.set('views', [__dirname + '/views', __dirname + '/views/complaint', __dirname + '/views/inspection']);
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
@@ -52,6 +54,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/AS', AS);
+app.use('/inspection', inspection);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
