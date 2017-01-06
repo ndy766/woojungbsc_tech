@@ -12,7 +12,8 @@ var mailOptions = {
     from: 'cscenterwoojung@gmail.com',
     to: '',
     subject: '',
-    html: ''
+    html: '',
+    attachments:[]
 };
 
 
@@ -147,6 +148,13 @@ router.post('/send', function (req, res) {
     '   </table>'+
     '</div>'+
     '</font>';
+    mailOptions.attachments=[
+        {
+            filename:'asd.png',
+            path:'http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/asd.png'
+        }
+    ];
+
 
     transporter.sendMail(mailOptions, function (err, result) {
         if (err) {

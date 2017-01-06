@@ -5,11 +5,27 @@
   <meta charset="utf-8">
   <link href="/bootstrap-2.3.2/docs/assets/css/bootstrap.css" rel="stylesheet">
   <link href="/bootstrap-2.3.2/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
+
   <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
   <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
   <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
+
+
+
+  <!--full calendar-->
+  <link href="/fullcalendar-3.1.0/fullcalendar.css" rel="stylesheet">
+  <!--<link href="/fullcalendar-3.1.0/fullcalendar.min.css" rel="stylesheet">-->
+
   <script src="/jquery/jquery-3.1.1.js"></script>
   <script src="/jquery/jquery-ui.min.js"></script>
+
+  <!--full calendar js file-->
+  <!--<script src="/fullcalendar-3.1.0/lib/jquery.min.js"></script>-->
+  <script src="/fullcalendar-3.1.0/lib/moment.min.js"></script>
+  <script src="/fullcalendar-3.1.0/fullcalendar.js"></script>
+  <script src="/fullcalendar-3.1.0/locale/ko.js"></script>
+  <!--<script src="/fullcalendar-3.1.0/fullcalendar.min.js"></script>-->
+
   <style>
     html, body{
       height:100%;
@@ -19,20 +35,12 @@
       background-color: #c09853;
       cursor: pointer;
     }
-  </style>
+    .fc-sun {color:#e31b23} /* fullcalendar 일요일 */
+    .fc-sat {color:#007dc3} /* fullcalendar 토요일 */
 
-  <script>
-    $(function() {
-      $( ".date_picker" ).datepicker({
-        dateFormat:'yy년 m월 d일',
-        changeMonth: true,
-        dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
-        dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
-        monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
-        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-      });
-    });
-  </script>
+    .fc-day-number.fc-sat.fc-past { color:#0000FF; }
+    .fc-day-number.fc-sun.fc-past { color:#FF0000; }
+  </style>
 </head>
 <body>
 
@@ -49,7 +57,7 @@
         <ul class="nav">
           <li><a href="/AS/getAllList">A/S관리</a></li>
           <li><a href="/inspection/createForm">주기안내</a></li>
-          <li><a href="/about">캘린더</a></li>
+          <li><a href="/calendar/sample">캘린더</a></li>
         </ul>
         <form class="navbar-form pull-right" method="post" action="/login/logout">
           <button type="submit" class="btn btn-danger">로그아웃</button>

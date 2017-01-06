@@ -119,12 +119,18 @@ router.get('/createForm', function (req, res) {
     //search를 초기화
     if (req.session.searchingBean) req.session.searchingBean = null;
 
+    var errorMessage = "";
+    if(req.query.errorMessage!=null && req.query.errorMessage!=undefined && req.query.errorMessage!=""){
+        console.log('문제있음');
+        errorMessage = req.query.errorMessage;
+    }
+
     var sql = 'select * from complaint order by no desc';
     var no = '';
     var stateCode = '';
     conn.query(sql, function (err, result) {
         no = result[0].no + 1;
-        res.render('complaint_create_form', {no: no, stateCode: stateCode});
+        res.render('complaint_create_form', {no: no, stateCode: stateCode, errorMessage:errorMessage});
     });
 
 });
@@ -140,8 +146,16 @@ router.post('/create', function (req, res) {
         state: state,
         receipt_date: req.body.receipt_date,
         customer_email: req.body.customer_email
-    }
+    };
+
+    //validation check
+    if(req.body.product.trim()=="" || req.body.customer.trim()=="" || req.body.content.trim()=="" || req.body.customer_email.trim()==""){
+        res.redirect('/AS/createForm?errorMessage=formValidation');
+        return;
+    };
+
     conn.query(sql, complaint, function (err, result) {
+
         //mail도 보내야함
         mailOptions.to = complaint.customer_email;
         mailOptions.subject = '[(주)우정비에스씨]A/S신청 완료 되었습니다.';

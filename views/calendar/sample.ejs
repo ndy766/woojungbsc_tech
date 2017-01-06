@@ -1,0 +1,82 @@
+<%- layout('../layout') %>
+
+
+<script>
+    $(document).ready(function(){   //페이지 로딩시 getEvent() 를가장먼저 호출
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        getEvent();
+    });
+
+
+    $(function() {
+        // page is now ready, initialize the calendar...
+
+
+
+        $('#calendar').fullCalendar({
+            header:{
+              left:"month,basicWeek,basicDay",
+              center:"title",
+              right:"today prev,next"
+            },
+            editable:true,
+            eventLimit : true,
+            //events 가져오는
+            events:function(start, end, timezone, callback) {
+                $.ajax({
+                    url: '/calendar/getAllSchedule',
+                    dataType: 'json',
+                    data: {
+                        // our hypothetical feed requires UNIX timestamps
+                        start: start.format(),
+                        end: end.format()
+                    },
+                    success: function(doc) {
+                        var events = [];
+                            events.push({
+                                title: doc.title,
+                                start: new Date(doc.start), // will be parsed
+                                end: new Date(doc.end), // will be parsed
+                            });
+
+//                        callback(events);
+                    }
+                });
+            },
+            selectable: true,  //사용자가 클릭 및 드래그하여 선택을 할 수 있도록
+            selectHelper: true,//사용자가 드래그되는 동안 "자리"이벤트를 그릴 것인지 여부를 지정할 수 있습니다.
+            //범위로 이베트 선택한 후, DB에 넣어줌
+            select: function(start, end) {
+                location.href='/calendar/registerForm?start='+start+'&end='+end;
+
+//                if (title) { //true
+//                    calendar.fullCalendar('renderEvent', //월이나 연도가 바뀌어도 없어지지않게(등록한 것이)
+//                            {
+//                                title: title, //입력값
+//                                start: start, //인자값
+//                                end: end,  //인자값
+//                                allDay: allDay//인자값
+//                            },
+//                            true // make the event "stick"
+//                    );
+//                }//if
+//                //입력이 안되면 선택취소 (메서드)
+//                calendar.fullCalendar('unselect'); //선택취소
+
+            }
+
+
+        });
+    });
+</script>
+
+<div style="position:relative;top:7%;">
+    <div id="calendar" style="position: relative;left:10%;width:1000px;height:1000px"></div>
+</div>
+
+
+
