@@ -1,0 +1,38 @@
+<%- layout('../layout') %>
+
+<script>
+    function getMemberDetail(event){
+        var target = event.target;
+        var id = target.parentNode.childNodes[9].innerHTML;
+        location.href='/member/getDetail?id='+id;
+    }
+</script>
+
+<div align=center style="position:relative; top:7%;">
+    <table align="center" width="600px" class="table-bordered table-condensed table-hover" border="1">
+        <tr>
+            <th>순번</th>
+            <th>이름</th>
+            <th>직급</th>
+            <th>전화번호</th>
+            <th>아이디</th>
+            <th>비밀번호</th>
+        </tr>
+        <%for(var i=0;i<memberList.length;i++){%>
+            <tr align="center" class="member_tr" onclick="getMemberDetail(event);">
+                <td><%=i+1%></td>
+                <td><%=memberList[i].name%></td>
+                <td><%=memberList[i].position%></td>
+                <td><%=memberList[i].phone%></td>
+                <td><%=memberList[i].id%></td>
+                <td><%=memberList[i].password%></td>
+            </tr>
+        <%}%>
+    </table>
+    <br>
+    <div>
+        <a href="/member/registerForm"><button class="btn btn-success">사용자 등록</button></a>
+    </div>
+
+</div>
+

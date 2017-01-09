@@ -4,9 +4,9 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/sample', function(req ,res){
+router.get('/', function(req ,res){
 
-   res.render('sample',{});
+   res.render('calendar',{});
 });
 
 router.get('/registerForm', function(req, res){
@@ -18,9 +18,9 @@ router.get('/registerForm', function(req, res){
 
 
 
-   //end가 1일 더해져있는 부분 수정해줌
+
    start = new Date(parseInt(start));
-   end = new Date(parseInt(end)-86400000);
+   end = new Date(parseInt(end)-86400000); //end가 1일 더해져있는 부분 수정해줌
    start = start.getFullYear()+'년 '+(start.getMonth()+1)+'월 '+start.getDate()+'일';
    end = end.getFullYear()+'년 '+(end.getMonth()+1)+'월 '+end.getDate()+'일';
 
@@ -38,7 +38,6 @@ router.post('/register', function(req, res){
 
 
 router.get('/getAllSchedule', function(req , res){
-   console.log('getAllSchedule 들어옴');
    res.send({
       title : "파랑색 배경 & 글자색 검정색"
       , color : "#0000FF"

@@ -1,0 +1,82 @@
+<%- layout('../layout') %>
+
+<script>
+    function modifyCustomer(event){
+        var target = event.target;
+        var no = target.parentNode.parentNode.childNodes[3].childNodes[1].innerHTML;
+
+        var name = prompt('수정할 이름을 입력하세요');
+
+        if(name!=null && name!="" && name!=null)
+        $.ajax({
+            url: '/customer/modify',
+            dataType: 'json',
+            type:'post',
+            data: {
+                no:no,
+                name:name
+            },
+            success:function(data){
+                location.reload();
+            }
+
+        });
+    }
+
+    function deleteCustomer(event){
+        var target = event.target;
+        var no = target.parentNode.parentNode.childNodes[3].childNodes[1].innerHTML;
+
+        $.ajax({
+            url: '/customer/delete?no='+no,
+            dataType: 'json',
+            type:'get',
+            success:function(data){
+                location.reload();
+            }
+
+        })
+    }
+
+    function registerCustomer(event){
+        var name = prompt('등록할 거래처의 이름을 입력하세요');
+        if(name!=null && name!="" && name!=null)
+            $.ajax({
+                url: '/customer/register',
+                dataType: 'json',
+                type:'post',
+                data: {
+                    name:name
+                },
+                success:function(data){
+                    location.reload();
+                }
+
+            });
+    }
+</script>
+
+<div align=center style="position:relative; top:7%;">
+    <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
+        <tr>
+            <th>순번</th>
+            <th>고유번호</th>
+            <th>거래처명</th>
+            <th>비고</th>
+        </tr>
+        <%for(var i=0;i<customerList.length;i++){%>
+        <tr align="center" class="customer_tr">
+            <td><%=i+1%></td>
+            <td>C-<span><%=customerList[i].no%></span></td>
+            <td><%=customerList[i].name%></td>
+            <td><button class="btn btn-warning" onclick="modifyCustomer(event);">수정</button> <button class="btn btn-danger" onclick="deleteCustomer(event);">제거</button></td>
+        </tr>
+        <%}%>
+    </table>
+    <br>
+    <div>
+        <button class="btn btn-success" onclick="registerCustomer(event);">거래처 등록</button>
+    </div>
+
+</div>
+

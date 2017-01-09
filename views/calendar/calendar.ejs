@@ -3,12 +3,12 @@
 
 <script>
     $(document).ready(function(){   //페이지 로딩시 getEvent() 를가장먼저 호출
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-
-        getEvent();
+//        var date = new Date();
+//        var d = date.getDate();
+//        var m = date.getMonth();
+//        var y = date.getFullYear();
+//
+//        getEvent();
     });
 
 
@@ -52,14 +52,11 @@
             //범위로 이베트 선택한 후, DB에 넣어줌
             select: function(start, end) {
                 location.href='/calendar/registerForm?start='+start+'&end='+end;
-
 //                if (title) { //true
 //                    calendar.fullCalendar('renderEvent', //월이나 연도가 바뀌어도 없어지지않게(등록한 것이)
 //                            {
-//                                title: title, //입력값
-//                                start: start, //인자값
-//                                end: end,  //인자값
-//                                allDay: allDay//인자값
+//                                start: '2017-01-09', //인자값
+//                                end: '2017-01-11'  //인자값
 //                            },
 //                            true // make the event "stick"
 //                    );

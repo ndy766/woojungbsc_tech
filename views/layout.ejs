@@ -35,12 +35,20 @@
       background-color: #c09853;
       cursor: pointer;
     }
+
+    .member_tr{
+      cursor: pointer;
+    }
+
     .fc-sun {color:#e31b23} /* fullcalendar 일요일 */
     .fc-sat {color:#007dc3} /* fullcalendar 토요일 */
 
     .fc-day-number.fc-sat.fc-past { color:#0000FF; }
     .fc-day-number.fc-sun.fc-past { color:#FF0000; }
   </style>
+
+
+
 </head>
 <body>
 
@@ -57,7 +65,17 @@
         <ul class="nav">
           <li><a href="/AS/getAllList">A/S관리</a></li>
           <li><a href="/inspection/createForm">주기안내</a></li>
-          <li><a href="/calendar/sample">캘린더</a></li>
+          <li><a href="/calendar">캘린더</a></li>
+          <li class="dropdown">
+            <a href="/login" class="dropdown-toggle"
+               data-toggle="dropdown">DB 관리<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="divider"></li>
+              <li class="nav-header">Menu</li>
+              <li><a href="/member">직원 관리</a></li>
+              <li><a href="/customer">거래처 관리</a></li>
+            </ul>
+          </li>
         </ul>
         <form class="navbar-form pull-right" method="post" action="/login/logout">
           <button type="submit" class="btn btn-danger">로그아웃</button>

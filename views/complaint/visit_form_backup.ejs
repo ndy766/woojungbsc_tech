@@ -28,22 +28,10 @@
             <td style="background-color:#F6F6F6" height="40px" align="center">접수번호</td><td align="center">WJ - <%=complaint.no%></td><td align="center" style="background-color:#F6F6F6">접수일</td><td align="center"><%=complaint.receipt_date%></td>
         </tr>
         <tr>
-            <td style="background-color:#F6F6F6" height="40px" align="center">대표자</td><td align="center">
-                <select name="charger_representative" class="input-small">
-                    <%for(var i=0;i<memberList.length;i++){%>
-                        <option value="<%=memberList[i].id%>"><%=memberList[i].name%></option>
-                    <%}%>
-                </select>
-            </td>
-            <td align="center" style="background-color:#F6F6F6">방문일</td><td align="center"><input class="date_picker" readonly='readonly' type="text" name="visit_date" size="40"></td>
+            <td style="background-color:#F6F6F6" height="40px" align="center">담당자</td><td align="center"><input type="text" name="charger" size="35"></td><td align="center" style="background-color:#F6F6F6">방문일</td><td align="center"><input class="date_picker" readonly='readonly' type="text" name="visit_date" size="40"></td>
         </tr>
         <tr>
-            <td style="background-color:#F6F6F6" height="40px" align="center">동행인</td>
-            <td align="left" colspan="3">
-                <%for(var i=0;i<memberList.length;i++){%>
-                <label style="display:inline"><%=memberList[i].name%><input type="checkbox" name="charger_accompany" value="<%=memberList[i].id%>"></label>
-                <%}%>
-            </td>
+            <td style="background-color:#F6F6F6" height="40px" align="center">담당자 전화번호</td><td align="center" colspan="3"><input type="text" name="charger_phone" style="width:97%"></td>
         </tr>
         <tr>
             <td style="background-color:#F6F6F6" height="40px" align="center">고객 이메일</td><td align="center" colspan="3"><%=complaint.customer_email%></td>

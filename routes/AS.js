@@ -88,15 +88,12 @@ router.get('/getAllList', function (req, res) {
     ;
 
 
-    console.log('cur_page : ' + currentPage);
-
     var sql = 'SELECT * FROM complaint ORDER BY no DESC LIMIT ' + ((currentPage * page_unit) - 10) + ',' + page_unit;
 
     if (req.session.searchingBean != null) {
         //유저가 겁색을 통해서 session에 searchingBean을 계속 유지하는 경우
         var searchType = req.session.searchingBean.searchType;
         var keyword = req.session.searchingBean.keyword;
-        console.log(searchType + keyword);
         sql = "SELECT * FROM complaint WHERE " + searchType + " LIKE '%" + keyword + "%' ORDER BY no DESC LIMIT " + ((currentPage * page_unit) - 10) + "," + page_unit;
     }
     var complaint_list = [];
@@ -217,7 +214,13 @@ router.get('/confirmVisitForm', function (req, res) {
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
     conn.query(sql, function (err, result) {
         var complaint = result[0];
-        res.render('visit_form', {complaint: complaint, stateCode: stateCode})
+        var sql2 = 'SELECT * FROM member ORDER BY position';
+        var memberList = [];
+        conn.query(sql2, function(err, result){
+            var memberList = result;
+            res.render('visit_form', {complaint: complaint, stateCode: stateCode, memberList:memberList})
+        });
+
     });
 
 });
@@ -277,7 +280,6 @@ router.post('/confirmVisit', function (req, res) {
                             return console.log(err);
                         }
 
-                        console.log('Message sent: ' + result);
                         res.redirect('/AS/getAllList');
                     });
 
