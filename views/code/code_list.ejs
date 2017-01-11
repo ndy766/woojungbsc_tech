@@ -1,0 +1,88 @@
+<%- layout('../layout') %>
+
+<script>
+    function modifyCode(event){
+        var target = event.target;
+        var code_no = target.parentNode.parentNode.childNodes[3].childNodes[1].innerHTML;
+
+        var code_name = prompt('수정할 항목의 이름을 입력하세요');
+        var code_type = prompt('등록할 항목의 타입을 입력하세요(업무구분, 제조사, 미결사유)');
+
+        if(code_name!=null && code_name!="" && code_name!=null && code_type!=null && code_type!="" && code_type!=null)
+        $.ajax({
+            url: '/code/modify',
+            dataType: 'json',
+            type:'post',
+            data: {
+                code_no:code_no,
+                code_name:code_name,
+                code_type:code_type
+            },
+            success:function(data){
+                location.reload();
+            }
+
+        });
+    }
+
+    function deleteCode(event){
+        var target = event.target;
+        var code_no = target.parentNode.parentNode.childNodes[3].childNodes[1].innerHTML;
+
+        $.ajax({
+            url: '/code/delete?code_no='+code_no,
+            dataType: 'json',
+            type:'get',
+            success:function(data){
+                location.reload();
+            }
+
+        })
+    }
+
+    function registerCode(event){
+        var code_name = prompt('등록할 항목의 이름을 입력하세요');
+        var code_type = prompt('등록할 항목의 타입을 입력하세요(업무구분, 제조사, 미결사유)');
+        if(code_name!=null && code_name!="" && code_name!=null && code_type!=null && code_type!="" && code_type!=null)
+            $.ajax({
+                url: '/code/register',
+                dataType: 'json',
+                type:'post',
+                data: {
+                    code_name:code_name,
+                    code_type:code_type
+                },
+                success:function(data){
+                    location.reload();
+                }
+
+            });
+    }
+</script>
+
+<div align=center style="position:relative; top:7%;">
+    <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
+        <tr>
+            <th>순번</th>
+            <th>코드번호</th>
+            <th>코드이름</th>
+            <th>코드타입</th>
+            <th>비고</th>
+        </tr>
+        <%for(var i=0;i<codeList.length;i++){%>
+        <tr align="center" class="code_tr">
+            <td><%=i+1%></td>
+            <td>CN-<span><%=codeList[i].code_no%></span></td>
+            <td><%=codeList[i].code_name%></td>
+            <td><%=codeList[i].code_type%></td>
+            <td><button class="btn btn-warning" onclick="modifyCode(event);">수정</button> <button class="btn btn-danger" onclick="deleteCode(event);">제거</button></td>
+        </tr>
+        <%}%>
+    </table>
+    <br>
+    <div>
+        <button class="btn btn-success" onclick="registerCode(event);">코드 등록</button>
+    </div>
+
+</div>
+

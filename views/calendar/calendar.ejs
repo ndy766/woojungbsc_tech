@@ -23,29 +23,10 @@
               center:"title",
               right:"today prev,next"
             },
-            editable:true,
+            editable : true,
             eventLimit : true,
-            //events 가져오는
-            events:function(start, end, timezone, callback) {
-                $.ajax({
-                    url: '/calendar/getAllSchedule',
-                    dataType: 'json',
-                    data: {
-                        // our hypothetical feed requires UNIX timestamps
-                        start: start.format(),
-                        end: end.format()
-                    },
-                    success: function(doc) {
-                        var events = [];
-                            events.push({
-                                title: doc.title,
-                                start: new Date(doc.start), // will be parsed
-                                end: new Date(doc.end), // will be parsed
-                            });
-
-//                        callback(events);
-                    }
-                });
+            events:{
+              url:'/calendar/getAllSchedule',
             },
             selectable: true,  //사용자가 클릭 및 드래그하여 선택을 할 수 있도록
             selectHelper: true,//사용자가 드래그되는 동안 "자리"이벤트를 그릴 것인지 여부를 지정할 수 있습니다.
@@ -64,6 +45,14 @@
 //                //입력이 안되면 선택취소 (메서드)
 //                calendar.fullCalendar('unselect'); //선택취소
 
+            },
+            eventClick:function(calEvent, jsEvent, view){
+//                alert('Event: ' + calEvent.no);
+//                alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+//                alert('View: ' + view.name);
+                location.href='/calendar/getScheduleByNo?no='+calEvent.no+'&start='+calEvent.start+'&end='+calEvent.end;
+                // change the border color just for fun
+//                $(this).css('border-color', 'red');
             }
 
 

@@ -26,6 +26,7 @@ var inspection = require('./routes/inspection');
 var calendar = require('./routes/calendar');
 var member = require('./routes/member');
 var customer = require('./routes/customer');
+var code = require('./routes/code');
 
 
 var app = express();
@@ -38,7 +39,8 @@ app.set('views', [
                   __dirname + '/views/inspection',
                   __dirname + '/views/calendar',
                   __dirname + '/views/member',
-                  __dirname + '/views/customer'
+                  __dirname + '/views/customer',
+                  __dirname + '/views/code'
                  ]);
 app.set('view engine', 'ejs');
 
@@ -69,6 +71,7 @@ app.use('/inspection', inspection);
 app.use('/calendar', calendar);
 app.use('/member', member);
 app.use('/customer', customer);
+app.use('/code', code);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,125 @@
+<%- layout('../layout') %>
+<div style="position:relative;top:7%">
+    <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
+        <form action="/calendar/register" method="post">
+        <tr>
+            <th width="24%" height="30px">구분</th>
+            <th>내용</th>
+        </tr>
+        <tr>
+            <td align="center"height="30px">일자</td>
+            <td align="center"><%=start%> ~ <%=end%></td>
+        </tr>
+        <tr>
+            <td align="center" height="30px">거래처</td>
+            <td align="center">
+                <select name="customer_no">
+                    <%for(var i=0;i<customerList.length;i++){%>
+                        <option value="<%=customerList[i].no%>"><%=customerList[i].name%></option>
+                    <%}%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">업무구분</td>
+            <td align="center">
+                <select name="work_type">
+                    <%for(var i=0;i<work_type_list.length;i++){%>
+                    <option><%=work_type_list[i].code_name%></option>
+                    <%}%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">제조사</td>
+            <td align="center">
+                <select name="manufacturer">
+                    <%for(var i=0;i<manufacturer_list.length;i++){%>
+                        <option><%=manufacturer_list[i].code_name%></option>
+                    <%}%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">방문자</td>
+            <td align="center">
+                <%for(var i=0;i<memberList.length;i++){%>
+                <label style="display:inline"><input type="checkbox" name="charger" value="<%=memberList[i].id%>"><%=memberList[i].name%></label>&nbsp;&nbsp;
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">방문형태</td>
+            <td align="center">
+                <label style="display:inline"><input type="radio" name="visit_type" checked="checked" value="신규 방문">신규 방문</label>&nbsp;&nbsp;
+                <label style="display:inline"><input type="radio" name="visit_type" value="재방문">재방문</label>
+                &nbsp;&nbsp;재방문 횟수 : <select name="revisit_count">
+                                <%for(var i=0;i<10;i++){%>
+                                    <%if(i==0){%>
+                                    <option selected="selected"><%=i%></option>
+                                    <%}else{%>
+                                    <option><%=i%></option>
+                                    <%}%>
+                                <%}%>
+                              </select>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">제품명</td>
+            <td align="center"><input type="text" name="equipment" style="width:470px"></td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">시리얼넘버</td>
+            <td align="center"><input type="text" name="serial_number" style="width:470px"></td>
+        </tr>
+        <tr>
+            <td height="60px" align="center">조치사항</td>
+            <td align="center"><textarea name="work_detail" style="width:470px"></textarea></td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">교체 부품</td>
+            <td align="center"><input type="text" name="changed_component" style="width:470px"></td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">처리 상태</td>
+            <td align="center">
+                <label style="display: inline"><input type="radio" name="state" checked="checked" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label style="display: inline"><input type="radio" name="state" value="미결"> 미결</label>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">미결 사유</td>
+            <td align="center">
+                <select name="undecided_reason">
+                    <%for(var i=0;i<undecided_reason_list.length;i++){%>
+                        <%if(undecided_reason_list[i].code_name=='미결사유 선택'){%>
+                            <option selected="selected"><%=undecided_reason_list[i].code_name%></option>
+                        <%}else{%>
+                            <option><%=undecided_reason_list[i].code_name%></option>
+                        <%}%>
+                    <%}%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">소요시간</td>
+            <td align="center"><input type="text" name="work_delay" style="width:200px;"> 시간</td>
+        </tr>
+        <tr>
+
+        </tr>
+        <tr>
+            <input type="hidden" value="<%=start_msec%>" name="start_msec">
+            <input type="hidden" value="<%=end_msec%>" name="end_msec">
+            <td colspan="2" height="30px" align="center"><input width="200px" class="btn btn-success" type="submit" value="일정 등록"></td>
+        </tr>
+        </form>
+    </table>
+
+</div>
+
+<script>
+//    document.getElementsByTagName('label').setAttribute('style', 'displ')
+</script>
+
+

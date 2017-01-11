@@ -1,0 +1,90 @@
+<%- layout('../layout') %>
+<div style="position:relative;top:7%">
+    <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
+        <form action="/calendar/register" method="post">
+            <input type="hidden" name="start_msec" value="<%=start_msec%>">
+            <input type="hidden" name="end_msec" value="<%=end_msec%>">
+        <tr>
+            <th width="24%" height="30px">구분</th>
+            <th>내용</th>
+        </tr>
+        <tr>
+            <td align="center"height="30px">일자</td>
+            <td align="center"><%=start_date%> ~ <%=end_date%></td>
+        </tr>
+        <tr>
+            <td align="center" height="30px">거래처</td>
+            <td align="center">
+                <select name="customer_no">
+                    <%for(var i=0;i<customerList.length;i++){%>
+                        <%if(customerList[i].no == schedule.customer_no){%>
+                            <option value="<%=customerList[i].no%>" selected="selected"><%=customerList[i].name%></option>
+                        <%}else{%>
+                            <option value="<%=customerList[i].no%>"><%=customerList[i].name%></option>
+                        <%}%>
+                    <%}%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">방문자</td>
+            <td align="center">
+                <%for(var i=0;i<memberList.length;i++){%>
+                    <label style="display:inline"><%=memberList[i].name%><input type="checkbox" name="charger" value="<%=memberList[i].id%>"></label>&nbsp;&nbsp;
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">제조사</td>
+            <td align="center">
+                <select name="manufacturer">
+                    <option value="IWT">IWT</option>
+                    <option value="PRIMUS">PRIMUS</option>
+                    <option value="삼성">삼성</option>
+                    <option value="애플">애플</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">업무구분</td>
+            <td align="center">
+                <%if(schedule.work_type=="유상유지보수"){%>
+                    <label style="display:inline">유상유지보수<input type="radio" name="work_type" value="유상유지보수" checked="checked"></label>
+                    <label style="display:inline">무상유지보수<input type="radio" name="work_type" value="무상유지보수"></label>&nbsp;&nbsp;
+                <%}else{%>
+                    <label style="display:inline">유상유지보수<input type="radio" name="work_type" value="유상유지보수"></label>
+                    <label style="display:inline">무상유지보수<input type="radio" name="work_type" value="무상유지보수" checked="checked"></label>&nbsp;&nbsp;
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">문제장비</td>
+            <td align="center"><input type="text" name="equipment" style="width:470px" value="<%=schedule.equipment%>"></td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">시리얼넘버</td>
+            <td align="center"><input type="text" name="serial_number" style="width:470px" value="<%=schedule.serial_number%>"></td>
+        </tr>
+        <tr>
+            <td height="60px" align="center">처리 세부 내용</td>
+            <td align="center"><textarea name="work_detail" style="width:470px"><%=schedule.work_detail%></textarea></td>
+        </tr>
+        <tr>
+            <td height="30px" align="center">소요시간</td>
+            <td align="center"><input type="text" name="work_delay" style="width:200px;" value="<%=schedule.work_delay%>"> 시간</td>
+        </tr>
+        <tr>
+            <td colspan="2" height="30px" align="center">
+                <input width="200px" class="btn btn-warning" type="submit" value="일정 수정">
+        </form>
+                <a href="/calendar/delete?no="+<%=schedule.no%>><button class="btn btn-danger">일정 삭제</button></a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+//    document.getElementsByTagName('label').setAttribute('style', 'displ')
+</script>
+
+

@@ -24,22 +24,23 @@ router.get('/', function(req, res){
         return;
     }
 
-    var sql = 'select * from customer';
-    var customerList = [];
+    var sql = 'select * from code ORDER BY code_type desc';
+    var codeList = [];
     conn.query(sql, function(err, result){
-        customerList = result;
-        res.render('customer_list', {customerList:customerList});
+        codeList = result;
+        res.render('code_list', {codeList:codeList});
     });
 
 });
 
 //등록하기
 router.post('/register', function(req, res){
-    var name = req.body.name;
+    var code_name = req.body.code_name;
+    var code_type = req.body.code_type;
 
-    var sql = "INSERT INTO customer SET name='"+name+"'";
-    conn.query(sql, function(err, result){
-        var href = '/customer/register';
+    var sql = "INSERT INTO code SET code_name='"+code_name+"', code_type='"+code_type+"'";
+        conn.query(sql, function(err, result){
+            var href = '/code/register';
         res.send({href:href});
     });
 });
@@ -47,18 +48,20 @@ router.post('/register', function(req, res){
 
 //수정하기
 router.post('/modify', function(req, res){
-    var no = req.body.no;
-    var name = req.body.name;
+    var code_no = req.body.code_no;
+    var code_name = req.body.code_name;
+    var code_type = req.body.code_type;
 
-    var sql = "SELECT * FROM customer WHERE no ="+no;
+    var sql = "SELECT * FROM code WHERE code_no ="+code_no;
 
     conn.query(sql, function(err, result){
-        var customer = result[0];
-        customer.name = name;
+        var code = result[0];
+        code.code_name = code_name;
+        code.code_type = code_type;
 
-        var sql2 = "UPDATE customer SET ? WHERE no ="+no;
-        conn.query(sql2, customer, function(err, result){
-            var href = '/customer';
+        var sql2 = "UPDATE code SET ? WHERE code_no ="+code_no;
+        conn.query(sql2, code, function(err, result){
+            var href = '/code';
             res.send({href:href});
         });
 
@@ -68,11 +71,11 @@ router.post('/modify', function(req, res){
 
 //삭제하기
 router.get('/delete', function(req, res){
-    var no = req.query.no;
-    var sql = "DELETE FROM customer WHERE no ="+no;
+    var code_no = req.query.code_no;
+    var sql = "DELETE FROM code WHERE code_no ="+code_no;
 
     conn.query(sql, function(err, result){
-        var href = '/customer/delete';
+        var href = '/code/delete';
         res.send({href:href});
     });
 });
