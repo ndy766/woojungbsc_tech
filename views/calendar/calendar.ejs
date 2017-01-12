@@ -2,16 +2,6 @@
 
 
 <script>
-    $(document).ready(function(){   //페이지 로딩시 getEvent() 를가장먼저 호출
-//        var date = new Date();
-//        var d = date.getDate();
-//        var m = date.getMonth();
-//        var y = date.getFullYear();
-//
-//        getEvent();
-    });
-
-
     $(function() {
         // page is now ready, initialize the calendar...
 
@@ -53,6 +43,9 @@
                 location.href='/calendar/getScheduleByNo?no='+calEvent.no+'&start='+calEvent.start+'&end='+calEvent.end;
                 // change the border color just for fun
 //                $(this).css('border-color', 'red');
+            },
+            eventDrop:function(event, delta, revertFunc){
+                location.href='/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end;
             }
 
 
@@ -61,7 +54,8 @@
 </script>
 
 <div style="position:relative;top:7%;">
-    <div id="calendar" style="position: relative;left:10%;width:1000px;height:1000px"></div>
+    <div id="calendar" style="position: relative;left:250px;width:1000px;height:800px;float:left"></div>
+    <div style="float:left;position:relative;"><a href="/calendar/registerForm?registerType=plusBtn"><button class="btn btn-success btn-large">+</button></a></div>
 </div>
 
 

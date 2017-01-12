@@ -1,5 +1,47 @@
 <%- layout('../layout') %>
+
+<script>
+    $(function() {
+        $( ".date_picker" ).datepicker({
+            dateFormat:'yy-mm-dd',
+            changeMonth: true,
+            dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+            dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
+            monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        });
+    });
+</script>
+
+
+<script>
+    $(function() {
+        $('#calendar').fullCalendar({
+            header:{
+                left:"month,basicWeek,basicDay",
+                center:"title",
+                right:"today prev,next"
+            },
+            editable : false,
+            eventLimit : false,
+            events:{
+                url:'/calendar/getAllSchedule',
+            },
+        });
+    });
+</script>
+
+<script>
+    function setImg(event){
+        alert(event.target.value);
+        var img1 = document.getElementById('img1');
+        img1.setAttribute('src','/schedule_image/'+event.target.value.split('\\')[2] );
+    }
+</script>
+
+
 <div style="position:relative;top:7%">
+    <div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>
     <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
         <form action="/calendar/register" method="post">
         <tr>
@@ -8,7 +50,7 @@
         </tr>
         <tr>
             <td align="center"height="30px">일자</td>
-            <td align="center"><%=start%> ~ <%=end%></td>
+            <td align="center"><input type="text" name="start_date" class="date_picker" value="<%=start%>"> ~ <input type="text" name="end_date" class="date_picker" value="<%=end%>"></td>
         </tr>
         <tr>
             <td align="center" height="30px">거래처</td>
@@ -106,7 +148,10 @@
             <td align="center"><input type="text" name="work_delay" style="width:200px;"> 시간</td>
         </tr>
         <tr>
-
+        <tr>
+            <td height="30px" align="center">사진</td>
+            <td align="center"><input type="file" name="img1" class="btn btn-info" onchange="setImg(event);"><img id="img1"></td>
+        </tr>
         </tr>
         <tr>
             <input type="hidden" value="<%=start_msec%>" name="start_msec">
@@ -118,8 +163,6 @@
 
 </div>
 
-<script>
-//    document.getElementsByTagName('label').setAttribute('style', 'displ')
-</script>
+
 
 

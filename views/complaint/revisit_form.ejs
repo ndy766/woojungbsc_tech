@@ -11,7 +11,13 @@
         });
     });
 </script>
-
+<script>
+    function getPhone(event){
+        var member_list = event.target;
+        var charger_phone = document.getElementById('charger_phone');
+        charger_phone.value = member_list.value;
+    };
+</script>
 
 
 <div align=center style="position:relative; top:7%;">
@@ -32,10 +38,24 @@
             <td style="background-color:#F6F6F6" height="40px" align="center">접수번호</td><td align="center">WJ - <%=complaint.no%></td><td align="center" style="background-color:#F6F6F6">접수일</td><td align="center"><%=complaint.receipt_date%></td>
         </tr>
         <tr>
-            <td style="background-color:#F6F6F6" height="40px" align="center">담당자</td><td align="center"><input type="text" name="charger" size="35" placeholder="<%=complaint.charger%>"></td><td align="center" style="background-color:#F6F6F6">재방문일</td><td align="center"><input class="date_picker" type="text" readonly='readonly' name="revisit_date" size="40"></td>
+            <td style="background-color:#F6F6F6" height="40px" align="center">담당자</td><td align="center"><input type="text" name="charger" size="35" value="<%=complaint.charger%>"></td><td align="center" style="background-color:#F6F6F6">재방문일</td><td align="center"><input class="date_picker" type="text" readonly='readonly' name="revisit_date" size="40"></td>
         </tr>
         <tr>
-            <td style="background-color:#F6F6F6" height="40px" align="center">담당자 전화번호</td><td align="center" colspan="3"><input type="text" name="charger_phone" style="width:97%" placeholder="<%=complaint.charger_phone%>"></td>
+            <td style="background-color:#F6F6F6" height="40px" align="center">담당자 전화번호</td>
+            <td align="center" colspan="3">
+                <select id="member_list" onchange="getPhone(event);">
+                    <% var flag= true;%>
+                    <%for(var i=0;i<memberList.length;i++){%>
+                        <%if(flag && complaint.charger.indexOf(memberList[i].name)!=-1){%>
+                            <option value="<%=memberList[i].phone%>" selected="selected"><%=memberList[i].name%></option>
+                        <%flag=false;%>
+                        <%}else{%>
+                            <option value="<%=memberList[i].phone%>"><%=memberList[i].name%></option>
+                        <%}%>
+                    <%}%>
+                </select>
+                <input id='charger_phone' type="text" name="charger_phone" style="width:40%" value="<%=complaint.charger_phone%>">
+            </td>
         </tr>
         <tr>
             <td style="background-color:#F6F6F6" height="40px" align="center">고객 이메일</td><td align="center" colspan="3"><%=complaint.customer_email%></td>

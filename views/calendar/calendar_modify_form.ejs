@@ -1,14 +1,48 @@
 <%- layout('../layout') %>
+<script>
+    $(function() {
+        $( ".date_picker" ).datepicker({
+            dateFormat:'yy-mm-dd',
+            changeMonth: true,
+            dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+            dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
+            monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        });
+    });
+</script>
+
+<script>
+    $(function() {
+        $('#calendar').fullCalendar({
+            header:{
+                left:"month,basicWeek,basicDay",
+                center:"title",
+                right:"today prev,next"
+            },
+            editable : false,
+            eventLimit : false,
+            events:{
+                url:'/calendar/getAllSchedule',
+            },
+        });
+    });
+</script>
+
+
 <div style="position:relative;top:7%">
+    <div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>
     <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
-        <form action="/calendar/register" method="post">
+        <form action="/calendar/modify" method="post">
+            <input type="hidden" name="no" value="<%=schedule.no%>">
+            <input type="hidden" name="end_date_fake" value="<%=end_msec%>">
             <tr>
                 <th width="24%" height="30px">구분</th>
                 <th>내용</th>
             </tr>
             <tr>
                 <td align="center" height="30px">일자</td>
-                <td align="center"><%= start %> ~ <%= end %></td>
+                <td align="center"><input class="date_picker" type="text" name="start_date" value="<%=start%>"> ~ <input class="date_picker" type="text" name="end_date" value="<%=end%>"></td>
             </tr>
             <tr>
                 <td align="center" height="30px">거래처</td>
@@ -69,11 +103,11 @@
                 <td height="30px" align="center">방문형태</td>
                 <td align="center">
                     <%if(schedule.visit_type=='신규 방문'){%>
-                        <label style="display:inline"><input type="radio" name="visit_type" checked="checked">신규 방문</label>&nbsp;&nbsp;
-                        <label style="display:inline"><input type="radio" name="visit_type">재방문</label>
+                        <label style="display:inline"><input type="radio" name="visit_type" checked="checked" value="신규 방문">신규 방문</label>&nbsp;&nbsp;
+                        <label style="display:inline"><input type="radio" name="visit_type" value="재방문">재방문</label>
                     <%}else{%>
-                        <label style="display:inline"><input type="radio" name="visit_type">신규 방문</label>&nbsp;&nbsp;
-                        <label style="display:inline"><input type="radio" name="visit_type" checked="checked">재방문</label>
+                        <label style="display:inline"><input type="radio" name="visit_type" value="신규 방문">신규 방문</label>&nbsp;&nbsp;
+                        <label style="display:inline"><input type="radio" name="visit_type" checked="checked" value="재방문">재방문</label>
                     <%}%>
                     &nbsp;&nbsp;재방문 횟수 : <select name="revisit_count">
                         <% for(var i = 0;i < 10;i++){ %>
@@ -106,11 +140,11 @@
                 <td height="30px" align="center">처리 상태</td>
                 <td align="center">
                     <%if(schedule.state=='완료'){%>
-                        <label style="display: inline"><input type="radio" name="state" checked="checked"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <label style="display: inline"><input type="radio" name="state"> 미결</label>
+                        <label style="display: inline"><input type="radio" name="state" checked="checked" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label style="display: inline"><input type="radio" name="state" value="미결"> 미결</label>
                     <%}else{%>
-                        <label style="display: inline"><input type="radio" name="state"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <label style="display: inline"><input type="radio" name="state" checked="checked"> 미결</label>
+                        <label style="display: inline"><input type="radio" name="state" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label style="display: inline"><input type="radio" name="state" checked="checked" value="미결"> 미결</label>
                     <%}%>
                 </td>
             </tr>
@@ -135,7 +169,10 @@
             <tr>
                 <input type="hidden" value="<%= start_msec %>" name="start_msec">
                 <input type="hidden" value="<%= end_msec %>" name="end_msec">
-                <td colspan="2" height="30px" align="center"><input width="200px" class="btn btn-success" type="submit" value="일정 등록"></td>
+                <td colspan="2" height="30px" align="center">
+                    <input width="200px" class="btn btn-warning" type="submit" value="일정 수정">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/calendar/delete?no=<%=schedule.no%>"><input width="200px" type="button" class="btn btn-danger" value="일정 삭제"></a>
+                </td>
             </tr>
         </form>
     </table>

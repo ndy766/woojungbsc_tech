@@ -329,9 +329,14 @@ router.get('/confirmReVisitForm', function (req, res) {
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
     conn.query(sql, function (err, result) {
         var complaint = result[0];
-        res.render('revisit_form', {complaint: complaint, stateCode: stateCode});
-    })
 
+        var sql2 = "SELECT * FROM member ORDER BY position";
+        var memberList = [];
+        conn.query(sql2, function(err, result){
+            var memberList = result;
+            res.render('revisit_form', {complaint: complaint, stateCode: stateCode, memberList:memberList})
+        });
+    });
 });
 
 //재방문 일자 확정하기
@@ -368,9 +373,9 @@ router.post('/confirmReVisit', function (req, res) {
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top3.jpg" width="460px"><br>' +
                         '<table  align="center" class="table-bordered" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;" width="460px">' +
                         ' <tr>' +
-                        '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" height="40px" align="center"><b>접수처</b></td>' +
+                        '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;border-top: 1px #D5D5D5 solid;" height="40px" align="center"><b>접수처</b></td>' +
                         '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.customer_name + '</td>' +
-                        '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" align="center"><b>제품명</b></td>' +
+                        '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;border-top: 1px #D5D5D5 solid;" align="center"><b>제품명</b></td>' +
                         '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.product + '</td>' +
                         '</tr>' +
                         ' <tr>' +
@@ -378,8 +383,8 @@ router.post('/confirmReVisit', function (req, res) {
                         '<td style="border-bottom: 1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.content + '</td>' +
                         '</tr>' +
                         ' <tr>' +
-                        '<td style="border-bottom: 1px #D5D5D5 solid;" height="40px" align="center"><b>사유</b></td>' +
-                        '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.revisit_reason + '</td>' +
+                        '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" height="40px" align="center"><b>사유</b></td>' +
+                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.revisit_reason + '</td>' +
                         '</tr>' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;"height="40px" align="center"><b>접수번호</b></td>' +
@@ -547,7 +552,7 @@ router.get('/excel', function (req, res) {
         for (var i = 0; i < data.length; i++) {
             var buffer = ['WJ - ' + data[i].no,
                 data[i].product,
-                data[i].customer,
+                data[i].customer_name,
                 data[i].content,
                 data[i].state,
                 data[i].receipt_date,
