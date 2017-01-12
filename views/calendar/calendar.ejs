@@ -45,7 +45,15 @@
 //                $(this).css('border-color', 'red');
             },
             eventDrop:function(event, delta, revertFunc){
-                location.href='/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end;
+                //location.href='/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end;
+                $.ajax({
+                   url:'/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end,
+                   type:'get',
+                   success:function(data){
+
+                   }
+
+                });
             }
 
 

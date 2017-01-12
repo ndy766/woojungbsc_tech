@@ -422,7 +422,7 @@ router.get('/dropEvent', function(req, res){
    var sql = "UPDATE schedule SET start_date='"+start+"', end_date='"+end+"' WHERE no="+no;
 
    conn.query(sql, function(err, result){
-      res.redirect('/calendar');
+      res.send();
    });
 
 });
