@@ -21,6 +21,7 @@ conn.connect();
 var nodeExcel = require('excel-export');
 var stringify = require('node-stringify');
 
+
 //mail service
 var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport('smtps://cscenterwoojung:woojung8302@smtp.gmail.com');
@@ -45,6 +46,10 @@ router.get('/getAllListHelpedPagingGroup', function (req, res) {
 
 /* GET home page. */
 router.get('/getAllList', function (req, res) {
+    if(req.session.user==undefined){
+        res.redirect('/?errorMessage=login_requirement');
+    };
+
     if (req.session.user.userType == 'member') {
         res.redirect('/login?errorMessage=admin_authority');
     }
@@ -59,7 +64,6 @@ router.get('/getAllList', function (req, res) {
         currentPage = req.query.page;
         req.session.pagingBean.current_page = currentPage;
     }
-    ;
 
 
     currentPageGroup = Number(req.session.pagingBean.current_pageGroup);
@@ -119,7 +123,7 @@ router.get('/createForm', function (req, res) {
     var errorMessage = "";
     if(req.query.errorMessage!=null && req.query.errorMessage!=undefined && req.query.errorMessage!=""){
         errorMessage = req.query.errorMessage;
-    }
+    };
 
     var sql = 'select * from complaint order by no desc';
     var no = '';

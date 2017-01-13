@@ -40,7 +40,7 @@
 
 
 <div style="position:relative;top:7%">
-    <div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>
+    <!--<div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>-->
     <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
         <form action="/calendar/register" method="post">
         <tr>
@@ -147,10 +147,6 @@
             <td align="center"><input type="text" name="work_delay" style="width:200px;"> 시간</td>
         </tr>
         <tr>
-        <tr>
-            <td height="30px" align="center">사진</td>
-            <td align="center"><input type="file" name="img1" class="btn btn-info" onchange="setImg(event);"><img id="img1"></td>
-        </tr>
         </tr>
         <tr>
             <input type="hidden" value="<%=start_msec%>" name="start_msec">

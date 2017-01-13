@@ -18,6 +18,9 @@ var mailOptions = {
 
 
 router.get('/createForm', function (req, res) {
+    if(req.session.user==undefined){
+        res.redirect('/?errorMessage=login_requirement');
+    };
 
     res.render('inspection_create_form', {});
 });

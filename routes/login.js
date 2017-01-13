@@ -20,6 +20,10 @@ conn.connect();
 
 /* GET home page. */
 router.get('/', function(req, res){
+    if(req.session.user==undefined){
+        res.redirect('/?errorMessage=login_requirement');
+    };
+
     var pagingBean = {
         current_page:'1',
         current_pageGroup:'1'
@@ -30,6 +34,8 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res) {
+
+
     var userType = req.body.userType;//admin or member
 
     var id = req.body.id;
@@ -97,7 +103,7 @@ router.post('/', function(req, res) {
                 }else if (flag=='id'){
                     res.redirect('/?errorMessage=id');
                     return;
-                }else{
+                }else {
                     res.redirect('/?errorMessage=pwd');
                     return;
                 }

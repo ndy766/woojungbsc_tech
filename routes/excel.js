@@ -20,6 +20,9 @@ conn.connect();
 var nodeExcel = require('excel-export');
 
 router.get('/', function(req, res){
+    if(req.session.user==undefined){
+        res.redirect('/?errorMessage=login_requirement');
+    };
 
     res.render('excel_list', {});
 })
@@ -197,10 +200,6 @@ router.get('/calendar', function(req, res){
     });
 
 });
-
-
-
-
 
 
 module.exports = router;

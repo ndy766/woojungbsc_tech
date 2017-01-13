@@ -16,9 +16,16 @@ var DBoption = {
 var conn = mysql.createConnection(DBoption);
 conn.connect();
 
+//공휴일 지정
+var holiday = require('../util/holiday');
 
 
 router.get('/', function(req ,res){
+
+   if(req.session.user==undefined){
+      res.redirect('/?errorMessage=login_requirement');
+   };
+
    res.render('calendar',{});
 });
 
@@ -216,7 +223,6 @@ router.get('/getAllSchedule', function(req , res){
          var textColor = '#FFFFFF'; //default 흰색
          if(req.session.user.userType=='member'){
             if(scheduleList[i].charger.indexOf(req.session.user.id)!=-1){
-
                textColor= 'yellow';
             };
          };
@@ -251,7 +257,7 @@ router.get('/getScheduleByNo', function(req, res){
    var no = req.query.no;
 
 //거래처 리스트를 조회해오는
-   var sql = "SELECT * FROM customer";
+   var sql = "SELECT * FROM customer ORDER BY name";
    var customerList = [];
    conn.query(sql, function(err, result){
       customerList = result;
@@ -284,7 +290,6 @@ router.get('/getScheduleByNo', function(req, res){
                      manufacturer_list.push(code_list[i]);
                   }
                }
-
                res.render('calendar_modify_form',{schedule:schedule, customerList:customerList, memberList:memberList, start:start_date, end:end_date, start_msec:req.query.start, end_msec:req.query.end, end_date_fake:end_date_fake, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list});
             });
 

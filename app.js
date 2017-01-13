@@ -60,7 +60,7 @@ app.use( session({
   resave: false,
   saveUninitialized: true,
   store:sessionStore,
-  cookie: { maxAge: 60*1000000 } //원래 60*1000
+  cookie: { maxAge: 60*10000000 } //원래 60*1000
 }));
 
 
