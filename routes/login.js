@@ -47,6 +47,7 @@ router.post('/', function(req, res) {
     }
         conn.query(sql, function (err, result) {
             var data = result;
+
             if(userType != 'member'){
                 data = result[0];
 

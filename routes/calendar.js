@@ -49,7 +49,7 @@ router.get('/registerForm', function(req, res){
       customerList = result;
 
       //기술부 직원 리스트를 조회해오는
-      var sql2 = "SELECT * FROM member";
+      var sql2 = "SELECT * FROM member ORDER BY position";
       var memberList = [];
       conn.query(sql2, function(err, result){
          memberList = result;
@@ -257,7 +257,7 @@ router.get('/getScheduleByNo', function(req, res){
       customerList = result;
 
       //기술부 직원 리스트를 조회해오는
-      var sql2 = "SELECT * FROM member";
+      var sql2 = "SELECT * FROM member ORDER BY position";
       var memberList = [];
       conn.query(sql2, function(err, result){
          memberList = result;
