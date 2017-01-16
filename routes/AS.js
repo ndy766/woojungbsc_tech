@@ -79,8 +79,7 @@ router.get('/getAllList', function (req, res) {
         }
         req.session.pagingBean.current_page = currentPage;
         req.session.pagingBean.current_pageGroup = currentPageGroup;
-    }
-    ;
+    };
 
 
     if (currentPage < 1 || currentPageGroup < 1) {
@@ -95,7 +94,7 @@ router.get('/getAllList', function (req, res) {
     var sql = 'SELECT * FROM complaint ORDER BY no DESC LIMIT ' + ((currentPage * page_unit) - 10) + ',' + page_unit;
 
     if (req.session.searchingBean != null) {
-        //유저가 겁색을 통해서 session에 searchingBean을 계속 유지하는 경우
+        //유저가 검색을 통해서 session에 searchingBean을 계속 유지하는 경우
         var searchType = req.session.searchingBean.searchType;
         var keyword = req.session.searchingBean.keyword;
         sql = "SELECT * FROM complaint WHERE " + searchType + " LIKE '%" + keyword + "%' ORDER BY no DESC LIMIT " + ((currentPage * page_unit) - 10) + "," + page_unit;

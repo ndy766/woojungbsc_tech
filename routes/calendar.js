@@ -194,7 +194,7 @@ router.get('/getAllSchedule', function(req , res){
 
    var start_range = new Date(req.query.start).toISOString().split('T')[0];
    var end_range = new Date(req.query.end).toISOString().split('T')[0]; //하루더 측정됨
-   var sql = "SELECT * FROM schedule WHERE start_date >='" +start_range+"' AND end_date <= '"+end_range+"'";
+   var sql = "SELECT * FROM schedule WHERE start_date <='" +end_range+"' AND end_date >= '"+start_range+"'";
    var scheduleList = [];
    conn.query(sql, function(err, result){
       scheduleList = result;
@@ -239,7 +239,7 @@ router.get('/getAllSchedule', function(req , res){
          });
 
       }
-
+      console.log(event_arr);
       res.send(event_arr);
    });
 
