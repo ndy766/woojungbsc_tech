@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="9d054373-36e1-4683-9de2-e72d475dd879" name="Default" comment="" />
+=======
+    <list default="true" id="9d054373-36e1-4683-9de2-e72d475dd879" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+    </list>
+>>>>>>> ac6bdce940d121dbe949183010e082ddb85282fe
     <ignored path="woojung_Tech.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -112,8 +119,13 @@
       <file leaf-file-name="login.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/login.js">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="308">
               <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+=======
+            <state relative-caret-position="140">
+              <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+>>>>>>> ac6bdce940d121dbe949183010e082ddb85282fe
               <folding />
             </state>
           </provider>
@@ -122,8 +134,13 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="307">
               <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+=======
+            <state relative-caret-position="252">
+              <caret line="18" column="24" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
+>>>>>>> ac6bdce940d121dbe949183010e082ddb85282fe
               <folding />
             </state>
           </provider>
@@ -251,11 +268,11 @@
         <option value="$PROJECT_DIR$/routes/calendar.js" />
         <option value="$PROJECT_DIR$/views/calendar/calendar_register_form.ejs" />
         <option value="$PROJECT_DIR$/views/temp/start.html" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/views/layout2.ejs" />
         <option value="$PROJECT_DIR$/views/temp/start.ejs" />
         <option value="$PROJECT_DIR$/views/complaint/complaint_list.ejs" />
         <option value="$PROJECT_DIR$/routes/login.js" />
+        <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
   </component>
@@ -444,13 +461,21 @@
       <workItem from="1483937808075" duration="15219000" />
       <workItem from="1484016408885" duration="80243000" />
       <workItem from="1484528975811" duration="14862000" />
+<<<<<<< HEAD
       <workItem from="1484614594294" duration="4548000" />
       <workItem from="1484620090804" duration="5000" />
+=======
+      <workItem from="1484614594294" duration="5363000" />
+>>>>>>> ac6bdce940d121dbe949183010e082ddb85282fe
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="268244000" />
+=======
+    <option name="totallyTimeSpent" value="269054000" />
+>>>>>>> ac6bdce940d121dbe949183010e082ddb85282fe
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
@@ -761,6 +786,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
           <caret line="8" column="44" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
+<<<<<<< HEAD
+=======
+          <folding />
+>>>>>>> ac6bdce940d121dbe949183010e082ddb85282fe
         </state>
       </provider>
     </entry>
@@ -896,16 +925,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/login.js">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="308">
           <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+=======
+        <state relative-caret-position="140">
+          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+>>>>>>> ac6bdce940d121dbe949183010e082ddb85282fe
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="307">
           <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+=======
+        <state relative-caret-position="252">
+          <caret line="18" column="24" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
+>>>>>>> ac6bdce940d121dbe949183010e082ddb85282fe
           <folding />
         </state>
       </provider>
