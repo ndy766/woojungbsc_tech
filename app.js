@@ -16,7 +16,6 @@ var DBoption = {
 };
 var sessionStore = new MySQLsession(DBoption);
 
-adsfadsfadsfadsfadsfadsf
 //router
 var index = require('./routes/index');
 var users = require('./routes/users');
