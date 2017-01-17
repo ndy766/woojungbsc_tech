@@ -42,7 +42,8 @@ app.set('views', [
                   __dirname + '/views/member',
                   __dirname + '/views/customer',
                   __dirname + '/views/code',
-                  __dirname + '/views/excel'
+                  __dirname + '/views/excel',
+                  __dirname + '/views/temp'
                  ]);
 app.set('view engine', 'ejs');
 

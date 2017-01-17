@@ -182,8 +182,6 @@ router.post('/register', function(req, res){
          conn.query(sql3, schedule, function(err, result){
             res.redirect('/calendar');
          });
-
-
       });
    });
 });
@@ -227,7 +225,6 @@ router.get('/getAllSchedule', function(req , res){
             };
          };
 
-
          event_arr.push({
             title:scheduleList[i].charger_name + " / " +scheduleList[i].customer_name,
             color:color,
@@ -239,7 +236,6 @@ router.get('/getAllSchedule', function(req , res){
          });
 
       }
-      console.log(event_arr);
       res.send(event_arr);
    });
 

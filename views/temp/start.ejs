@@ -1,0 +1,259 @@
+<%- layout('../layout2') %>
+
+	<!--
+		AVAILABLE BODY CLASSES:
+		
+		smoothscroll 			= create a browser smooth scroll
+		enable-animation		= enable WOW animations
+
+		bg-grey					= grey background
+		grain-grey				= grey grain background
+		grain-blue				= blue grain background
+		grain-green				= green grain background
+		grain-blue				= blue grain background
+		grain-orange			= orange grain background
+		grain-yellow			= yellow grain background
+		
+		boxed 					= boxed layout
+		pattern1 ... patern11	= pattern background
+		menu-vertical-hide		= hidden, open on click
+		
+		BACKGROUND IMAGE [together with .boxed class]
+		data-background="assets/images/boxed_background/1.jpg"
+	-->
+	<body class="smoothscroll enable-animation">
+
+		<!-- wrapper -->
+		<div id="wrapper">
+
+			<!-- 
+				AVAILABLE HEADER CLASSES
+
+				Default nav height: 96px
+				.header-md 		= 70px nav height
+				.header-sm 		= 60px nav height
+
+				.noborder 		= remove bottom border (only with transparent use)
+				.transparent	= transparent header
+				.translucent	= translucent header
+				.sticky			= sticky header
+				.static			= static header
+				.dark			= dark header
+				.bottom			= header on bottom
+				
+				shadow-before-1 = shadow 1 header top
+				shadow-after-1 	= shadow 1 header bottom
+				shadow-before-2 = shadow 2 header top
+				shadow-after-2 	= shadow 2 header bottom
+				shadow-before-3 = shadow 3 header top
+				shadow-after-3 	= shadow 3 header bottom
+
+				.clearfix		= required for mobile menu, do not remove!
+
+				Example Usage:  class="clearfix sticky header-sm transparent noborder"
+			-->
+			<div id="header" class="sticky clearfix">
+
+				<!-- TOP NAV -->
+				<header id="topNav">
+					<div class="container">
+
+						<!-- Mobile Menu Button -->
+						<button class="btn btn-mobile" data-toggle="collapse" data-target=".nav-main-collapse">
+							<i class="fa fa-bars"></i>
+						</button>
+
+						<!-- BUTTONS -->
+						<ul class="pull-right nav nav-pills nav-second-main">
+
+						</ul>
+						<!-- /BUTTONS -->
+
+
+						<!-- Logo -->
+						<a class="logo pull-left" href="../../../../Documents/카카오톡%20받은%20파일/유료템플릿/project%20template/HTML/index.html">
+							<img src="/project_template/assets/images/logo_dark.png" alt="" />
+						</a>
+
+						<!-- 
+							Top Nav 
+							
+							AVAILABLE CLASSES:
+							submenu-dark = dark sub menu
+						-->
+						<div class="navbar-collapse pull-right nav-main-collapse collapse submenu-dark">
+							<nav class="nav-main">
+
+								<!--
+									NOTE
+									
+									For a regular link, remove "dropdown" class from LI tag and "dropdown-toggle" class from the href.
+									Direct Link Example: 
+
+									<li>
+										<a href="#">HOME</a>
+									</li>
+								-->
+								<ul id="topMain" class="nav nav-pills nav-main">
+									<li class="dropdown"><!-- HOME -->
+										<a href="/AS/getAllList">
+											A/S 관리
+										</a>
+									</li>
+									<li><!-- PAGES -->
+										<a href="#">
+											주기 안내
+										</a>
+									</li>
+									<li><!-- PAGES -->
+										<a href="#">
+											캘린더
+										</a>
+									</li>
+									<li class="dropdown"><!-- FEATURES -->
+										<a class="dropdown-toggle" href="#">
+											DB 관리
+										</a>
+										<ul class="dropdown-menu">
+											<li class="dropdown">
+												<a href="#">
+													<i class="et-heart"></i> 직원 관리
+												</a>
+											</li>
+											<li class="dropdown">
+												<a href="#">
+													<i class="et-expand"></i> 거래처 관리
+												</a>
+											</li>
+											<li class="dropdown">
+												<a href="#">
+													<i class="et-grid"></i> 데이터 관리
+												</a>
+											</li>
+											<li class="dropdown">
+												<a href="#">
+													<i class="et-browser"></i> 엑셀 추출
+												</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</nav>
+						</div>
+
+					</div>
+				</header>
+				<!-- /Top Nav -->
+
+			</div>
+
+
+			<!-- -->
+			<section class="height-450" style="background:url('/public/project_template/assets/images/demo/wall2.jpg')">
+				<div class="display-table">
+					<div class="display-table-cell vertical-align-middle">
+
+						<div class="container text-center">
+							
+							<h1 class="nomargin size-50 weight-300 wow fadeInUp" data-wow-delay="0.4s"><span>Woojung</span> Tech Department</h1>
+							<p class="lead font-lato size-30 wow fadeInUp" data-wow-delay="0.7s">Over 595 html files! <span class="theme-color weight-400 font-style-italic">Admin included</span> &amp; RTL</p>
+							<span class="label label-default wow fadeInUp" data-wow-delay="1.1s">Version 1.1.4</span>
+
+						</div>
+
+					</div>
+				</div>
+
+			</section>
+			<!-- -->
+
+
+			<section class="nopadding text-center">
+				<a class="scrollTo btn btn-default btn-sm margin-top-20 margin-bottom-20" href="#admin">ADMIN</a>
+				<a class="scrollTo btn btn-default btn-sm margin-top-20 margin-bottom-20" href="#multipage">MULTI PAGE</a>
+				<a class="scrollTo btn btn-default btn-sm margin-top-20 margin-bottom-20" href="#onepage">ONE PAGE</a>
+				<a class="scrollTo btn btn-default btn-sm margin-top-20 margin-bottom-20" href="#newrevslider"><span class="label label-success label-absolute">NEW</span>NEW REVOLUTION SLIDER 5+</a>
+			</section>
+
+			
+
+
+			<!-- DARK CALLOUT -->
+			<section class="callout-dark heading-title heading-arrow-top">
+				<div class="container text-center">
+
+					<h3>Woojung Tech</h3>
+					
+
+					<div class="row text-left margin-top-60 hidden-xs">
+						<div class="col-md-4 col-sm-4">
+							<ul class="list-unstyled list-icons">
+								<li><i class="fa fa-check text-success"></i> Fully Customizable</li>
+								<li><i class="fa fa-check text-success"></i> RTL Support</li>
+								<li><i class="fa fa-check text-success"></i> Custom Backgrounds</li>
+								<li><i class="fa fa-check text-success"></i> Awsome Main Menu</li>
+								<li><i class="fa fa-check text-success"></i> Unlimited Colors / Skins</li>
+								<li><i class="fa fa-check text-success"></i> Powerful Customization Options</li>
+								<li><i class="fa fa-check text-success"></i> 100% Valid HTML Markup</li>
+								<li><i class="fa fa-check text-success"></i> Easy To Customize</li>
+							</ul>
+						</div>
+						<div class="col-md-4 col-sm-4">
+							<ul class="list-unstyled list-icons">
+								<li><i class="fa fa-check text-success"></i> Various One Page</li>
+								<li><i class="fa fa-check text-success"></i> Eye-Catching CSS3 Animations</li>
+								<li><i class="fa fa-check text-success"></i> Boxed or Wide</li>
+								<li><i class="fa fa-check text-success"></i> Extensive Doc</li>
+								<li><i class="fa fa-check text-success"></i> Top Notch Support Service</li>
+								<li><i class="fa fa-check text-success"></i> Updates &amp; New Features</li>
+								<li><i class="fa fa-check text-success"></i> Awsome Blog Design</li>
+								<li><i class="fa fa-check text-success"></i> Awsome Shop Design</li>
+							</ul>
+						</div>
+						<div class="col-md-4 col-sm-4">
+							<ul class="list-unstyled list-icons">
+								<li><i class="fa fa-check text-success"></i> Admin Included</li>
+								<li><i class="fa fa-check text-success"></i> Font Awesome Icon Integration</li>
+								<li><i class="fa fa-check text-success"></i> Advanced Typography</li>
+								<li><i class="fa fa-check text-success"></i> Strong SEO Base Built In</li>
+								<li><i class="fa fa-check text-success"></i> Unlimited Sidebar</li>
+								<li><i class="fa fa-check text-success"></i> Multiple Widgets</li>
+								<li><i class="fa fa-check text-success"></i> Awesome Sliders</li>
+								<li><i class="fa fa-check text-success"></i> Fully Optimized For Speed</li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</section>
+			<!-- /DARK CALLOUT -->
+
+
+		</div>
+		<!-- /wrapper -->
+
+
+		<!-- SCROLL TO TOP -->
+		<a href="#" id="toTop"></a>
+
+
+		<!-- PRELOADER -->
+		<div id="preloader">
+			<div class="inner">
+				<span class="loader"></span>
+			</div>
+		</div><!-- /PRELOADER -->
+
+
+		<!-- JAVASCRIPT FILES -->
+		<script type="text/javascript">var plugin_path = '/project_template/assets/plugins/';</script>
+		<script type="text/javascript" src="/project_template/assets/plugins/jquery/jquery-2.2.3.min.js"></script>
+
+		<script type="text/javascript" src="/project_template/assets/js/scripts.js"></script>
+		
+		<!-- STYLESWITCHER - REMOVE -->
+		<script async type="text/javascript" src="assets/plugins/styleswitcher/styleswitcher.js"></script>
+		<script>
+			var totalNewRs5 = jQuery("div.rs5>div").length;
+			jQuery("#rs5count").html(totalNewRs5);
+		</script>
