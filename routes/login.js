@@ -66,7 +66,7 @@ router.post('/', function(req, res) {
 
                         req.session.user = user;
                         req.session.pagingBean = pagingBean;
-                        res.render('start', {});
+                        res.render('main', {});
 
                     } else {
                         res.redirect('/?errorMessage=pwd');
@@ -98,7 +98,7 @@ router.post('/', function(req, res) {
                 }
 
                 if(flag=='success'){
-                    res.render('start', {});
+                    res.render('main', {});
                     return;
                 }else if (flag=='id'){
                     res.redirect('/?errorMessage=id');

@@ -29,6 +29,17 @@
     });
 </script>
 
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                input.nextSibling.setAttribute('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 
 <div style="position:relative;top:7%">
     <!--<div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>-->
@@ -167,8 +178,23 @@
                 <td align="center"><input type="text" name="work_delay" style="width:200px;" value="<%=schedule.work_delay%>"> 시간</td>
             </tr>
             <tr>
+                <td height="60px" align="center">사진</td>
+                <td>
+                    <input id='aa' type="file" name='file1' onchange="readURL(this);" value="<%=file_path_arr[0]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[0]%>">
+                    <input type="file" name='file2' onchange="readURL(this);" value="<%=file_path_arr[1]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[1]%>">
+                    <input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[2]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[2]%>">
+                    <input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[3]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[3]%>">
+                    <input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[4]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[4]%>">
+                </td>
+            </tr>
+            <tr>
                 <input type="hidden" value="<%= start_msec %>" name="start_msec">
                 <input type="hidden" value="<%= end_msec %>" name="end_msec">
+                <input type="hidden" value="<%=file_path_arr[0]%>" name="file1">
+                <input type="hidden" value="<%=file_path_arr[1]%>" name="file2">
+                <input type="hidden" value="<%=file_path_arr[2]%>" name="file3">
+                <input type="hidden" value="<%=file_path_arr[3]%>" name="file4">
+                <input type="hidden" value="<%=file_path_arr[4]%>" name="file5">
                 <td colspan="2" height="30px" align="center">
                     <input width="200px" class="btn btn-warning" type="submit" value="일정 수정">&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="/calendar/delete?no=<%=schedule.no%>"><input width="200px" type="button" class="btn btn-danger" value="일정 삭제"></a>
@@ -180,7 +206,6 @@
 </div>
 
 <script>
-
 
 </script>
 

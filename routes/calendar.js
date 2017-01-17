@@ -4,6 +4,10 @@
 var express = require('express');
 var router = express.Router();
 
+//file
+var multiparty = require('multiparty');
+var fs = require('fs');
+
 //db
 var mysql = require('mysql');
 var DBoption = {
@@ -89,6 +93,13 @@ router.get('/registerForm', function(req, res){
 });
 
 router.post('/register', function(req, res){
+
+   //file 이후 새로운 코드 써봄
+
+   var form = new multiparty.Form();
+
+
+
    //parameter받아서 DB에 등록하고 다시 전체 일정의 캘린더를 불러와서 달력을 보여줌 - 등록하고 데이터를 전달 res.redirect할껀지, render해서 view의 ajax로 전부 처리할껀지 결정해야됨.
    //var start_date = new Date(parseInt(req.body.start_msec)).toISOString().split('T')[0];
    //var end_date = new Date(parseInt(req.body.end_msec-86400000)).toISOString().split('T')[0];
@@ -96,7 +107,8 @@ router.post('/register', function(req, res){
    var start_date = req.body.start_date;
    var end_date = req.body.end_date;
    var customer_no = parseInt(req.body.customer_no);
-   var chargerList =  req.body.charger;
+   // var chargerList =  req.body.charger;
+   var chargerList = '';
    var manufacturer = req.body.manufacturer;
    var work_type = req.body.work_type;
    var equipment = req.body.equipment;
@@ -111,79 +123,196 @@ router.post('/register', function(req, res){
    var state = req.body.state;
    var undecided_reason=req.body.undecided_reason;
 
-   //신규 방문의 경우 재방문 횟수가 0임
-   if(visit_type=="신규 방문"){
-      revisit_count='0';
-   };
+   //170117 파일 업로드하면서 추가된 부분
+   var file_path = [];
 
-   var tmp_arr = [];
+   // get field name & value
+   form.on('field',function(name,value){
 
-   if(typeof chargerList=='object'){
-      var temp ='';
-      for(var i=0;i<chargerList.length;i++){
-         if(i==chargerList.length-1){
-            temp += chargerList[i];
-         }else{
-            temp +=chargerList[i]+',';
-         }
-         tmp_arr.push(chargerList[i]);
+      if(name=='start_date'){
+         start_date=value;
+      }else if(name=='end_date'){
+         end_date=value;
+      }else if(name=='customer_no'){
+         customer_no=parseInt(value);
+      }else if(name=='charger'){
+         chargerList+=value+',';
+      }else if(name=='manufacturer'){
+         manufacturer=value;
+      }else if(name=='work_type'){
+         work_type=value;
+      }else if(name=='equipment'){
+         equipment=value;
+      }else if(name=='serial_number'){
+         serial_number=value;
+      }else if(name=='work_detail'){
+         work_detail=value;
+      }else if(name=='work_delay'){
+         work_delay=value;
+      }else if(name=='visit_type'){
+         visit_type=value;
+      }else if(name=='revisit_count'){
+         revisit_count=value;
+      }else if(name=='changed_component'){
+         changed_component=value;
+      }else if(name=='state'){
+         state=value;
+      }else if(name=='undecided_reason'){
+         undecided_reason = value;
       }
-      chargerList = temp;
-   }else{
-      tmp_arr.push(chargerList);
-   }
+   });
 
 
-   var sql = "SELECT * FROM customer WHERE no="+customer_no;
-   var customer = {};
-   conn.query(sql, function(err, result){
-      customer = result[0];
-      var find_helper = "";
-      for(var i=0;i<tmp_arr.length;i++) {
-         if(i==tmp_arr.length-1){
-            find_helper += " id = '" + tmp_arr[i] + "'";
-         }else {
-            find_helper += " id = '" + tmp_arr[i] + "' OR";
-         }
+   // file upload handling
+   form.on('part',function(part){
+      var filename;
+      var size;
+      if (part.filename) {
+         //filename = part.filename;
+         var ex = part.filename.split('.')[1];
+         var directory = Math.floor(Math.random() * 10) + 1;
+         var rand = Math.floor(Math.random() * 1000000) + 1;
+         filename = directory + '/'+req.session.user.id+rand+'.'+ex;
+         size = part.byteCount;
+      }else{
+         part.resume();
+
       }
-      var sql2 = "SELECT * FROM member WHERE"+find_helper;
-      var chargerArray = [];
-      conn.query(sql2, function(err, result){
-         chargerArray = result;
-         var charger_name_string = "";
-         for(var k=0;k<chargerArray.length;k++){
-            if(k==chargerArray.length-1){
-               charger_name_string+= chargerArray[k].name;
-            }else{
-               charger_name_string+= chargerArray[k].name+",";
+
+      console.log("Write Streaming file :"+filename);
+      var writeStream = fs.createWriteStream('public/schedule_image/'+filename);
+      writeStream.filename = filename;
+      console.log('writestream : '+writeStream.filename);
+      part.pipe(writeStream);
+
+      part.on('data',function(chunk){
+         console.log(filename+' read '+chunk.length + 'bytes');
+      });
+
+      part.on('end',function(){
+         console.log(filename+' Part read complete');
+         writeStream.end();
+      });
+      file_path.push(filename);
+   });
+
+
+
+   // track progress
+   form.on('progress',function(byteRead,byteExpected){
+      console.log(' Reading total  '+byteRead+'/'+byteExpected);
+   });
+
+   form.parse(req);
+
+
+
+   //file 이후 새로운 코드 써봄
+
+
+   // all uploads are completed
+   form.on('close',function(){
+      //전송이 완료된 경우 DB access함.
+
+      var tmp_arr = []; //방문자를 하나하나 담을 array
+
+      //chargerList 맨 뒤의 ,를 제거해줌
+      var split = chargerList.split(',');
+      if(split.length<=2){
+         chargerList = split[0];
+         tmp_arr.push(chargerList);
+      }else {
+         chargerList = '';
+         for (var i = 0; i < split.length - 2; i++) {
+            chargerList += split[i] + ',';
+            tmp_arr.push(split[i]);
+         }
+         chargerList += split[split.length - 2];
+         tmp_arr.push(split[split.length-2]);
+      }
+
+
+      //신규 방문의 경우 재방문 횟수가 0임
+      if(visit_type=="신규 방문"){
+         revisit_count='0';
+      };
+
+
+//
+      //if(typeof chargerList=='object'){
+      //   var temp ='';
+      //   for(var i=0;i<chargerList.length;i++){
+      //      if(i==chargerList.length-1){
+      //         temp += chargerList[i];
+      //      }else{
+      //         temp +=chargerList[i]+',';
+      //      }
+      //      tmp_arr.push(chargerList[i]);
+      //   }
+      //   chargerList = temp;
+      //}else{
+      //   tmp_arr.push(chargerList);
+      //}
+
+
+
+      var sql = "SELECT * FROM customer WHERE no="+customer_no;
+      var customer = {};
+      conn.query(sql, function(err, result){
+         customer = result[0];
+         var find_helper = "";
+         for(var i=0;i<tmp_arr.length;i++) {
+            if(i==tmp_arr.length-1){
+               find_helper += " id = '" + tmp_arr[i] + "'";
+            }else {
+               find_helper += " id = '" + tmp_arr[i] + "' OR";
             }
          }
+         var sql2 = "SELECT * FROM member WHERE"+find_helper;
+         var chargerArray = [];
+         conn.query(sql2, function(err, result){
+            chargerArray = result;
+            var charger_name_string = "";
+            for(var k=0;k<chargerArray.length;k++){
+               if(k==chargerArray.length-1){
+                  charger_name_string+= chargerArray[k].name;
+               }else{
+                  charger_name_string+= chargerArray[k].name+",";
+               }
+            }
 
-         var sql3 = "INSERT INTO schedule SET ?";
-         var schedule = {
-            start_date:start_date,
-            end_date:end_date,
-            customer_no:customer_no,
-            customer_name:customer.name,
-            charger:chargerList,
-            charger_name:charger_name_string,
-            manufacturer:manufacturer,
-            work_type:work_type,
-            equipment:equipment,
-            serial_number:serial_number,
-            work_detail:work_detail,
-            work_delay:work_delay,
-            visit_type:visit_type,
-            revisit_count:revisit_count,
-            changed_component:changed_component,
-            state:state,
-            undecided_reason:undecided_reason
-         };
-         conn.query(sql3, schedule, function(err, result){
-            res.redirect('/calendar');
+            var sql3 = "INSERT INTO schedule SET ?";
+            var schedule = {
+               start_date:start_date,
+               end_date:end_date,
+               customer_no:customer_no,
+               customer_name:customer.name,
+               charger:chargerList,
+               charger_name:charger_name_string,
+               manufacturer:manufacturer,
+               work_type:work_type,
+               equipment:equipment,
+               serial_number:serial_number,
+               work_detail:work_detail,
+               work_delay:work_delay,
+               visit_type:visit_type,
+               revisit_count:revisit_count,
+               changed_component:changed_component,
+               state:state,
+               undecided_reason:undecided_reason,
+               file_path:file_path.toString()
+            };
+            conn.query(sql3, schedule, function(err, result){
+               console.log(file_path);
+               res.redirect('/calendar');
+            });
          });
       });
    });
+
+
+
+
 });
 
 
@@ -274,8 +403,8 @@ router.get('/getScheduleByNo', function(req, res){
             var manufacturer_list = [];
             var undecided_reason_list = [];
 
-            var sql3 = "SELECT * FROM code WHERE code_type='업무구분' OR code_type='미결사유' OR code_type='제조사'";
-            conn.query(sql3, function(err, result){
+            var sql4 = "SELECT * FROM code WHERE code_type='업무구분' OR code_type='미결사유' OR code_type='제조사'";
+            conn.query(sql4, function(err, result){
                code_list = result;
                for(var i =0;i<code_list.length;i++){
                   if(code_list[i].code_type=='업무구분'){
@@ -286,7 +415,15 @@ router.get('/getScheduleByNo', function(req, res){
                      manufacturer_list.push(code_list[i]);
                   }
                }
-               res.render('calendar_modify_form',{schedule:schedule, customerList:customerList, memberList:memberList, start:start_date, end:end_date, start_msec:req.query.start, end_msec:req.query.end, end_date_fake:end_date_fake, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list});
+               var file_path = schedule.file_path;
+               var file_path_arr= [];
+               if(file_path!=null && file_path!=undefined && file_path!='') {
+                  for (var i = 0; i < file_path.split(',').length; i++) {
+                     file_path_arr.push(file_path.split(',')[i]);
+                  }
+               }
+
+               res.render('calendar_modify_form',{schedule:schedule, customerList:customerList, memberList:memberList, start:start_date, end:end_date, start_msec:req.query.start, end_msec:req.query.end, end_date_fake:end_date_fake, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list, file_path_arr:file_path_arr});
             });
 
          });

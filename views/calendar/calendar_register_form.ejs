@@ -32,17 +32,23 @@
 </script>
 
 <script>
-    function setImg(event){
-        var img1 = document.getElementById('img1');
-        img1.setAttribute('src','/schedule_image/'+event.target.value.split('\\')[2] );
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                input.nextSibling.setAttribute('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 </script>
+
 
 
 <div style="position:relative;top:7%">
     <!--<div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>-->
     <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
-        <form action="/calendar/register" method="post">
+        <form action="/calendar/register" method="post" enctype="multipart/form-data">
         <tr>
             <th width="24%" height="30px">구분</th>
             <th>내용</th>
@@ -148,7 +154,13 @@
         </tr>
         <tr>
             <td height="60px" align="center">사진</td>
-            <td><img><img><img></td>
+            <td>
+                <input type="file" name='file1' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image1">
+                <input type="file" name='file2' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image2">
+                <input type="file" name='file3' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image3">
+                <input type="file" name='file4' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image4">
+                <input type="file" name='file5' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image5">
+            </td>
         </tr>
         <tr>
             <input type="hidden" value="<%=start_msec%>" name="start_msec">
