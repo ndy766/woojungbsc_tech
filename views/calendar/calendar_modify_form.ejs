@@ -44,7 +44,7 @@
 <div style="position:relative;top:7%">
     <!--<div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>-->
     <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
-        <form action="/calendar/modify" method="post">
+        <form action="/calendar/modify" method="post" enctype="multipart/form-data">
             <input type="hidden" name="no" value="<%=schedule.no%>">
             <input type="hidden" name="end_date_fake" value="<%=end_msec%>">
             <tr>

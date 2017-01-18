@@ -438,13 +438,15 @@ router.get('/getScheduleByNo', function(req, res){
 });
 
 //수정
-router.post('/modify', function(req, res){
+router.post('/modify', function(req, res) {
+
+   var form = new multiparty.Form();//multipartform을 조회해오기 위한 객체
 
    var no = req.body.no;
    var start_date = req.body.start_date;
    var end_date = req.body.end_date;
    var customer_no = parseInt(req.body.customer_no);
-   var chargerList =  req.body.charger;
+   var chargerList = req.body.charger;
    var manufacturer = req.body.manufacturer;
    var work_type = req.body.work_type;
    var equipment = req.body.equipment;
@@ -454,89 +456,194 @@ router.post('/modify', function(req, res){
 
    var visit_type = req.body.visit_type;
    var revisit_count = req.body.revisit_count;
-   var changed_component =  req.body.changed_component;
+   var changed_component = req.body.changed_component;
    var state = req.body.state;
-   var undecided_reason=req.body.undecided_reason;
+   var undecided_reason = req.body.undecided_reason;
 
-   //신규 방문의 경우 재방문 횟수가 0임
-   if(visit_type=="신규 방문"){
-      revisit_count='0';
-   };
 
-   var tmp_arr = [];
+   //170118 파일 업로드하면서 추가된 부분
+   var file_path = [];
 
-   if(typeof chargerList=='object'){
-      var temp ='';
-      for(var i=0;i<chargerList.length;i++){
-         if(i==chargerList.length-1){
-            temp += chargerList[i];
-         }else{
-            temp +=chargerList[i]+',';
-         }
-         tmp_arr.push(chargerList[i]);
+   // get field name & value
+   form.on('field', function (name, value) {
+
+      if (name == 'start_date') {
+         start_date = value;
+      } else if (name == 'end_date') {
+         end_date = value;
+      } else if (name == 'customer_no') {
+         customer_no = parseInt(value);
+      } else if (name == 'charger') {
+         chargerList += value + ',';
+      } else if (name == 'manufacturer') {
+         manufacturer = value;
+      } else if (name == 'work_type') {
+         work_type = value;
+      } else if (name == 'equipment') {
+         equipment = value;
+      } else if (name == 'serial_number') {
+         serial_number = value;
+      } else if (name == 'work_detail') {
+         work_detail = value;
+      } else if (name == 'work_delay') {
+         work_delay = value;
+      } else if (name == 'visit_type') {
+         visit_type = value;
+      } else if (name == 'revisit_count') {
+         revisit_count = value;
+      } else if (name == 'changed_component') {
+         changed_component = value;
+      } else if (name == 'state') {
+         state = value;
+      } else if (name == 'undecided_reason') {
+         undecided_reason = value;
       }
-      chargerList = temp;
-   }else{
-      tmp_arr.push(chargerList);
-   }
-
-
-   var sql = "SELECT * FROM customer WHERE no="+customer_no;
-   var customer = {};
-   conn.query(sql, function(err, result){
-      customer = result[0];
-      var find_helper = "";
-      for(var i=0;i<tmp_arr.length;i++) {
-         if(i==tmp_arr.length-1){
-            find_helper += " id = '" + tmp_arr[i] + "'";
-         }else {
-            find_helper += " id = '" + tmp_arr[i] + "' OR";
-         }
-      }
-      var sql2 = "SELECT * FROM member WHERE"+find_helper;
-      var chargerArray = [];
-      conn.query(sql2, function(err, result){
-         chargerArray = result;
-         var charger_name_string = "";
-         for(var k=0;k<chargerArray.length;k++){
-            if(k==chargerArray.length-1){
-               charger_name_string+= chargerArray[k].name;
-            }else{
-               charger_name_string+= chargerArray[k].name+",";
-            }
-         }
-
-         var sql3 = "UPDATE schedule SET ? WHERE no="+no;
-         var schedule = {
-            start_date:start_date,
-            end_date:end_date,
-            customer_no:customer_no,
-            customer_name:customer.name,
-            charger:chargerList,
-            charger_name:charger_name_string,
-            manufacturer:manufacturer,
-            work_type:work_type,
-            equipment:equipment,
-            serial_number:serial_number,
-            work_detail:work_detail,
-            work_delay:work_delay,
-            visit_type:visit_type,
-            revisit_count:revisit_count,
-            changed_component:changed_component,
-            state:state,
-            undecided_reason:undecided_reason
-         };
-
-         conn.query(sql3, schedule, function(err, result){
-            console.log(schedule);
-            res.redirect('/calendar');
-         });
-
-
-      });
    });
 
 
+   // file upload handling
+   form.on('part', function (part) {
+      var filename;
+      var size;
+      if (part.filename) {
+         //filename = part.filename;
+         var ex = part.filename.split('.')[1];
+         var directory = Math.floor(Math.random() * 10) + 1;
+         var rand = Math.floor(Math.random() * 1000000) + 1;
+         filename = directory + '/' + req.session.user.id + rand + '.' + ex;
+         size = part.byteCount;
+      } else {
+         part.resume();
+
+      }
+
+      console.log("Write Streaming file :" + filename);
+      var writeStream = fs.createWriteStream('public/schedule_image/' + filename);
+      writeStream.filename = filename;
+      console.log('writestream : ' + writeStream.filename);
+      part.pipe(writeStream);
+
+      part.on('data', function (chunk) {
+         console.log(filename + ' read ' + chunk.length + 'bytes');
+      });
+
+      part.on('end', function () {
+         console.log(filename + ' Part read complete');
+         writeStream.end();
+      });
+      file_path.push(filename);
+   });
+
+
+   // track progress
+   form.on('progress', function (byteRead, byteExpected) {
+      console.log(' Reading total  ' + byteRead + '/' + byteExpected);
+   });
+
+   form.parse(req);
+
+
+   //file 이후 새로운 코드 써봄
+
+
+   // all uploads are completed
+   form.on('close', function () {
+      //전송이 완료된 경우 DB access함.
+
+      var tmp_arr = []; //방문자를 하나하나 담을 array
+
+      //chargerList 맨 뒤의 ,를 제거해줌
+      var split = chargerList.split(',');
+      if (split.length <= 2) {
+         chargerList = split[0];
+         tmp_arr.push(chargerList);
+      } else {
+         chargerList = '';
+         for (var i = 0; i < split.length - 2; i++) {
+            chargerList += split[i] + ',';
+            tmp_arr.push(split[i]);
+         }
+         chargerList += split[split.length - 2];
+         tmp_arr.push(split[split.length - 2]);
+      }
+
+      //신규 방문의 경우 재방문 횟수가 0임
+      if (visit_type == "신규 방문") {
+         revisit_count = '0';
+      };
+
+      //var tmp_arr = [];
+//
+      //if(typeof chargerList=='object'){
+      //   var temp ='';
+      //   for(var i=0;i<chargerList.length;i++){
+      //      if(i==chargerList.length-1){
+      //         temp += chargerList[i];
+      //      }else{
+      //         temp +=chargerList[i]+',';
+      //      }
+      //      tmp_arr.push(chargerList[i]);
+      //   }
+      //   chargerList = temp;
+      //}else{
+      //   tmp_arr.push(chargerList);
+      //}
+
+
+      var sql = "SELECT * FROM customer WHERE no=" + customer_no;
+      var customer = {};
+      conn.query(sql, function (err, result) {
+         customer = result[0];
+         var find_helper = "";
+         for (var i = 0; i < tmp_arr.length; i++) {
+            if (i == tmp_arr.length - 1) {
+               find_helper += " id = '" + tmp_arr[i] + "'";
+            } else {
+               find_helper += " id = '" + tmp_arr[i] + "' OR";
+            }
+         }
+         var sql2 = "SELECT * FROM member WHERE" + find_helper;
+         var chargerArray = [];
+         conn.query(sql2, function (err, result) {
+            chargerArray = result;
+            var charger_name_string = "";
+            for (var k = 0; k < chargerArray.length; k++) {
+               if (k == chargerArray.length - 1) {
+                  charger_name_string += chargerArray[k].name;
+               } else {
+                  charger_name_string += chargerArray[k].name + ",";
+               }
+            }
+
+            var sql3 = "UPDATE schedule SET ? WHERE no=" + no;
+            var schedule = {
+               start_date: start_date,
+               end_date: end_date,
+               customer_no: customer_no,
+               customer_name: customer.name,
+               charger: chargerList,
+               charger_name: charger_name_string,
+               manufacturer: manufacturer,
+               work_type: work_type,
+               equipment: equipment,
+               serial_number: serial_number,
+               work_detail: work_detail,
+               work_delay: work_delay,
+               visit_type: visit_type,
+               revisit_count: revisit_count,
+               changed_component: changed_component,
+               state: state,
+               undecided_reason: undecided_reason,
+               file_path:file_path.toString()
+            };
+
+            conn.query(sql3, schedule, function (err, result) {
+
+               res.redirect('/calendar');
+            });
+         });
+      });//
+   });
 });
 
 //일정 삭제
