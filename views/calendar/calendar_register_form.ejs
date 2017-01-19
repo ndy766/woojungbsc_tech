@@ -36,13 +36,22 @@
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                input.nextSibling.setAttribute('src', e.target.result);
+                input.nextSibling.nextSibling.setAttribute('src', e.target.result);
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
 </script>
 
+<script>
+    function createInput(){
+        var imgTd = document.getElementById('img');
+        var span = document.createElement('span');
+        var count = document.getElementsByClassName('files').length+1;
+        span.innerHTML = '<input class="files" type="file" onchange="readURL(this);" name="'+count+'"><input type="button" class="btn btn-success" value="+" onclick="createInput();"><br><img alt="insert image"><br>';
+        imgTd.appendChild(span);
+    }
+</script>
 
 
 <div style="position:relative;top:7%">
@@ -154,12 +163,11 @@
         </tr>
         <tr>
             <td height="60px" align="center">사진</td>
-            <td>
-                <input type="file" name='file1' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image1">
-                <input type="file" name='file2' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image2">
-                <input type="file" name='file3' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image3">
-                <input type="file" name='file4' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image4">
-                <input type="file" name='file5' onchange="readURL(this);"><img width="400px" height="400px" alt="your Image5">
+            <td id="img" align="center">
+                <!--<input class="files" type="file" name="file1" onchange="readURL(this);"><input type="button" class="btn btn-success" value="+" onclick="createInput();"><br><img alt="insert image"><br>-->
+                <%for(var i=0;i<5;i++){%>
+                    <input class="files" type="file" name="file<%=i+1%>" onchange="readURL(this);"><br><img width="450px" alt="insert image"><br>
+                <%}%>
             </td>
         </tr>
         <tr>
@@ -171,7 +179,9 @@
     </table>
 
 </div>
+<script>
 
+</script>
 
 
 

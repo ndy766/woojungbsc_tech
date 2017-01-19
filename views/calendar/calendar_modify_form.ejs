@@ -60,12 +60,11 @@
                 <td align="center">
                     <select name="customer_no">
                         <% for(var i = 0;i < customerList.length;i++){ %>
-                        <% if(customerList[i].no == schedule.customer_no){ %>
-                        <option value="<%= customerList[i].no %>"
-                                selected="selected"><%= customerList[i].name %></option>
-                        <% }else{ %>
-                        <option value="<%= customerList[i].no %>"><%= customerList[i].name %></option>
-                        <% } %>
+                            <% if(customerList[i].no == schedule.customer_no){ %>
+                                <option value="<%= customerList[i].no %>" selected="selected"><%= customerList[i].name %></option>
+                            <% }else{ %>
+                                <option value="<%= customerList[i].no %>"><%= customerList[i].name %></option>
+                            <% } %>
                         <% } %>
                     </select>
                 </td>
@@ -179,22 +178,18 @@
             </tr>
             <tr>
                 <td height="60px" align="center">사진</td>
-                <td>
-                    <input id='aa' type="file" name='file1' onchange="readURL(this);" value="<%=file_path_arr[0]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[0]%>">
-                    <input type="file" name='file2' onchange="readURL(this);" value="<%=file_path_arr[1]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[1]%>">
-                    <input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[2]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[2]%>">
-                    <input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[3]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[3]%>">
-                    <input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[4]%>"><img width="400px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/<%=file_path_arr[4]%>">
+                <td id="img" align="center">
+                    <!--<input type="file" name='file1' onchange="readURL(this);" value="<%=file_path_arr[0]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[0]%>">-->
+                    <!--<input type="file" name='file2' onchange="readURL(this);" value="<%=file_path_arr[1]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[1]%>">-->
+                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[2]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[2]%>">-->
+                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[3]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[3]%>">-->
+                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[4]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[4]%>">-->
                 </td>
             </tr>
             <tr>
                 <input type="hidden" value="<%= start_msec %>" name="start_msec">
                 <input type="hidden" value="<%= end_msec %>" name="end_msec">
-                <input type="hidden" value="<%=file_path_arr[0]%>" name="file1">
-                <input type="hidden" value="<%=file_path_arr[1]%>" name="file2">
-                <input type="hidden" value="<%=file_path_arr[2]%>" name="file3">
-                <input type="hidden" value="<%=file_path_arr[3]%>" name="file4">
-                <input type="hidden" value="<%=file_path_arr[4]%>" name="file5">
+                <input type="hidden" value="<%=file_path_arr%>" id="arr">
                 <td colspan="2" height="30px" align="center">
                     <input width="200px" class="btn btn-warning" type="submit" value="일정 수정">&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="/calendar/delete?no=<%=schedule.no%>"><input width="200px" type="button" class="btn btn-danger" value="일정 삭제"></a>
@@ -206,7 +201,15 @@
 </div>
 
 <script>
-
+    var file_path_arr = document.getElementById('arr');
+    var imgDiv = document.getElementById('img');
+    var split = file_path_arr.value.split(',');
+    var count = 0;
+    for(var i=0;i<split.length;i++){
+        if(split[i]!=undefined && split[i]!=null && split[i]!=''){
+            imgDiv.innerHTML += "<img width='450px' src=/schedule_image/" + file_path_arr.value.toString().split(',')[i] + "><br>";
+        }
+    }
 </script>
 
 

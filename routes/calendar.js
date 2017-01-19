@@ -24,6 +24,25 @@ conn.connect();
 var holiday = require('../util/holiday');
 
 
+//디렉토리 존재하는지 check하는 함수
+function checkDirectory(directory, callback) {
+   fs.stat(directory, function(err, stats) {
+      //Check if error defined and the error code is "not exists"
+      if (err && err.errno === 34) {
+         //Create the directory, call the callback.
+         fs.mkdir(directory, callback);
+      } else {
+         //just in case there was a different error:
+         callback(err)
+      }
+   });
+}
+
+
+
+
+
+
 router.get('/', function(req ,res){
 
    if(req.session.user==undefined){
@@ -128,7 +147,6 @@ router.post('/register', function(req, res){
 
    // get field name & value
    form.on('field',function(name,value){
-
       if(name=='start_date'){
          start_date=value;
       }else if(name=='end_date'){
@@ -179,18 +197,18 @@ router.post('/register', function(req, res){
 
       }
 
-      console.log("Write Streaming file :"+filename);
+      //console.log("Write Streaming file :"+filename);
       var writeStream = fs.createWriteStream('public/schedule_image/'+filename);
       writeStream.filename = filename;
-      console.log('writestream : '+writeStream.filename);
+      //console.log('writestream : '+writeStream.filename);
       part.pipe(writeStream);
 
       part.on('data',function(chunk){
-         console.log(filename+' read '+chunk.length + 'bytes');
+        // console.log(filename+' read '+chunk.length + 'bytes');
       });
 
       part.on('end',function(){
-         console.log(filename+' Part read complete');
+         //console.log(filename+' Part read complete');
          writeStream.end();
       });
       file_path.push(filename);
@@ -200,7 +218,7 @@ router.post('/register', function(req, res){
 
    // track progress
    form.on('progress',function(byteRead,byteExpected){
-      console.log(' Reading total  '+byteRead+'/'+byteExpected);
+      // console.log(' Reading total  '+byteRead+'/'+byteExpected);
    });
 
    form.parse(req);
@@ -282,6 +300,7 @@ router.post('/register', function(req, res){
             }
 
             var sql3 = "INSERT INTO schedule SET ?";
+
             var schedule = {
                start_date:start_date,
                end_date:end_date,
@@ -303,15 +322,12 @@ router.post('/register', function(req, res){
                file_path:file_path.toString()
             };
             conn.query(sql3, schedule, function(err, result){
-               console.log(file_path);
+               console.log(schedule.file_path);
                res.redirect('/calendar');
             });
          });
       });
    });
-
-
-
 
 });
 
@@ -432,15 +448,14 @@ router.get('/getScheduleByNo', function(req, res){
 
    });
 
-
-
-
 });
+
+
 
 //수정
 router.post('/modify', function(req, res) {
 
-   var form = new multiparty.Form();//multipartform을 조회해오기 위한 객체
+   var form = new multiparty.Form();//multipart form을 조회해오기 위한 객체
 
    var no = req.body.no;
    var start_date = req.body.start_date;
@@ -463,6 +478,7 @@ router.post('/modify', function(req, res) {
 
    //170118 파일 업로드하면서 추가된 부분
    var file_path = [];
+   var tmp_path = []; //input type=hidden으로 넘어온 filename을 담고있는 array
 
    // get field name & value
    form.on('field', function (name, value) {
@@ -497,38 +513,65 @@ router.post('/modify', function(req, res) {
          state = value;
       } else if (name == 'undecided_reason') {
          undecided_reason = value;
+      } else if (name.indexOf('file')!=-1){
+         //console.log('file form으로부터 하나 읽음 ');
+      } else if (name == 'no'){
+         no = value;
       }
    });
 
 
    // file upload handling
    form.on('part', function (part) {
+
+      //파일 받을 때
       var filename;
       var size;
+
+      var flag = false;
+      console.log(part.filename);
       if (part.filename) {
+         checkDirectory(part.filename, function(error) {
+            if(error) {
+               console.log("oh no!!!", error);
+            } else {
+               //Carry on, all good, directory exists / created.
+               flag=true;
+            }
+         });
+
+
          //filename = part.filename;
          var ex = part.filename.split('.')[1];
          var directory = Math.floor(Math.random() * 10) + 1;
          var rand = Math.floor(Math.random() * 1000000) + 1;
-         filename = directory + '/' + req.session.user.id + rand + '.' + ex;
+
+         if(flag){
+
+            filename=part.filename;
+            console.log('flag가 true : '+filename);
+         }else{
+            filename = directory + '/' + req.session.user.id + rand + '.' + ex;
+            console.log('flag가 false : '+filename);
+         }
+
          size = part.byteCount;
       } else {
          part.resume();
-
       }
 
-      console.log("Write Streaming file :" + filename);
+      //console.log("Write Streaming file :" + filename);
       var writeStream = fs.createWriteStream('public/schedule_image/' + filename);
       writeStream.filename = filename;
-      console.log('writestream : ' + writeStream.filename);
+      //console.log('writestream : ' + writeStream.filename);
       part.pipe(writeStream);
 
       part.on('data', function (chunk) {
-         console.log(filename + ' read ' + chunk.length + 'bytes');
+       //  console.log(filename + ' read ' + chunk.length + 'bytes');
       });
 
       part.on('end', function () {
-         console.log(filename + ' Part read complete');
+         //console.log(filename + ' Part read complete');
          writeStream.end();
       });
       file_path.push(filename);
@@ -537,7 +580,7 @@ router.post('/modify', function(req, res) {
 
    // track progress
    form.on('progress', function (byteRead, byteExpected) {
-      console.log(' Reading total  ' + byteRead + '/' + byteExpected);
+      //console.log(' Reading total  ' + byteRead + '/' + byteExpected);
    });
 
    form.parse(req);
@@ -554,17 +597,17 @@ router.post('/modify', function(req, res) {
 
       //chargerList 맨 뒤의 ,를 제거해줌
       var split = chargerList.split(',');
-      if (split.length <= 2) {
+      if(split.length<=2){
          chargerList = split[0];
          tmp_arr.push(chargerList);
-      } else {
+      }else {
          chargerList = '';
          for (var i = 0; i < split.length - 2; i++) {
             chargerList += split[i] + ',';
             tmp_arr.push(split[i]);
          }
          chargerList += split[split.length - 2];
-         tmp_arr.push(split[split.length - 2]);
+         tmp_arr.push(split[split.length-2]);
       }
 
       //신규 방문의 경우 재방문 횟수가 0임
@@ -616,6 +659,7 @@ router.post('/modify', function(req, res) {
             }
 
             var sql3 = "UPDATE schedule SET ? WHERE no=" + no;
+
             var schedule = {
                start_date: start_date,
                end_date: end_date,
@@ -638,7 +682,7 @@ router.post('/modify', function(req, res) {
             };
 
             conn.query(sql3, schedule, function (err, result) {
-
+               console.log(schedule.file_path);
                res.redirect('/calendar');
             });
          });
