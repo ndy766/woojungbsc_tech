@@ -24,7 +24,8 @@
                                 $.map(data, function(item) {
                                     return {
                                         label: item.name,
-                                        value: item.name
+                                        value: item.name,
+                                        real_value:item.no
                                     }
                                 })
                         );
@@ -35,9 +36,9 @@
             minLength: 1,
             select: function( event, ui ) {
                 // 만약 검색리스트에서 선택하였을때 선택한 데이터에 의한 이벤트발생
+                var no = ui.item.real_value;
+                $('#cus_no').val(no);
             }
-
-
         });
     });
 </script>
@@ -54,7 +55,8 @@
                             <!--<option value="<%=customerList[i].no%>"><%=customerList[i].name%></option>-->
                         <!--<%}%>-->
                     <!--</select>-->
-                    <input type="text" name="customer_no" id="autocomplete_customer">
+                    <input type="text" name="customer_name" id="autocomplete_customer">
+                    <input type="hidden" name="customer_no" id="cus_no">
                 </td>
                 <td align="center" style="background-color:#F6F6F6">제품명</td><td align="left"><input type="text" name="product"></td>
             </tr>
