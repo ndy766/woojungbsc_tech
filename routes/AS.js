@@ -180,6 +180,12 @@ router.post('/create', function (req, res) {
             mailOptions.to = complaint.customer_email;
             mailOptions.subject = '[(주)우정비에스씨]A/S신청 완료 되었습니다.';
             mailOptions.html =
+                '<html>'+
+                    '<head>' +
+                    '<style>img{width:460px}table{width:460px}'+
+                '</style>'+
+                '</head>'+
+                    '<body>'+
                 '<font face="맑은고딕" color="#474747">' +
                 '<div align="center">' +
                 '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top.jpg" width="460px"><br>' +
@@ -203,7 +209,8 @@ router.post('/create', function (req, res) {
                 '</table>' +
                 '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
                 '</div>' +
-                '</font>';
+                '</font>'+
+                '</body>';
 
                 transporter.sendMail(mailOptions, function (err, result) {
                     if (err) {
