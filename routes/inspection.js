@@ -165,8 +165,6 @@ router.post('/send', function (req, res) {
         }
         res.render('main', {});
     });
-
-
 });
 
 

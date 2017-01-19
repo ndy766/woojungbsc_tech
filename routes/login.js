@@ -33,8 +33,8 @@ router.get('/', function(req, res){
   res.render('main',{});
 });
 
-router.post('/', function(req, res) {
 
+router.post('/', function(req, res) {
 
     var userType = req.body.userType;//admin or member
 
@@ -107,17 +107,16 @@ router.post('/', function(req, res) {
                     res.redirect('/?errorMessage=pwd');
                     return;
                 }
-
             }
-
-
         });
 });
+
 
 router.get('/logout', function(req, res){
     req.session.destroy();
     res.redirect('/');
 });
+
 
 router.post('/logout', function(req, res){
     req.session.destroy();

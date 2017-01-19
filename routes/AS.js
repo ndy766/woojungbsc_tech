@@ -128,14 +128,22 @@ router.get('/createForm', function (req, res) {
     var no = '';
     var stateCode = '';
     conn.query(sql, function (err, result) {
-        no = result[0].no + 1;
+        if(result.length==0) {
+            no = '1';
+        }else{
+            no = result[0].no + 1;
+        }
         var sql2 = 'SELECT * FROM customer';
         var customerList = [];
-        conn.query(sql2, function(err, result){
+        conn.query(sql2, function (err, result) {
             customerList = result;
-            res.render('complaint_create_form', {no: no, stateCode: stateCode, errorMessage:errorMessage, customerList:customerList});
+            res.render('complaint_create_form', {
+                no: no,
+                stateCode: stateCode,
+                errorMessage: errorMessage,
+                customerList: customerList
+            });
         });
-
     });
 
 });

@@ -101,7 +101,19 @@ router.get('/getCustomerListByType', function(req, res){
     })
 
 
-})
+});
+
+//ajax로 autocomplete기능 구현
+router.post('/autocompleteByCustomer', function(req, res){
+    var value = req.body.value;
+    var customer_list = [];
+    var sql = "select * from customer WHERE name LIKE '"+value+"%'";
+    conn.query(sql, function(err, result){
+       customer_list = result;
+       res.send(customer_list);
+    });
+
+});
 
 
 
