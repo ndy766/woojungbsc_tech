@@ -480,6 +480,7 @@ router.post('/modify', function(req, res) {
    var file_path = [];
    var tmp_path = []; //input type=hidden으로 넘어온 filename을 담고있는 array
 
+   chargerList='';
    // get field name & value
    form.on('field', function (name, value) {
 
@@ -592,7 +593,6 @@ router.post('/modify', function(req, res) {
    // all uploads are completed
    form.on('close', function () {
       //전송이 완료된 경우 DB access함.
-
       var tmp_arr = []; //방문자를 하나하나 담을 array
 
       //chargerList 맨 뒤의 ,를 제거해줌

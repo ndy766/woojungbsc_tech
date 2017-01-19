@@ -41,6 +41,37 @@
     }
 </script>
 
+
+<script>
+    //대분류 해주는 것
+    function getCustomerListByType(event){
+        var target = event.target;
+        var type = target.value;
+
+        var cus_list = [];
+        $.ajax({
+            url:'/customer/getCustomerListByType?type='+type,
+            success:function(data){
+                cus_list = data;
+                var cus_list_select = document.getElementById('cus_list');
+                while(cus_list_select.hasChildNodes()){
+                    //모든 자식노드(option tag)를 삭제해주고
+                    cus_list_select.removeChild(cus_list_select.firstChild);
+                };
+                var html = '';
+                for(var i=0;i<cus_list.length;i++){
+                    html+="<option value='"+cus_list[i].no+"'>"+cus_list[i].name+"</option>";
+                }
+                //다시 넣음
+                cus_list_select.innerHTML=html;
+
+            }
+        });
+
+
+    }
+</script>
+
 <div style="position:relative;top:7%">
     <!--<div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>-->
     <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
@@ -58,7 +89,13 @@
             <tr>
                 <td align="center" height="30px">거래처</td>
                 <td align="center">
-                    <select name="customer_no">
+                    <select id="customer_type" name="customer_type" style="width:120px" onchange="getCustomerListByType(event);">
+                        <option value="전체">거채처 타입</option>
+                        <option value="병원">병원</option>
+                        <option value="제약회사">제약회사</option>
+                        <option value="기타">기타</option>
+                    </select>
+                    <select name="customer_no" id="cus_list">
                         <% for(var i = 0;i < customerList.length;i++){ %>
                             <% if(customerList[i].no == schedule.customer_no){ %>
                                 <option value="<%= customerList[i].no %>" selected="selected"><%= customerList[i].name %></option>

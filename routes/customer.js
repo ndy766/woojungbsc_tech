@@ -27,7 +27,7 @@ router.get('/', function(req, res){
         return;
     }
 
-    var sql = 'select * from customer';
+    var sql = 'select * from customer ORDER BY type';
     var customerList = [];
     conn.query(sql, function(err, result){
         customerList = result;
@@ -39,8 +39,9 @@ router.get('/', function(req, res){
 //등록하기
 router.post('/register', function(req, res){
     var name = req.body.name;
+    var type = req.body.type;
 
-    var sql = "INSERT INTO customer SET name='"+name+"'";
+    var sql = "INSERT INTO customer SET name='"+name+"', type='"+type+"'";
     conn.query(sql, function(err, result){
         var href = '/customer/register';
         res.send({href:href});
@@ -52,12 +53,14 @@ router.post('/register', function(req, res){
 router.post('/modify', function(req, res){
     var no = req.body.no;
     var name = req.body.name;
+    var type = req.body.type;
 
     var sql = "SELECT * FROM customer WHERE no ="+no;
 
     conn.query(sql, function(err, result){
         var customer = result[0];
         customer.name = name;
+        customer.type = type;
 
         var sql2 = "UPDATE customer SET ? WHERE no ="+no;
         conn.query(sql2, customer, function(err, result){
@@ -80,6 +83,25 @@ router.get('/delete', function(req, res){
     });
 });
 
+
+//대분류
+router.get('/getCustomerListByType', function(req, res){
+
+    var type = req.query.type;
+    var cus_list = [];
+    var sql = '';
+    if(type =='전체') {
+        sql = "SELECT * FROM customer ORDER BY name";
+    }else {
+        sql = "SELECT * FROM customer WHERE type='" + type + "' ORDER BY name";
+    }
+    conn.query(sql, function(err, result){
+        cus_list = result;
+        res.send(cus_list);
+    })
+
+
+})
 
 
 
