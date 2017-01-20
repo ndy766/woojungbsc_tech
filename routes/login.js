@@ -30,7 +30,7 @@ router.get('/', function(req, res){
     };
     req.session.pagingBean = pagingBean;
     req.session.searchingBean = null;
-  res.render('main',{});
+  res.render('main',{name:req.session.user.name});
 });
 
 
@@ -43,7 +43,8 @@ router.post('/', function(req, res) {
     var user = {
         id: id,
         password: password,
-        userType:userType
+        userType:userType,
+        name:''
     };
 
     if(userType=='member') {
@@ -53,20 +54,17 @@ router.post('/', function(req, res) {
     }
         conn.query(sql, function (err, result) {
             var data = result;
-
             if(userType != 'member'){
-                data = result[0];
-
-                if (id == data.id) {
-                    if (password == data.password) {
+                if (id == data[0].id) {
+                    if (password == data[0].password) {
                         var pagingBean = {
                             current_page:1,
                             current_pageGroup:1
                         };
-
+                        user = data[0];
                         req.session.user = user;
                         req.session.pagingBean = pagingBean;
-                        res.render('main', {});
+                        res.render('main', {name:user.name});
 
                     } else {
                         res.redirect('/?errorMessage=pwd');
@@ -85,12 +83,11 @@ router.post('/', function(req, res) {
                                 current_page:1,
                                 current_pageGroup:1
                             };
-
+                            user = data[i];
                             req.session.user = user;
                             req.session.pagingBean = pagingBean;
-
+                            flag= 'success';
                             break;
-                            flag= 'success'
                         } else {
                             flag='pwd'
                         }
@@ -98,7 +95,7 @@ router.post('/', function(req, res) {
                 }
 
                 if(flag=='success'){
-                    res.render('main', {});
+                    res.render('main', {name:user.name});
                     return;
                 }else if (flag=='id'){
                     res.redirect('/?errorMessage=id');

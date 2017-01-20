@@ -112,7 +112,6 @@ router.post('/autocompleteByCustomer', function(req, res){
        customer_list = result;
        res.send(customer_list);
     });
-
 });
 
 

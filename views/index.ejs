@@ -1,76 +1,97 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en-US">
 <head>
-    <title></title>
-    <meta charset="utf-8">
-    <!--<link href="/bootstrap-2.3.2/docs/assets/css/bootstrap.css" rel="stylesheet">-->
-    <link href="/bootstrap-2.3.2/docs/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/bootstrap-2.3.2/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
-    <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
-    <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>Smarty Admin</title>
+    <meta name="description" content="" />
+    <meta name="Author" content="Dorin Grigoras [www.stepofweb.com]" />
 
+    <!-- mobile settings -->
+    <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" />
 
-    <!--full calendar-->
-    <link href="/fullcalendar-3.1.0/fullcalendar.css" rel="stylesheet">
-    <!--<link href="/fullcalendar-3.1.0/fullcalendar.min.css" rel="stylesheet">-->
+    <!-- WEB FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&amp;subset=latin,latin-ext,cyrillic,cyrillic-ext" rel="stylesheet" type="text/css" />
 
-    <script src="/jquery/jquery-3.1.1.js"></script>
-    <script src="/jquery/jquery-ui.min.js"></script>
+    <!-- CORE CSS -->
+    <link href="Admin/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
-    <!--full calendar js file-->
-    <!--<script src="/fullcalendar-3.1.0/lib/jquery.min.js"></script>-->
-    <script src="/fullcalendar-3.1.0/lib/moment.min.js"></script>
-    <script src="/fullcalendar-3.1.0/fullcalendar.js"></script>
-    <script src="/fullcalendar-3.1.0/locale/ko.js"></script>
-    <!--<script src="/fullcalendar-3.1.0/fullcalendar.min.js"></script>-->
-
+    <!-- THEME CSS -->
+    <link href="Admin/assets/css/essentials.css" rel="stylesheet" type="text/css" />
+    <link href="Admin/assets/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="Admin/assets/css/color_scheme/green.css" rel="stylesheet" type="text/css" id="color_scheme" />
     <style>
-        html, body{
-            height:100%;
-            font-family: '맑은고딕';
+        .col-centered{
+            float: none;
+            margin: 0 auto;
         }
-        .as_list_tr:hover{
-            background-color: #c09853;
-            cursor: pointer;
-        }
-        .fc-sun {color:#e31b23} /* fullcalendar 일요일 */
-        .fc-sat {color:#007dc3} /* fullcalendar 토요일 */
-
-        .fc-day-number.fc-sat.fc-past { color:#0000FF; }
-        .fc-day-number.fc-sun.fc-past { color:#FF0000; }
     </style>
 </head>
+<!--
+    .boxed = boxed version
+-->
 <body>
 
-<div class="container">
-<table align="center" height="50%" border="1" class="col-md-6 col-xs-12">
-    <tr>
-        <td align=center colspan="2"><img src="images/login_logo.jpg" style="width:100%;height:100%"></td>
-    </tr>
-    <tr>
-        <td align=center colspan="2"><img src="images/login_logo2.jpg" style="width:100%;height:100%"></td>
-    </tr>
-    <form action="/login" method="post" style="width: 100%;height: 100%">
-        <tr>
-            <td width=50% align="center"><label class="custom-control custom-radio">사용자&nbsp;<input type="radio" name="userType" value="member" class="custom-control-input" checked="checked"></label></td>
-            <td width=50% align="center"><label class="custom-control custom-radio">A/S담당자&nbsp;<input type="radio" name="userType" value="admin"></label></td>
-        </tr>
-        <tr>
-            <td style="width:50%" align=center>아이디</td>
-            <td><input type='text' name="id" style="width:90%"></td>
-        </tr>
-        <tr>
-            <td style="width:50%" align=center>비밀번호</td>
-            <td><input type="password" name="password" style="width:90%"></td>
-        </tr>
-        <tr style="height:40px">
-            <td colspan="2" align="center"><input style="width:50%" type="submit" value='로그인' class="btn btn-lg btn-success"></td>
-        </tr>
-    </form>
-</table>
-<input type="hidden" id="errorMessage" name="errorMessage" value="<%=errorMessage%>">
+
+<div class="padding-15 container">
+    <div class="row">
+    <div class="login-box col-xs-12 col-md-6 col-centered">
+        <!-- login form -->
+        <form action="/login" method="post" class="sky-form boxed">
+            <header><i class="fa fa-users"></i> 로그인</header>
+
+            <!--
+            <div class="alert alert-danger noborder text-center weight-400 nomargin noradius">
+                Invalid Email or Password!
+            </div>
+
+            <div class="alert alert-warning noborder text-center weight-400 nomargin noradius">
+                Account Inactive!
+            </div>
+
+            <div class="alert alert-default noborder text-center weight-400 nomargin noradius">
+                <strong>Too many failures!</strong> <br />
+                Please wait: <span class="inlineCountdown" data-seconds="180"></span>
+            </div>
+            -->
+
+            <fieldset>
+
+                <section>
+                    <label class="label">아이디</label>
+                    <label class="input">
+                        <i class="icon-append fa fa-envelope"></i>
+                        <input type="id" name="id">
+                        <span class="tooltip tooltip-top-right">아이디를 입력하세요</span>
+                    </label>
+                </section>
+
+                <section>
+                    <label class="label">비밀번호</label>
+                    <label class="input">
+                        <i class="icon-append fa fa-lock"></i>
+                        <input type="password" name="password">
+                        <b class="tooltip tooltip-top-right">비밀번호를 입력하세요</b>
+                    </label>
+                </section>
+
+            </fieldset>
+
+            <footer>
+                <label class="radio pull-left" style="display:inline"><input type="radio" value="member" name="userType" checked="checked"><i></i>일반회원</label>
+                <label class="radio pull-left" style="display:inline"><input type="radio" value="admin" name="userType"><i></i>관리자</label>
+                <button type="submit" class="btn btn-primary pull-right">로그인</button>
+            </footer>
+        </form>
+        <!-- /login form -->
+
+        <hr />
+
     </div>
+    </div>
+    <input type="hidden" id="errorMessage" name="errorMessage" value="<%=errorMessage%>">
+
+</div>
 <script>
     var errMsg = document.getElementById('errorMessage');
     if(errMsg.value=='id'){
@@ -82,6 +103,10 @@
     }
 </script>
 
-</body>
 
+<!-- JAVASCRIPT FILES -->
+<script type="text/javascript">var plugin_path = 'Admin/assets/plugins/';</script>
+<script type="text/javascript" src="Admin/assets/plugins/jquery/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="Admin/assets/js/app.js"></script>
+</body>
 </html>
