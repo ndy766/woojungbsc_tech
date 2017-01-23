@@ -49,7 +49,7 @@ router.get('/', function(req ,res){
       res.redirect('/?errorMessage=login_requirement');
    };
 
-   res.render('calendar',{});
+   res.render('calendar',{name:req.session.user.name});
 });
 
 
@@ -102,7 +102,7 @@ router.get('/registerForm', function(req, res){
                }
             }
 
-            res.render('calendar_register_form',{start:start, end:end, start_msec:req.query.start, end_msec:req.query.end, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list});
+            res.render('calendar_register_form',{start:start, end:end, start_msec:req.query.start, end_msec:req.query.end, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list, name:req.session.user.name});
          });
 
       });
@@ -322,7 +322,6 @@ router.post('/register', function(req, res){
                file_path:file_path.toString()
             };
             conn.query(sql3, schedule, function(err, result){
-               console.log(schedule.file_path);
                res.redirect('/calendar');
             });
          });
@@ -439,7 +438,7 @@ router.get('/getScheduleByNo', function(req, res){
                   }
                }
 
-               res.render('calendar_modify_form',{schedule:schedule, customerList:customerList, memberList:memberList, start:start_date, end:end_date, start_msec:req.query.start, end_msec:req.query.end, end_date_fake:end_date_fake, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list, file_path_arr:file_path_arr});
+               res.render('calendar_modify_form',{name:req.session.user.name, schedule:schedule, customerList:customerList, memberList:memberList, start:start_date, end:end_date, start_msec:req.query.start, end_msec:req.query.end, end_date_fake:end_date_fake, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list, file_path_arr:file_path_arr});
             });
 
          });

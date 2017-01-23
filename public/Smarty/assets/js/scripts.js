@@ -2480,7 +2480,7 @@
 		var _container_1 = jQuery('.datepicker');
 		
 		if(_container_1.length > 0) {
-			loadScript(plugin_path + 'bootstrap.datepicker/js/bootstrap-datepicker.min.js', function() {
+			loadScript(plugin_path + 'bootstrap.datepicker/js/bootstrap-datepicker.js', function() {
 		
 				if(jQuery().datepicker) {
 

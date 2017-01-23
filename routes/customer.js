@@ -85,9 +85,8 @@ router.get('/delete', function(req, res){
 
 
 //대분류
-router.get('/getCustomerListByType', function(req, res){
-
-    var type = req.query.type;
+router.post('/getCustomerListByType', function(req, res){
+    var type = req.body.type;
     var cus_list = [];
     var sql = '';
     if(type =='전체') {
