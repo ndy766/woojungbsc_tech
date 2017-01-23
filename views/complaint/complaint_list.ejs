@@ -1,10 +1,9 @@
-<%- layout('../layout') %>
+<%- layout('complaint_layout') %>
 <script type="text/javascript">
     function getAS(event){
 
         var target = event.target.parentNode;//parent - tr
         var no = target.childNodes[1].childNodes[1].innerHTML;
-//        alert(no);
         var frm = document.createElement('form');
         var hid = document.createElement('input');
         hid.setAttribute('type', 'hidden');
@@ -19,83 +18,110 @@
     }
 </script>
 
-<div style="position:relative; top:7%" class="_main_content">
-<table class="table">
-    <thead class="thead-inverse">
-    <tr>
-        <th>접수번호</th>
-        <th>제품명</th>
-        <th>접수 내용</th>
-        <th>접수처</th>
-        <th>최초접수일</th>
-        <th>접수상태</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% for(var i = 0;i < complaint_list.length;i++){ %>
-    <tr class="as_list_tr" onclick="getAS(event);">
-        <td class="as_no"><span class="wj"></span><span><%= complaint_list[i].no %></span></td>
-        <td><%= complaint_list[i].product %></td>
-        <td><%= complaint_list[i].content %></td>
-        <td><%= complaint_list[i].customer_name %></td>
-        <td><%= complaint_list[i].receipt_date %></td>
-        <td><%= complaint_list[i].state %></td>
-    </tr>
-    <% } %>
-    </tbody>
-</table>
-    <!--페이지 기능-->
-    <div align="center">
-        <a href="/AS/getAllListHelpedPagingGroup?flag=0">◀</a>&nbsp;&nbsp;&nbsp;
-        <%for(var i=beginPage;i<=endPage;i++){%>
-            <%if(i==current_page){%>
-                [<%=i%>]&nbsp;&nbsp;&nbsp;
-            <%}else{%>
-                <a href="/AS/getAllList?page=<%=i%>"><%=i%></a>&nbsp;&nbsp;&nbsp;
-            <%}%>
-        <%}%>
-        <a href="/AS/getAllListHelpedPagingGroup?flag=1">▶</a>
-    </div>
-    <br>
-    <!-- search기능 -->
-    <div align="center">
-        <form method="post" action="/AS/search">
-            <select name="searchType">
-                <option value="no">접수번호</option>
-                <option value="product">제품명</option>
-                <option value="content">접수 내용</option>
-                <option value="customer">접수자</option>
-                <option value="state">접수상태</option>
-            </select>
-            <input type="text" name="keyword">
-            <button class="btn btn-success">검색</button>
-        </form>
-    </div>
-    <div align="center">
-        <a href="/AS/createForm"><button class="btn btn-primary">새로운 A/S 접수</button></a>
-        <a href="/AS/excel"><button class="btn btn-info">전체항목 엑셀 추출</button></a>
-    </div>
-</div>
+    <section class="page-header page-header-xs">
+        <div class="container" data-shadow="0">
 
+            <h1>A/S LIST</h1>
+
+            <!-- breadcrumbs -->
+            <ol class="breadcrumb">
+                <li><a href="/login">Home</a></li>
+                <li><a href="/AS/getAllList">A/S management</a></li>
+                <li class="active">A/S  LIST</li>
+            </ol><!-- /breadcrumbs -->
+
+            <!-- page tabs -->
+            <ul class="page-header-tabs list-inline">
+                <!--<li><a href="shortcode-tables.html">Bootstrap</a></li>-->
+                <!--<li><a href="shortcode-tables-jqgrid.html">jQGrid</a></li>-->
+                <!--<li><a href="shortcode-tables-footable.html">Footable</a></li>-->
+                <!--<li class="active"><a href="shortcode-tables-datatables.html">Datatables</a></li>-->
+            </ul><!-- /page tabs -->
+
+        </div>
+    </section>
+    <!-- /PAGE HEADER -->
+
+
+    <!-- WELCOME -->
+    <section>
+        <div class="container">
+            <table class="table">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>접수번호</th>
+                    <th>제품명</th>
+                    <th class="hidden-xs">접수 내용</th>
+                    <th>접수처</th>
+                    <th class="hidden-xs">최초접수일</th>
+                    <th>접수상태</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for(var i = 0;i < complaint_list.length;i++){ %>
+                <tr class="as_list_tr" onclick="getAS(event);">
+                    <td class="as_no"><span class="wj"></span><span><%= complaint_list[i].no %></span></td>
+                    <td><%= complaint_list[i].product %></td>
+                    <td class="hidden-xs"><%= complaint_list[i].content %></td>
+                    <td><%= complaint_list[i].customer_name %></td>
+                    <td class="hidden-xs"><%= complaint_list[i].receipt_date %></td>
+                    <td><%= complaint_list[i].state %></td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+            <!--페이지 기능-->
+            <div align="center">
+                <font size="4">
+                <a href="/AS/getAllListHelpedPagingGroup?flag=0">◀</a>&nbsp;&nbsp;&nbsp;
+                <%for(var i=beginPage;i<=endPage;i++){%>
+                <%if(i==current_page){%>
+                [<%=i%>]&nbsp;&nbsp;&nbsp;
+                <%}else{%>
+                <a href="/AS/getAllList?page=<%=i%>"><%=i%></a>&nbsp;&nbsp;&nbsp;
+                <%}%>
+                <%}%>
+                <a href="/AS/getAllListHelpedPagingGroup?flag=1">▶</a>
+                </font>
+            </div>
+            <br>
+            <!-- search기능 -->
+
+                <div class="container">
+                    <div class="row">
+                    <form method="post" action="/AS/search">
+                        <div class="col-md-2 col-xs-4">
+                            <select name="searchType" class="form-control">
+                                <option value="no">접수번호</option>
+                                <option value="product">제품명</option>
+                                <option value="content">접수 내용</option>
+                                <option value="customer">접수자</option>
+                                <option value="state">접수상태</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-xs-5">
+                            <input class="form-control col-md-10" type="text" name="keyword">
+                        </div>
+                        <div class="col-md-2 col-xs-1">
+                            <button class="btn btn-success">검색</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            <hr>
+            <div align="center">
+                <a href="/AS/createForm"><button class="btn btn-primary">새로운 A/S 접수</button></a>
+                <a href="/AS/excel"><button class="btn btn-info">전체항목 엑셀 추출</button></a>
+            </div>
+        </div>
+    </section>
+    <!-- /WELCOME -->
 <script>
     var wj = document.getElementsByClassName('wj');
-//    var date = new Date();
-//    var head = date.getFullYear();
+    //    var date = new Date();
+    //    var head = date.getFullYear();
     for(var i=0;i<wj.length;i++) {
         wj[i].innerHTML = 'WJ - '/*+ head + ' - '*/;
     }
 </script>
 
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/jquery.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-transition.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-alert.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-modal.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-dropdown.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-scrollspy.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-tab.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-tooltip.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-popover.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-button.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-collapse.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-carousel.js"></script>-->
-<!--<script src="/bootstrap-2.3.2/docs/assets/js/bootstrap-typeahead.js"></script>-->

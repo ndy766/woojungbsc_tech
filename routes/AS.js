@@ -109,7 +109,8 @@ router.get('/getAllList', function (req, res) {
             complaint_list: complaint_list,
             current_page: currentPage,
             beginPage: beginPage,
-            endPage: endPage
+            endPage: endPage,
+            name:req.session.user.name
         });
     })
 
@@ -141,7 +142,8 @@ router.get('/createForm', function (req, res) {
                 no: no,
                 stateCode: stateCode,
                 errorMessage: errorMessage,
-                customerList: customerList
+                customerList: customerList,
+                name:req.session.user.name
             });
         });
     });
