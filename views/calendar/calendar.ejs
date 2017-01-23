@@ -46,6 +46,9 @@
 
 
     <script>
+        window.onresize = function(event) {
+           location.reload();
+        };
         $(document).ready(function() {
             // page is now ready, initialize the calendar...
             $('#calendar').fullCalendar({
@@ -86,13 +89,64 @@
                         }
 
                     });
+                }
+//                viewRender: function(view){
+//                    //풀캘린더의 높이를 크게해주기 위함
+//                    $("#calendar").fullCalendar("option", "contentHeight", (view.name === "month")? NaN : 9999);
+//                },
+//                height:400
+
+            });
+
+            //모바일, 태블릿
+            $('#calendar_mobile').fullCalendar({
+                customButtons: {
+                    addSchedule: {
+                        text: '새 일정',
+                        click: function() {
+                            location.href="/calendar/registerForm?registerType=plusBtn";
+                        }
+                    }
+                },
+                header:{
+                    left:"month,basicWeek,basicDay",
+                    center:"title",
+                    right:"addSchedule   today prev,next"
+                },
+                editable : true,
+                eventLimit : true,
+                events:{
+                    url:'/calendar/getAllSchedule',
+                },
+                selectable: true,  //사용자가 클릭 및 드래그하여 선택을 할 수 있도록
+                selectHelper: true,//사용자가 드래그되는 동안 "자리"이벤트를 그릴 것인지 여부를 지정할 수 있습니다.
+                //범위로 이베트 선택한 후, DB에 넣어줌
+                select: function(start, end) {
+                    location.href='/calendar/registerForm?start='+start+'&end='+end;
+                },
+                eventClick:function(calEvent, jsEvent, view){
+                    location.href='/calendar/getScheduleByNo?no='+calEvent.no+'&start='+calEvent.start+'&end='+calEvent.end;
+                },
+                eventDrop:function(event, delta, revertFunc){
+                    //location.href='/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end;
+                    $.ajax({
+                        url:'/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end,
+                        type:'get',
+                        success:function(data){
+
+                        }
+
+                    });
                 },
                 viewRender: function(view){
                     //풀캘린더의 높이를 크게해주기 위함
-                    $("#calendar").fullCalendar("option", "contentHeight", (view.name === "month")? NaN : 9999);
+                    $("#calendar_mobile").fullCalendar("option", "contentHeight", (view.name === "month")? NaN : 9999);
                 }
+//                height:400
 
             });
+
+
         });
     </script>
 
@@ -168,20 +222,20 @@
                     <!-- MENU -->
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="index.html">
+                            <a href="/login">
                                 <i class="et-trophy"></i>
                                 Home
                             </a>
                         </li>
                         <li class="dropdown">
-                            <a href="#" aria-expanded="false">
+                            <a href="/AS/getAllList" aria-expanded="false">
                                 <i class="et-basket"></i>
                                 A/S관리
                             </a>
                         </li>
 
                         <li class="dropdown">
-                            <a href="#" aria-expanded="false">
+                            <a href="/inspection/createForm" aria-expanded="false">
                                 <i class="et-layers"></i>
                                 주기안내
                             </a>
@@ -198,11 +252,11 @@
                                 DB관리
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="portfolio-grid-2-columns.html">직원 관리</a></li>
-                                <li><a href="portfolio-grid-3-columns.html">거래처 관리</a></li>
-                                <li><a href="portfolio-grid-4-columns.html">데이터 관리</a></li>
-                                <li><a href="portfolio-layout-default.html">주소록 관리</a></li>
-                                <li><a href="portfolio-layout-aside-left.html">엑셀 추출</a></li>
+                                <li><a href="/member">직원 관리</a></li>
+                                <li><a href="/customer">거래처 관리</a></li>
+                                <li><a href="/code">데이터 관리</a></li>
+                                <li><a href="/login">주소록 관리</a></li>
+                                <li><a href="/excel">엑셀 추출</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -225,9 +279,8 @@
         <div class="container">
 
             <div class="row">
-
-                <div class="col-sm-12 col-lg-12" id="calendar" style="margin-bottom:0"></div>
-
+                <div class="hidden-sm hidden-xs" id="calendar"></div>
+                <div class="hidden-lg hidden-md" id="calendar_mobile"></div>
             </div>
 
         </div>
