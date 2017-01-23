@@ -67,31 +67,14 @@
                 events:{
                     url:'/calendar/getAllSchedule',
                 },
-                selectable: true,  //사용자가 클릭 및 드래   그하여 선택을 할 수 있도록
+                selectable: true,  //사용자가 클릭 및 드래그하여 선택을 할 수 있도록
                 selectHelper: true,//사용자가 드래그되는 동안 "자리"이벤트를 그릴 것인지 여부를 지정할 수 있습니다.
                 //범위로 이베트 선택한 후, DB에 넣어줌
                 select: function(start, end) {
                     location.href='/calendar/registerForm?start='+start+'&end='+end;
-//                if (title) { //true
-//                    calendar.fullCalendar('renderEvent', //월이나 연도가 바뀌어도 없어지지않게(등록한 것이)
-//                            {
-//                                start: '2017-01-09', //인자값
-//                                end: '2017-01-11'  //인자값
-//                            },
-//                            true // make the event "stick"
-//                    );
-//                }//if
-//                //입력이 안되면 선택취소 (메서드)
-//                calendar.fullCalendar('unselect'); //선택취소
-
                 },
                 eventClick:function(calEvent, jsEvent, view){
-//                alert('Event: ' + calEvent.no);
-//                alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-//                alert('View: ' + view.name);
                     location.href='/calendar/getScheduleByNo?no='+calEvent.no+'&start='+calEvent.start+'&end='+calEvent.end;
-                    // change the border color just for fun
-//                $(this).css('border-color', 'red');
                 },
                 eventDrop:function(event, delta, revertFunc){
                     //location.href='/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end;
@@ -103,6 +86,10 @@
                         }
 
                     });
+                },
+                viewRender: function(view){
+                    //풀캘린더의 높이를 크게해주기 위함
+                    $("#calendar").fullCalendar("option", "contentHeight", (view.name === "month")? NaN : 9999);
                 }
 
             });
@@ -239,9 +226,7 @@
 
             <div class="row">
 
-                <div class="col-sm-12 col-lg-12" id="calendar">
-
-                </div>
+                <div class="col-sm-12 col-lg-12" id="calendar" style="margin-bottom:0"></div>
 
             </div>
 
