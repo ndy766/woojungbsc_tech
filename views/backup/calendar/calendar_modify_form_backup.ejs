@@ -1,0 +1,252 @@
+<%- layout('../layout') %>
+<script>
+    $(function() {
+        $( ".date_picker" ).datepicker({
+            dateFormat:'yy-mm-dd',
+            changeMonth: true,
+            dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+            dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
+            monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        });
+    });
+</script>
+
+<script>
+    $(function() {
+        $('#calendar').fullCalendar({
+            header:{
+                left:"month,basicWeek,basicDay",
+                center:"title",
+                right:"today prev,next"
+            },
+            editable : false,
+            eventLimit : false,
+            events:{
+                url:'/calendar/getAllSchedule',
+            },
+        });
+    });
+</script>
+
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                input.nextSibling.setAttribute('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+
+<script>
+    //대분류 해주는 것
+    function getCustomerListByType(event){
+        var target = event.target;
+        var type = target.value;
+
+        var cus_list = [];
+        $.ajax({
+            url:'/customer/getCustomerListByType?type='+type,
+            success:function(data){
+                cus_list = data;
+                var cus_list_select = document.getElementById('cus_list');
+                while(cus_list_select.hasChildNodes()){
+                    //모든 자식노드(option tag)를 삭제해주고
+                    cus_list_select.removeChild(cus_list_select.firstChild);
+                };
+                var html = '';
+                for(var i=0;i<cus_list.length;i++){
+                    html+="<option value='"+cus_list[i].no+"'>"+cus_list[i].name+"</option>";
+                }
+                //다시 넣음
+                cus_list_select.innerHTML=html;
+
+            }
+        });
+
+
+    }
+</script>
+
+<div style="position:relative;top:7%">
+    <!--<div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>-->
+    <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
+        <form action="/calendar/modify" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="no" value="<%=schedule.no%>">
+            <input type="hidden" name="end_date_fake" value="<%=end_msec%>">
+            <tr>
+                <th width="24%" height="30px">구분</th>
+                <th>내용</th>
+            </tr>
+            <tr>
+                <td align="center" height="30px">일자</td>
+                <td align="center"><input class="date_picker" type="text" name="start_date" value="<%=start%>"> ~ <input class="date_picker" type="text" name="end_date" value="<%=end%>"></td>
+            </tr>
+            <tr>
+                <td align="center" height="30px">거래처</td>
+                <td align="center">
+                    <select id="customer_type" name="customer_type" style="width:120px" onchange="getCustomerListByType(event);">
+                        <option value="전체">거채처 타입</option>
+                        <option value="병원">병원</option>
+                        <option value="제약회사">제약회사</option>
+                        <option value="기타">기타</option>
+                    </select>
+                    <select name="customer_no" id="cus_list">
+                        <% for(var i = 0;i < customerList.length;i++){ %>
+                            <% if(customerList[i].no == schedule.customer_no){ %>
+                                <option value="<%= customerList[i].no %>" selected="selected"><%= customerList[i].name %></option>
+                            <% }else{ %>
+                                <option value="<%= customerList[i].no %>"><%= customerList[i].name %></option>
+                            <% } %>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">업무구분</td>
+                <td align="center">
+                    <select name="work_type">
+                        <% for(var i = 0;i < work_type_list.length;i++){ %>
+                        <% if(work_type_list[i].code_name == schedule.work_type){ %>
+                        <option selected="selected"><%= work_type_list[i].code_name %></option>
+                        <% }else{ %>
+                        <option><%= work_type_list[i].code_name %></option>
+                        <% } %>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">제조사</td>
+                <td align="center">
+                    <select name="manufacturer">
+                        <% for(var i = 0;i < manufacturer_list.length;i++){ %>
+                            <% if(manufacturer_list[i].code_name == schedule.manufacturer){ %>
+                                <option selected="selected"><%= manufacturer_list[i].code_name %></option>
+                            <% }else{ %>
+                                <option><%= manufacturer_list[i].code_name %></option>
+                            <% } %>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">방문자</td>
+                <td align="center">
+                    <% for(var i = 0;i < memberList.length;i++){ %>
+                        <%if(schedule.charger.indexOf(memberList[i].id)!=-1){%>
+                            <label style="display:inline"><input type="checkbox" checked="checked" name="charger" value="<%= memberList[i].id %>"><%= memberList[i].name %></label>&nbsp;&nbsp;
+                        <%}else{%>
+                            <label style="display:inline"><input type="checkbox" name="charger" value="<%= memberList[i].id %>"><%= memberList[i].name %></label>&nbsp;&nbsp;
+                        <%}%>
+                    <% } %>
+                </td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">방문형태</td>
+                <td align="center">
+                    <%if(schedule.visit_type=='신규 방문'){%>
+                        <label style="display:inline"><input type="radio" name="visit_type" checked="checked" value="신규 방문">신규 방문</label>&nbsp;&nbsp;
+                        <label style="display:inline"><input type="radio" name="visit_type" value="재방문">재방문</label>
+                    <%}else{%>
+                        <label style="display:inline"><input type="radio" name="visit_type" value="신규 방문">신규 방문</label>&nbsp;&nbsp;
+                        <label style="display:inline"><input type="radio" name="visit_type" checked="checked" value="재방문">재방문</label>
+                    <%}%>
+                    &nbsp;&nbsp;재방문 횟수 : <select name="revisit_count">
+                        <% for(var i = 0;i < 10;i++){ %>
+                            <% if(i == schedule.revisit_count){ %>
+                                <option selected="selected"><%= i %></option>
+                            <% }else{ %>
+                                <option><%= i %></option>
+                            <% } %>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">제품명</td>
+                <td align="center"><input type="text" name="equipment" style="width:470px" value="<%=schedule.equipment%>"></td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">시리얼넘버</td>
+                <td align="center"><input type="text" name="serial_number" style="width:470px" value="<%=schedule.serial_number%>"></td>
+            </tr>
+            <tr>
+                <td height="60px" align="center">조치사항</td>
+                <td align="center"><textarea name="work_detail" style="width:470px"><%=schedule.work_detail%></textarea></td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">교체 부품</td>
+                <td align="center"><input type="text" name="changed_component" style="width:470px" value="<%=schedule.changed_component%>"></td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">처리 상태</td>
+                <td align="center">
+                    <%if(schedule.state=='완료'){%>
+                        <label style="display: inline"><input type="radio" name="state" checked="checked" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label style="display: inline"><input type="radio" name="state" value="미결"> 미결</label>
+                    <%}else{%>
+                        <label style="display: inline"><input type="radio" name="state" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label style="display: inline"><input type="radio" name="state" checked="checked" value="미결"> 미결</label>
+                    <%}%>
+                </td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">미결 사유</td>
+                <td align="center">
+                    <select name="undecided_reason">
+                        <% for(var i = 0;i < undecided_reason_list.length;i++){ %>
+                            <% if(undecided_reason_list[i].code_name == schedule.undecided_reason){ %>
+                                <option selected="selected"><%=undecided_reason_list[i].code_name %></option>
+                            <% }else{ %>
+                                <option><%=undecided_reason_list[i].code_name %></option>
+                            <% } %>
+                        <% } %>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td height="30px" align="center">소요시간</td>
+                <td align="center"><input type="text" name="work_delay" style="width:200px;" value="<%=schedule.work_delay%>"> 시간</td>
+            </tr>
+            <tr>
+                <td height="60px" align="center">사진</td>
+                <td id="img" align="center">
+                    <!--<input type="file" name='file1' onchange="readURL(this);" value="<%=file_path_arr[0]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[0]%>">-->
+                    <!--<input type="file" name='file2' onchange="readURL(this);" value="<%=file_path_arr[1]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[1]%>">-->
+                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[2]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[2]%>">-->
+                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[3]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[3]%>">-->
+                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[4]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[4]%>">-->
+                </td>
+            </tr>
+            <tr>
+                <input type="hidden" value="<%= start_msec %>" name="start_msec">
+                <input type="hidden" value="<%= end_msec %>" name="end_msec">
+                <input type="hidden" value="<%=file_path_arr%>" id="arr">
+                <td colspan="2" height="30px" align="center">
+                    <input width="200px" class="btn btn-warning" type="submit" value="일정 수정">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/calendar/delete?no=<%=schedule.no%>"><input width="200px" type="button" class="btn btn-danger" value="일정 삭제"></a>
+                </td>
+            </tr>
+        </form>
+    </table>
+    <!--member 수정시 자동으로 체크상태로 놔두기 위한 hidden-->
+</div>
+
+<script>
+    var file_path_arr = document.getElementById('arr');
+    var imgDiv = document.getElementById('img');
+    var split = file_path_arr.value.split(',');
+    var count = 0;
+    for(var i=0;i<split.length;i++){
+        if(split[i]!=undefined && split[i]!=null && split[i]!=''){
+            imgDiv.innerHTML += "<img width='450px' src=/schedule_image/" + file_path_arr.value.toString().split(',')[i] + "><br>";
+        }
+    }
+</script>
+
+

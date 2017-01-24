@@ -1,0 +1,66 @@
+<%- layout('../layout') %>
+
+<script>
+    $(function() {
+        $( ".date_picker" ).datepicker({
+            dateFormat:'yy년 m월 d일',
+            changeMonth: true,
+            dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+            dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
+            monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        });
+    });
+</script>
+
+
+<div align=center style="position:relative; top:7%;">
+    <form method="post" action="/AS/confirmVisit">
+    <img src=/images/as_mail_top<%=stateCode%>.jpg width="40%">
+    <table class="table-bordered" align=center border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;" width="38%">
+        <tr>
+            <td style="background-color:#F6F6F6" height="40px" align="center">접수자</td><td align="center"><%=complaint.customer%></td><td align="center" style="background-color:#F6F6F6">제품명</td><td align="center"><%=complaint.product%></td>
+        </tr>
+        <tr>
+            <td style="background-color:#F6F6F6" height="40px" align="center">접수내용</td><td align="center" colspan="3"><%=complaint.content%></td>
+        </tr>
+        <tr>
+            <td style="background-color:#F6F6F6" height="40px" align="center">접수번호</td><td align="center">WJ - <%=complaint.no%></td><td align="center" style="background-color:#F6F6F6">접수일</td><td align="center"><%=complaint.receipt_date%></td>
+        </tr>
+        <tr>
+            <td style="background-color:#F6F6F6" height="40px" align="center">대표자</td><td align="center">
+                <select name="charger_representative" class="input-small">
+                    <%for(var i=0;i<memberList.length;i++){%>
+                        <option value="<%=memberList[i].id%>"><%=memberList[i].name%></option>
+                    <%}%>
+                </select>
+            </td>
+            <td align="center" style="background-color:#F6F6F6">방문일</td><td align="center"><input class="date_picker" readonly='readonly' type="text" name="visit_date" size="40"></td>
+        </tr>
+        <tr>
+            <td style="background-color:#F6F6F6" height="40px" align="center">동행인</td>
+            <td align="left" colspan="3">
+                <%for(var i=0;i<memberList.length;i++){%>
+                <label style="display:inline"><%=memberList[i].name%><input type="checkbox" name="charger_accompany" value="<%=memberList[i].id%>"></label>
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color:#F6F6F6" height="40px" align="center">고객 이메일</td><td align="center" colspan="3"><%=complaint.customer_email%></td>
+        </tr>
+    </table>
+    <br></br>
+    <div><button class="btn btn-success">저장&메일전송</button></div>
+    <img src="/images/as_mail_bottom.jpg" width="40%">
+    <input type="hidden" name="no" value="<%=complaint.no%>">
+    </form>
+</div>
+
+<!-- <div align=center>
+<img src=as_mail_bottom.jpg>
+</div> -->
+
+
+
+
+
