@@ -174,7 +174,9 @@ router.post('/create', function (req, res) {
                 content: req.body.content,
                 state: state,
                 receipt_date: req.body.receipt_date,
-                customer_email: req.body.customer_email
+                customer_email: req.body.customer_email,
+                other_detail:req.body.other_detail,
+                customer_charger:req.body.customer_charger
             };
 
             conn.query(sql, complaint, function (err, result) {
@@ -244,13 +246,13 @@ router.post('/getComplaintByNo', function (req, res) {
         } else {
             stateCode = '4';
         }
-        res.render('complaint_detail' + stateCode, {complaint: complaint, stateCode: stateCode});
+        res.render('complaint_detail' + stateCode, {complaint: complaint, stateCode: stateCode, name:req.session.user.name});
     })
 });
 
 //방문일자 확정폼
-router.get('/confirmVisitForm', function (req, res) {
-    var no = req.query.no;//접수번호
+router.post('/confirmVisitForm', function (req, res) {
+    var no = req.body.no;//접수번호
     var stateCode = '2';
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
     conn.query(sql, function (err, result) {
@@ -259,7 +261,7 @@ router.get('/confirmVisitForm', function (req, res) {
         var memberList = [];
         conn.query(sql2, function(err, result){
             var memberList = result;
-            res.render('visit_form', {complaint: complaint, stateCode: stateCode, memberList:memberList})
+            res.render('visit_form', {complaint: complaint, stateCode: stateCode, memberList:memberList, name:req.session.user.name})
         });
 
     });
@@ -272,6 +274,7 @@ router.post('/confirmVisit', function (req, res) {
     var visit_date = req.body.visit_date;
     var charger = req.body.charger;
     var charger_phone = req.body.charger_phone;
+    var other_detail = req.body.other_detail;
     var state = 'A/S 방문일자 확정';
 
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
@@ -281,6 +284,7 @@ router.post('/confirmVisit', function (req, res) {
         complaint.charger = charger;
         complaint.state = state;
         complaint.charger_phone = charger_phone;
+        complaint.other_detail = other_detail;
         var sql2 = 'UPDATE complaint SET ? WHERE no=' + no;
         if (err) {
             console.log('error발생 : ' + err);
@@ -343,8 +347,8 @@ router.post('/confirmVisit', function (req, res) {
 
 
 //재방문일자 확정폼
-router.get('/confirmReVisitForm', function (req, res) {
-    var no = req.query.no;
+router.post('/confirmReVisitForm', function (req, res) {
+    var no = req.body.no;
     var stateCode = '3';
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
     conn.query(sql, function (err, result) {
@@ -354,7 +358,7 @@ router.get('/confirmReVisitForm', function (req, res) {
         var memberList = [];
         conn.query(sql2, function(err, result){
             var memberList = result;
-            res.render('revisit_form', {complaint: complaint, stateCode: stateCode, memberList:memberList})
+            res.render('revisit_form', {complaint: complaint, stateCode: stateCode, memberList:memberList, name:req.session.user.name})
         });
     });
 });
@@ -366,6 +370,8 @@ router.post('/confirmReVisit', function (req, res) {
     var charger = req.body.charger;
     var charger_phone = req.body.charger_phone;
     var revisit_reason = req.body.revisit_reason;
+    var customer_charger = req.body.customer_charger;//새로 추가됨 1월 24일
+    var customer_email = req.body.customer_email;//새로 추가됨 1월 24일
     var state = 'A/S 재방문 일자 확정';
 
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
@@ -376,6 +382,8 @@ router.post('/confirmReVisit', function (req, res) {
         complaint.charger_phone = charger_phone;
         complaint.revisit_reason = revisit_reason;
         complaint.state = state;
+        complaint.customer_charger = customer_charger;
+        complaint.customer_email = customer_email;
         var sql2 = 'UPDATE complaint SET ? WHERE no=' + no;
         if (err) {
             console.log('error발생 : ' + err);
@@ -431,7 +439,6 @@ router.post('/confirmReVisit', function (req, res) {
                             return console.log(err);
                         }
 
-                        console.log('Message sent: ' + result);
                         res.redirect('/AS/getAllList');
                     });
 
@@ -531,7 +538,8 @@ router.get('/excel', function (req, res) {
         //excel코드
         var conf = {};
         conf.name = 'complaint';
-        conf.cols = [{
+        conf.cols = [
+            {
             caption: '접수번호',
             type: 'string'
         }, {
@@ -565,12 +573,23 @@ router.get('/excel', function (req, res) {
             caption: '재방문 사유',
             type: 'string'
         }, {
-            caption: '담당자 전화번호',
+            caption: '방문자 전화번호',
             type: 'string'
-        }];
+        }, {
+            caption : '고객 이메일',
+            type: 'string'
+        }, {
+            caption : '기타 사항',
+            type: 'string'
+        }, {
+            caption : '거래처 담당자',
+            type: 'string'
+        }
+        ];
         var data = result;
         for (var i = 0; i < data.length; i++) {
-            var buffer = ['WJ - ' + data[i].no,
+            var buffer = [
+                'WJ - ' + data[i].no,
                 data[i].product,
                 data[i].customer_name,
                 data[i].content,
@@ -582,7 +601,10 @@ router.get('/excel', function (req, res) {
                 data[i].charger ? data[i].charger : '',
                 data[i].revisit_reason ? data[i].revisit_reason : '',
                 data[i].charger_phone ? data[i].charger_phone : '',
-                data[i].customer_email];
+                data[i].customer_email? data[i].customer_email : '',
+                data[i].other_detail? data[i].other_detail : '',
+                data[i].customer_charger ? data[i].customer_charger:''
+                ];
             temp.push(buffer);
         }
         ;

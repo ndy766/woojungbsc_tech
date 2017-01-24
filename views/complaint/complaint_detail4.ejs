@@ -1,30 +1,229 @@
-<%- layout('../layout') %>
+<%- layout('complaint_layout') %>
 
-<div align=center style="position:relative; top:7%;">
-    <img src=/images/as_mail_top<%=stateCode%>.jpg width="40%">
-    <table class="table-bordered" align=center border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px gray solid;position:relative;" width="38%">
-        <tr>
-            <td style="background-color:#F6F6F6" height="40px" align="center">접수처</td><td align="center"><%=complaint.customer_name%></td><td align="center" style="background-color:#F6F6F6">제품명</td><td align="center"><%=complaint.product%></td>
-            </tr>
-        <tr>
-            <td style="background-color:#F6F6F6" height="40px" align="center">접수내용</td><td align="center" colspan="3"><%=complaint.content%></td>
-            </tr>
-        <tr>
-            <td style="background-color:#F6F6F6" height="40px" align="center">접수번호</td><td align="center">WJ - <%=complaint.no%></td><td align="center" style="background-color:#F6F6F6">완료일</td><td align="center"><%=complaint.complete_date%></td>
-            </tr>
-        </table>
-    <br></br>
-    <div><a href="/AS/getAllList"><button class="btn btn-info">목록으로</button></a></div>
-    <img src="/images/as_mail_bottom.jpg" width="40%">
-</div>
+<section class="page-header page-header-xs">
+    <div class="container" data-shadow="0">
 
-<!-- <div align=center>
-<img src=as_mail_bottom.jpg>
-</div> -->
-<script>
+        <h1>A/S 접수</h1>
 
-</script>
+        <!-- breadcrumbs -->
+        <ol class="breadcrumb">
+            <li><a href="/login">Home</a></li>
+            <li><a href="/AS/getAllList">A/S management</a></li>
+            <li class="active">A/S  접수</li>
+        </ol><!-- /breadcrumbs -->
+
+        <!-- page tabs -->
+        <ul class="page-header-tabs list-inline">
+            <!--<li><a href="shortcode-tables.html">Bootstrap</a></li>-->
+            <!--<li><a href="shortcode-tables-jqgrid.html">jQGrid</a></li>-->
+            <!--<li><a href="shortcode-tables-footable.html">Footable</a></li>-->
+            <!--<li class="active"><a href="shortcode-tables-datatables.html">Datatables</a></li>-->
+        </ul><!-- /page tabs -->
+
+    </div>
+</section>
+<!-- /PAGE HEADER -->
+
+<section>
+    <div class="container">
+
+        <div class="row">
+
+            <!-- LEFT - FORM -->
+            <div class="col-md-6 col-sm-6">
+
+                <div class="heading-title heading-border-bottom">
+                    <h2 class="size-20">접수 정보</h2>
+                </div>
+
+                <form action="/AS/complete" method="get">
+                    <fieldset>
+                        <!-- required [php action request] -->
+                        <input type="hidden" name="no" value="<%=complaint.no%>">
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6">
+                                    <label>접수 번호 *</label>
+                                    <input type="text" name="wj_no" value="WJ - <%=complaint.no%>" class="form-control required" readonly="readonly">
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <label>접수일 *</label>
+                                    <input type="text" class="form-control" id="cur_date" value="<%=complaint.receipt_date%>" name="receipt_date" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6">
+                                    <label>거래처 종류 </label>
+                                    <select class="form-control pointer" id="customer_type" name="customer_type" onchange="getCustomerListByType(event);" readonly="readonly">
+                                        <option value="전체">거채처 타입</option>
+                                        <option value="병원">병원</option>
+                                        <option value="제약회사">제약회사</option>
+                                        <option value="기타">기타</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <label>거래처 *</label>
+                                    <input type="text" name="customer" class="form-control" value="<%=complaint.customer_name%>" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>제조사 / 제품명 *</label>
+                                    <input type="text" name="product" class="form-control" readonly="readonly" value="<%=complaint.product%>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>접수 내용 *</label>
+                                    <textarea name="content" rows="4" class="form-control required" readonly="readonly"><%=complaint.content%></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>재방문 사유 *</label>
+                                    <textarea name="content" rows="4" class="form-control required" readonly="readonly"><%=complaint.revisit_reason%></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6">
+                                    <label>거래처 담당자 *</label>
+                                    <input type="text" name="customer_name" class="form-control required" readonly="readonly" value="<%=complaint.customer_charger%>">
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <label>담당자 이메일 *</label>
+                                    <input type="text" name="customer_email" class="form-control required" readonly="readonly" value="<%=complaint.customer_email%>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>기타 사항</label>
+                                    <textarea name="content" rows="4" class="form-control required" readonly="readonly"><%=complaint.other_detail%></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6">
+                                    <label>방문자 *</label>
+                                    <input type="text" name="charger" class="form-control required" readonly="readonly" value="<%=complaint.charger%>">
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <label>방문일 *</label>
+                                    <input type="text" name="visit_date" class="form-control required" readonly="readonly" value="<%=complaint.visit_date%>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6">
+                                    <label>재방문일</label>
+                                    <input type="text" name="charger" class="form-control required" readonly="readonly" value="<%=complaint.revisit_date%>">
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <label>완료일 *</label>
+                                    <input type="text" name="visit_date" class="form-control required" readonly="readonly" value="<%=complaint.complete_date%>">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>대표 연락처 *</label>
+                                    <input id='charger_phone' type="text" name="charger_phone" class="form-control" readonly="readonly" value="<%=complaint.charger_phone%>">
+                                </div>
+                            </div>
+                        </div>
 
 
 
+                    </fieldset>
 
+                    <div class="row">
+                        <div class="col-md-12" align="center">
+                            <a href="/AS/getAllList">
+                                <button type="button" class="btn btn-3d btn-google btn-block">
+                                    <h4>목록으로</h4>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+
+                </form>
+
+                <hr class="margin-top-60" />
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="col-md-6 col-sm-6">
+
+                <div class="heading-title heading-border-bottom heading-color">
+                    <span class="pull-right text-muted">A/S 완료</span>
+                    <h2 class="size-20"><span>*</span> 접수 상태</h2>
+                </div>
+
+                <div class="margin-bottom-80">
+                    <div class="row process-wizard process-wizard-info">
+
+                        <div class="col-xs-3 process-wizard-step complete">
+                            <div class="text-center process-wizard-stepnum">Step 1</div>
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="process-wizard-dot"></a>
+                            <div class="process-wizard-info text-center">A/S 접수</div>
+                        </div>
+
+                        <div class="col-xs-3 process-wizard-step complete"><!-- complete -->
+                            <div class="text-center process-wizard-stepnum">Step 2</div>
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="process-wizard-dot"></a>
+                            <div class="process-wizard-info text-center">A/S 방문일자 확정</div>
+                        </div>
+
+                        <div class="col-xs-3 process-wizard-step complete"><!-- complete -->
+                            <div class="text-center process-wizard-stepnum">Step 3</div>
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="process-wizard-dot"></a>
+                            <div class="process-wizard-info text-center">A/S 재방문일자 확정</div>
+                        </div>
+
+                        <div class="col-xs-3 process-wizard-step complete"><!-- active -->
+                            <div class="text-center process-wizard-stepnum">Step 4</div>
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="process-wizard-dot"></a>
+                            <div class="process-wizard-info text-center">A/S 완료</div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</section>
+<!-- / -->

@@ -43,14 +43,14 @@
             <div class="col-md-6 col-sm-6">
 
                 <div class="heading-title heading-border-bottom">
-                    <h2 class="size-20">접수 정보</h2>
+                    <h2 class="size-20">A/S 접수 폼</h2>
                 </div>
 
 
                 <form action="/AS/create" method="post">
+                    <input type="hidden" name="no" value="<%=no%>">
                     <fieldset>
                         <!-- required [php action request] -->
-                        <input type="hidden" name="action" value="contact_send" />
 
                         <div class="row">
                             <div class="form-group">
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="col-md-6 col-sm-6">
                                     <label>접수일 *</label>
-                                    <input type="text" class="form-control date_picker" id="cur_date" name="receipt_date">
+                                    <input type="text" class="form-control date_picker pointer" id="cur_date" name="receipt_date">
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6">
                                     <label>거래처 담당자 *</label>
-                                    <input type="text" name="customer_name" value="" class="form-control required">
+                                    <input type="text" name="customer_charger" value="" class="form-control required">
                                 </div>
                                 <div class="col-md-6 col-sm-6">
                                     <label>담당자 이메일 *</label>
@@ -124,8 +124,8 @@
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-md-12 col-sm-12">
-                                    <label>기타 사항 *</label>
-                                    <textarea name="other_detail" rows="4" class="form-control required"></textarea>
+                                    <label>기타 사항</label>
+                                    <textarea name="other_detail" rows="4" class="form-control required"> </textarea>
                                 </div>
                             </div>
                         </div>
@@ -140,6 +140,15 @@
                             </button>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12" align="center">
+                            <a href="/AS/getAllList">
+                                <button type="button" class="btn btn-3d btn-google btn-block">
+                                    <h4>목록으로</h4>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
 
                 </form>
 
@@ -151,12 +160,42 @@
             <div class="col-md-6 col-sm-6">
 
                 <div class="heading-title heading-border-bottom heading-color">
-                    <span class="pull-right text-muted">접수 진행중...</span>
+                    <span class="pull-right text-muted">접수 진행중</span>
                     <h2 class="size-20"><span>*</span> 접수 상태</h2>
                 </div>
 
                 <div class="margin-bottom-80">
-                    <img src="/images/state.png" class="img-responsive">
+                    <div class="row process-wizard process-wizard-info">
+
+                        <div class="col-xs-3 process-wizard-step active">
+                            <div class="text-center process-wizard-stepnum">Step 1</div>
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="process-wizard-dot"></a>
+                            <div class="process-wizard-info text-center">A/S 접수</div>
+                        </div>
+
+                        <div class="col-xs-3 process-wizard-step disabled"><!-- complete -->
+                            <div class="text-center process-wizard-stepnum">Step 2</div>
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="process-wizard-dot"></a>
+                            <div class="process-wizard-info text-center">A/S 방문일자 확정</div>
+                        </div>
+
+                        <div class="col-xs-3 process-wizard-step disabled"><!-- complete -->
+                            <div class="text-center process-wizard-stepnum">Step 3</div>
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="process-wizard-dot"></a>
+                            <div class="process-wizard-info text-center">A/S 재방문일자 확정</div>
+                        </div>
+
+                        <div class="col-xs-3 process-wizard-step disabled"><!-- active -->
+                            <div class="text-center process-wizard-stepnum">Step 4</div>
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="process-wizard-dot"></a>
+                            <div class="process-wizard-info text-center">A/S 완료</div>
+                        </div>
+
+                    </div>
                 </div>
 
             </div>

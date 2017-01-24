@@ -83,8 +83,6 @@
 
         }
     </script>
-
-
     <script type="text/javascript">
         $(function() {
             $( ".date_picker" ).datepicker({
@@ -96,6 +94,14 @@
                 monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
             });
         });
+    </script>
+    <script>
+        //방문자 전화번호 가져오려고
+        function getPhone(event){
+            var member_list = event.target;
+            var charger_phone = document.getElementById('charger_phone');
+            charger_phone.value = member_list.value;
+        };
     </script>
 </head>
 
@@ -290,7 +296,7 @@
         </header>
         <!-- /Top Nav -->
     </div>
-</div>
+
 
 <%- body %>
 
