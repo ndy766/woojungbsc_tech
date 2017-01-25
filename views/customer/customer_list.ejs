@@ -6,7 +6,7 @@
         var no = target.parentNode.parentNode.childNodes[3].childNodes[1].innerHTML;
 
         var name = prompt('수정할 이름을 입력하세요');
-        var type = prompt('수정할 거래처종류를 입력하세요 (병원/제약회사/기타)');
+        var type = prompt('수정할 거래처종류를 입력하세요 (1. 병원/제약회사 2.학교/연구소 3.기타)');
 
         if(name!=null && name!="" && name!=null && type!=null && type!="" && type!=null)
         $.ajax({
@@ -42,7 +42,7 @@
 
     function registerCustomer(event){
         var name = prompt('등록할 거래처의 이름을 입력하세요');
-        var type = prompt('등록할 거래처의 종류를 입력하세요 (병원/제약회사/기타)')
+        var type = prompt('등록할 거래처의 종류를 입력하세요 (1. 병원/제약회사 2.학교/연구소 3.기타)')
 
         if(name!=null && name!="" && name!=null && type!=null && type!="" && type!=null)
             $.ajax({

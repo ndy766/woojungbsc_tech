@@ -341,6 +341,7 @@
 
                 <div class="heading-title heading-border-bottom">
                     <h2 class="size-20">Register Schedule</h2>
+                    <h6 class="pull-right"><%=final_correction_time%> <%=name%>님이 작성중</h6>
                 </div>
 
 
@@ -368,8 +369,8 @@
                                     <label>거래처 타입 *</label>
                                     <select class="form-control pointer" id="customer_type" name="customer_type" onchange="getCustomerListByType(event);">
                                         <option value="전체">거채처 타입</option>
-                                        <option value="병원">병원</option>
-                                        <option value="제약회사">제약회사</option>
+                                        <option value="병원/제약회사">병원/제약회사</option>
+                                        <option value="학교/연구소">학교/연구소</option>
                                         <option value="기타">기타</option>
                                     </select>
                                 </div>
@@ -398,6 +399,41 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="inline-group form-group">
+                                <label>방문형태 *</label>
+                                <div class="col-md-3 col-sm-3">
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="신규 방문" checked="checked">
+                                        <i></i> 신규 방문
+                                    </label>
+                                </div>
+                                <br>
+                                <div class="col-md-3 col-sm-3">
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="재방문">
+                                        <i></i> 재방문
+                                    </label>
+                                </div>
+                                <br>
+
+                                <div class="col-md-6 col-sm-6">
+                                    <label>재방문 횟수 </label>
+                                    <select name="revisit_count" class="form-control pointer">
+                                        <%for(var i=0;i<10;i++){%>
+                                        <%if(i==0){%>
+                                        <option selected="selected"><%=i%></option>
+                                        <%}else{%>
+                                        <option><%=i%></option>
+                                        <%}%>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
 
                         <div class="row">
                             <div class="form-group">
@@ -431,12 +467,12 @@
 
                         <div class="row">
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3">
+                                <div class="col-md-2 col-sm-2">
                                     <label>교체장비/부품</label>
                                     <input type="text" name="changed_component" class="form-control">
                                 </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <label>소요 시간 - <small>(단위:시간생략)</small></label>
+                                <div class="col-md-4 col-sm-4">
+                                    <label>소요 시간 - <small>인원수 x 소요시간(사무실 출발 ~ 도착 기준)</small></label>
                                     <input type="number" name="work_delay" class="form-control">
                                 </div>
                                     <label>처리 상태</label>

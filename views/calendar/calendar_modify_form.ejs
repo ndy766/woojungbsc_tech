@@ -341,6 +341,7 @@
 
                 <div class="heading-title heading-border-bottom">
                     <h2 class="size-20">Register Schedule</h2>
+                    <h6 class="pull-right"><%=schedule.final_correction_time%> <%=schedule.final_writer%>님이 최종수정</h6>
                 </div>
 
 
@@ -372,8 +373,8 @@
                                     <label>거래처 타입 *</label>
                                     <select class="form-control pointer" id="customer_type" name="customer_type" onchange="getCustomerListByType(event);">
                                         <option value="전체">거채처 타입</option>
-                                        <option value="병원">병원</option>
-                                        <option value="제약회사">제약회사</option>
+                                        <option value="병원/제약회사">병원/제약회사</option>
+                                        <option value="학교/연구소">학교/연구소</option>
                                         <option value="기타">기타</option>
                                     </select>
                                 </div>
@@ -410,6 +411,56 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="row">
+                            <div class="inline-group form-group">
+                                <%if(schedule.visit_type=='신규 방문'){%>
+                                <label>방문형태 *</label>
+                                <div class="col-md-3 col-sm-3">
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="신규 방문" checked="checked">
+                                        <i></i> 신규 방문
+                                    </label>
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="재방문">
+                                        <i></i> 재방문
+                                    </label>
+                                </div>
+                                <%}else{%>
+                                <label>방문형태 *</label>
+                                <div class="col-md-3 col-sm-3">
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="신규 방문">
+                                        <i></i> 신규 방문
+                                    </label>
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="재방문" checked="checked">
+                                        <i></i> 재방문
+                                    </label>
+                                </div>
+                                <%}%>
+                                <br>
+                                <div class="col-md-6 col-sm-6">
+                                    <label>재방문 횟수 </label>
+                                    <select name="revisit_count" class="form-control pointer">
+                                        <%for(var i=0;i<10;i++){%>
+                                        <%if(i==schedule.revisit_count){%>
+                                        <option selected="selected"><%=i%></option>
+                                        <%}else{%>
+                                        <option><%=i%></option>
+                                        <%}%>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
 
                         <div class="row">
                             <div class="form-group">
@@ -497,6 +548,7 @@
                         <input type="hidden" value="<%=start_msec%>" name="start_msec">
                         <input type="hidden" value="<%=end_msec%>" name="end_msec">
                         <input type="hidden" value="<%=file_path_arr%>" id="arr">
+                        <input type="hidden" value="<%=schedule.no%>" name="no">
                     </fieldset>
 
                     <div class="row">

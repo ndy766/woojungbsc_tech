@@ -28,6 +28,7 @@ var member = require('./routes/member');
 var customer = require('./routes/customer');
 var code = require('./routes/code');
 var excel = require('./routes/excel');
+var address_book = require('./routes/address_book');
 
 
 var app = express();
@@ -43,7 +44,7 @@ app.set('views', [
                   __dirname + '/views/customer',
                   __dirname + '/views/code',
                   __dirname + '/views/excel',
-                  __dirname + '/views/temp'
+                  __dirname + '/views/address_book'
                  ]);
 app.set('view engine', 'ejs');
 
@@ -77,6 +78,7 @@ app.use('/member', member);
 app.use('/customer', customer);
 app.use('/code', code);
 app.use('/excel', excel);
+app.use('/addressBook', address_book);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

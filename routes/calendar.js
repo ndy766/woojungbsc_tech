@@ -57,6 +57,8 @@ router.get('/registerForm', function(req, res){
 
    var start = req.query.start;
    var end   = req.query.end;
+   var final_correction_time = new Date();
+   final_correction_time =(final_correction_time.getMonth()+1)+'월 '+ final_correction_time.getDate() + '일 '+('0'+final_correction_time.getHours()).slice(-2)+':'+('0'+final_correction_time.getMinutes()).slice(-2);
 
    if(req.query.registerType!=null && req.query.registerType!=undefined && req.query.registerType!=''){
       //+버튼을 통해서 넘어온 경우
@@ -101,8 +103,19 @@ router.get('/registerForm', function(req, res){
                   manufacturer_list.push(code_list[i]);
                }
             }
-
-            res.render('calendar_register_form',{start:start, end:end, start_msec:req.query.start, end_msec:req.query.end, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list, name:req.session.user.name});
+            res.render('calendar_register_form',{
+               start:start,
+               end:end,
+               start_msec:req.query.start,
+               end_msec:req.query.end,
+               customerList:customerList,
+               memberList:memberList,
+               work_type_list:work_type_List,
+               undecided_reason_list:undecided_reason_list,
+               manufacturer_list:manufacturer_list,
+               name:req.session.user.name,
+               final_correction_time:final_correction_time
+            });
          });
 
       });
@@ -116,8 +129,6 @@ router.post('/register', function(req, res){
    //file 이후 새로운 코드 써봄
 
    var form = new multiparty.Form();
-
-
 
    //parameter받아서 DB에 등록하고 다시 전체 일정의 캘린더를 불러와서 달력을 보여줌 - 등록하고 데이터를 전달 res.redirect할껀지, render해서 view의 ajax로 전부 처리할껀지 결정해야됨.
    //var start_date = new Date(parseInt(req.body.start_msec)).toISOString().split('T')[0];
@@ -144,6 +155,12 @@ router.post('/register', function(req, res){
 
    //170117 파일 업로드하면서 추가된 부분
    var file_path = [];
+
+   //최종수정에 대한 정보 표시해주면서 추가된 내용
+   var final_writer = req.session.user.name;
+   var final_correction_time = new Date();
+   final_correction_time =(final_correction_time.getMonth()+1)+'월 '+ final_correction_time.getDate() + '일 '+('0'+final_correction_time.getHours()).slice(-2)+':'+('0'+final_correction_time.getMinutes()).slice(-2);
+
 
    // get field name & value
    form.on('field',function(name,value){
@@ -319,7 +336,9 @@ router.post('/register', function(req, res){
                changed_component:changed_component,
                state:state,
                undecided_reason:undecided_reason,
-               file_path:file_path.toString()
+               file_path:file_path.toString(),
+               final_writer:final_writer,
+               final_correction_time:final_correction_time
             };
             conn.query(sql3, schedule, function(err, result){
                res.redirect('/calendar');
@@ -480,6 +499,14 @@ router.post('/modify', function(req, res) {
    var tmp_path = []; //input type=hidden으로 넘어온 filename을 담고있는 array
 
    chargerList='';
+
+   //최종수정한 사람과 시간 알아야되면서 추가한 부분
+   var final_writer = req.session.user.name;
+   var final_correction_time = new Date();
+   final_correction_time =(final_correction_time.getMonth()+1)+'월 '+ final_correction_time.getDate() + '일 '+('0'+final_correction_time.getHours()).slice(-2)+':'+('0'+final_correction_time.getMinutes()).slice(-2);
+
+
+
    // get field name & value
    form.on('field', function (name, value) {
 
@@ -677,11 +704,11 @@ router.post('/modify', function(req, res) {
                changed_component: changed_component,
                state: state,
                undecided_reason: undecided_reason,
-               file_path:file_path.toString()
+               final_writer:final_writer,
+               final_correction_time:final_correction_time
             };
 
             conn.query(sql3, schedule, function (err, result) {
-               console.log(schedule.file_path);
                res.redirect('/calendar');
             });
          });
@@ -707,7 +734,13 @@ router.get('/dropEvent', function(req, res){
    start = new Date(parseInt(start)).toISOString().split('T')[0];
    end = new Date(parseInt(end)-86400000).toISOString().split('T')[0];
 
-   var sql = "UPDATE schedule SET start_date='"+start+"', end_date='"+end+"' WHERE no="+no;
+   //최종수정한 사람과 시간 알아야되면서 추가한 부분
+   var final_writer = req.session.user.name;
+   var final_correction_time = new Date();
+   final_correction_time =(final_correction_time.getMonth()+1)+'월 '+ final_correction_time.getDate() + '일 '+('0'+final_correction_time.getHours()).slice(-2)+':'+('0'+final_correction_time.getMinutes()).slice(-2);
+
+
+   var sql = "UPDATE schedule SET start_date='"+start+"', end_date='"+end+"', final_writer='"+final_writer+"', final_correction_time='"+final_correction_time+"' WHERE no="+no;
 
    conn.query(sql, function(err, result){
       res.send();
