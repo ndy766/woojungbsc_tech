@@ -138,6 +138,17 @@
 
                     });
                 },
+                eventResize:function(event, delta, revertFunc){
+                    //location.href='/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end;
+                    $.ajax({
+                        url:'/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end,
+                        type:'get',
+                        success:function(data){
+
+                        }
+
+                    });
+                },
                 viewRender: function(view){
                     //풀캘린더의 높이를 크게해주기 위함
                     $("#calendar_mobile").fullCalendar("option", "contentHeight", (view.name === "month" && view.width>500)? NaN : 700);
