@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--[if IE 8]>			<html class="ie ie8"> <![endif]-->
+<!--[if IE 9]>			<html class="ie ie9"> <![endif]-->
+<!--[if gt IE 9]><!-->	<html> <!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>WoojungBSC TECH DEPARTMENT</title>
+    <meta name="keywords" content="HTML5,CSS3,Template" />
+    <meta name="description" content="" />
+    <meta name="Author" content="Dorin Grigoras [www.stepofweb.com]" />
+
+    <!-- mobile settings -->
+    <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" />
+    <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
+
+    <!-- WEB FONTS : use %7C instead of | (pipe) -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400%7CRaleway:300,400,500,600,700%7CLato:300,400,400italic,600,700" rel="stylesheet" type="text/css" />
+
+    <!-- CORE CSS -->
+    <link href="/Smarty/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <!--date_picker-->
+    <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
+
+
+    <!-- THEME CSS -->
+    <link href="/Smarty/assets/css/essentials.css" rel="stylesheet" type="text/css" />
+    <link href="/Smarty/assets/css/layout.css" rel="stylesheet" type="text/css" />
+
+    <!-- PAGE LEVEL SCRIPTS -->
+    <link href="/Smarty/assets/css/header-1.css" rel="stylesheet" type="text/css" />
+    <link href="/Smarty/assets/css/color_scheme/green.css" rel="stylesheet" type="text/css" id="color_scheme" />
+    <style>
+        *{
+            font-family: 나눔고딕;
+        }
+    </style>
+    <script type="text/javascript" src="/Smarty/assets/plugins/jquery/jquery-2.2.3.min.js"></script>
+    <script src="/jquery/jquery-ui.min.js"></script>
+
+
+    <!--data table-->
+    <!-- CSS DATATABLES -->
+    <link href="/Smarty/assets/css/layout-datatables.css" rel="stylesheet" type="text/css" />
+
+
+
+    <!-- JS DATATABLES -->
+    <script type="text/javascript" src="/Smarty/assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/Smarty/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script type="text/javascript" src="/Smarty/assets/plugins/select2/js/select2.full.min.js"></script>
+
+    <script type="text/javascript">
+        //대분류 해주는 것
+        function getCustomerListByType(event){
+            var target = event.target;
+            var type = target.value;
+            var cus_list = [];
+            $.ajax({
+                url:'/customer/getCustomerListByType',
+                type:'post',
+                data:{
+                    type:type
+                },
+                contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+                crossDomain:true,
+                cache:false,
+                success:function(data){
+                    cus_list = data;
+                    var cus_list_select = document.getElementById('cus_list');
+                    while(cus_list_select.hasChildNodes()){
+                        //모든 자식노드(option tag)를 삭제해주고
+                        cus_list_select.removeChild(cus_list_select.firstChild);
+                    };
+                    var html = '';
+                    for(var i=0;i<cus_list.length;i++){
+                        html+="<option value='"+cus_list[i].name+"'>"+cus_list[i].name+"</option>";
+                    }
+                    //다시 넣음
+                    cus_list_select.innerHTML=html;
+
+                }
+            });
+
+
+        }
+    </script>
+
+
+</head>
+
+
+<body class="smoothscroll enable-animation">
+    <div class="container">
+        <div class="col-md-12 col-xs-12">
+            <div class="heading-title heading-border-bottom">
+                <h2 class="size-20">Modify Address</h2>
+            </div>
+
+
+            <form action="/addressBook/modify" method="post">
+                <fieldset>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-4">
+                                <label>거래처 타입 *</label>
+                                <select class="form-control pointer" id="customer_type" name="customer_type" onchange="getCustomerListByType(event);">
+                                    <option value="전체">거채처 타입</option>
+                                    <option value="병원/제약회사">병원/제약회사</option>
+                                    <option value="학교/연구소">학교/연구소</option>
+                                    <option value="기타">기타</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5 col-sm-6">
+                                <label>거래처 *</label>
+                                <select name="customer_name" class="form-control pointer required" id="cus_list">
+                                    <%for(var i=0;i<customerList.length;i++){%>
+                                    <%if(customerList[i].name==address.customer_name){%>
+                                        <option selected="selected" value="<%=customerList[i].name%>"><%=customerList[i].name%></option>
+                                    <%}else{%>
+                                        <option value="<%=customerList[i].name%>"><%=customerList[i].name%></option>
+                                    <%}%>
+                                    <%}%>>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-3">
+                                <label>담당자 *</label>
+                                <input class="form-control" type="text" name="name" value="<%=address.name%>">
+                            </div>
+                            <div class="col-md-4 col-sm-4">
+                                <label>전화번호 *</label>
+                                <input class="form-control" type="text" name="phone" value="<%=address.phone%>">
+                            </div>
+                            <div class="col-md-5 col-sm-5">
+                                <label>E-mail *</label>
+                                <input class="form-control" type="text" name="email" readonly="readonly" value="<%=address.email%>">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </fieldset>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="submit" value="주소록 보관" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-10">
+                        <input type="button" value="Close" class="btn btn-3d btn-google form-control" onclick="javascript:window.close();opener.location.reload()">
+                    </div>
+                </div>
+            </form>
+            <hr class="margin-top-60" />
+
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+<!-- JAVASCRIPT FILES -->
+<script type="text/javascript">var plugin_path = '/Smarty/assets/plugins/';</script>
+
+
+<script type="text/javascript" src="/Smarty/assets/js/scripts.js"></script>
+
+
+
+
+
+<input type="hidden" id="hid" value="<%=msg%>">
+
+
+<script>
+    var hid = document.getElementById('hid');
+    if(hid.value!=''){
+        alert(hid.value);
+    }
+</script>
+</body>
+</html>
+
