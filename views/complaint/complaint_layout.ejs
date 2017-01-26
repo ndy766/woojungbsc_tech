@@ -36,6 +36,9 @@
     <script type="text/javascript" src="/Smarty/assets/plugins/jquery/jquery-2.2.3.min.js"></script>
     <script src="/jquery/jquery-ui.min.js"></script>
 
+    <!--autocomplete기능 구현위해서-->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <style>
         *{
             font-family: 나눔고딕;
@@ -100,9 +103,23 @@
         function getPhone(event){
             var member_list = event.target;
             var charger_phone = document.getElementById('charger_phone');
+            var representative_charger = document.getElementById('representative_charger');
             charger_phone.value = member_list.value;
+            $.ajax({
+                type:'get',
+                url:'/member/getNameByPhone?phone='+member_list.value,
+                contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+                crossDomain:true,
+                cache:false,
+                success:function(data){
+                    var name = data.name;
+                    representative_charger.value = name;
+                }
+            });
         };
     </script>
+
+
 </head>
 
 <body class="smoothscroll enable-animation">

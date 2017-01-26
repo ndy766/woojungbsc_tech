@@ -147,6 +147,16 @@ router.post('/search', function (req, res) {
 });
 
 
+//자동완성 기능
+router.post('/autocompleteByAddressBook', function(req, res){
+    var value = req.body.value;
+    var sql = "SELECT * FROM address_book WHERE name LIKE '"+value+"%' OR customer_name LIKE '"+value+"%' ORDER BY name";
+    conn.query(sql, function(err, result){
+        res.send(result);
+    });
+});
+
+
 
 
 module.exports = router;

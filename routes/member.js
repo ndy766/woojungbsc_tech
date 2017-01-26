@@ -130,6 +130,18 @@ router.get('/delete', function(req, res){
 
 });
 
+//a/s 대표 방문자를 위한 NAME 리턴해주는 곳
+router.get('/getNameByPhone', function(req, res){
+    var phone = req.query.phone;
+    var sql = "SELECT * FROM member WHERE phone = '"+phone+"'";
+    var member = {};
+    conn.query(sql, function(err, result){
+        member = result[0];
+       res.send(member);
+
+    });
+});
+
 
 
 module.exports = router;

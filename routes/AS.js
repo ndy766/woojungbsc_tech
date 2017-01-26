@@ -276,6 +276,9 @@ router.post('/confirmVisit', function (req, res) {
     var charger_phone = req.body.charger_phone;
     var other_detail = req.body.other_detail;
     var state = 'A/S 방문일자 확정';
+    var revisit_count = '0';
+    var revisit_reason = '';
+    var representative_charger = req.body.representative_charger;
 
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
     conn.query(sql, function (err, result) {
@@ -285,6 +288,9 @@ router.post('/confirmVisit', function (req, res) {
         complaint.state = state;
         complaint.charger_phone = charger_phone;
         complaint.other_detail = other_detail;
+        complaint.revisit_count = revisit_count;
+        complaint.revisit_reason = revisit_reason;
+        complaint.representative_charger = representative_charger;
         var sql2 = 'UPDATE complaint SET ? WHERE no=' + no;
         if (err) {
             console.log('error발생 : ' + err);
@@ -294,6 +300,13 @@ router.post('/confirmVisit', function (req, res) {
                 var sql3 = 'SELECT * FROM complaint WHERE no=' + no;
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
+
+                    var charger_list_for_mail = complaint.charger;
+                    if(complaint.charger.indexOf(',')!=-1){
+                        charger_list_for_mail = complaint.charger.split(',')[0]+' 외 '+(complaint.charger.split(',').length-1)+'인';
+                    };
+
+
                     mailOptions.to = complaint.customer_email;
                     mailOptions.subject = '[(주)우정비에스씨]A/S방문 일자가 확정 되었습니다.';
                     mailOptions.html =
@@ -319,13 +332,13 @@ router.post('/confirmVisit', function (req, res) {
                         '</tr>' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6; border-bottom:1px #D5D5D5 solid;" height="40px" align="center"><b>담당자</b></td>' +
-                        '<td style="border-bottom:1px #D5D5D5 solid;" align="center">' + complaint.charger + '</td>' +
+                        '<td style="border-bottom:1px #D5D5D5 solid;" align="center">' + charger_list_for_mail + '</td>' +
                         '<td style="background-color:#F6F6F6; border-bottom:1px #D5D5D5 solid;" align="center"><b>방문일</b></td>' +
                         '<td style="border-bottom:1px #D5D5D5 solid;" align="center">' + complaint.visit_date + '</td>' +
                         '</tr>' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6;border-bottom:1px #D5D5D5 solid;" height="40px" align="center"><b>담당자 전화번호</b></td>' +
-                        '<td style="border-bottom:1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.charger_phone + '</td>' +
+                        '<td style="border-bottom:1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.charger_phone+' ('+complaint.representative_charger+')' + '</td>' +
                         '</tr>' +
                         '</table>' +
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
@@ -373,6 +386,7 @@ router.post('/confirmReVisit', function (req, res) {
     var customer_charger = req.body.customer_charger;//새로 추가됨 1월 24일
     var customer_email = req.body.customer_email;//새로 추가됨 1월 24일
     var state = 'A/S 재방문 일자 확정';
+    var representative_charger = req.body.representative_charger;
 
     var sql = 'SELECT * FROM complaint WHERE no=' + no;
     conn.query(sql, function (err, result) {
@@ -384,6 +398,8 @@ router.post('/confirmReVisit', function (req, res) {
         complaint.state = state;
         complaint.customer_charger = customer_charger;
         complaint.customer_email = customer_email;
+        complaint.revisit_count = parseInt(complaint.revisit_count)+1;
+        complaint.representative_charger = representative_charger;
         var sql2 = 'UPDATE complaint SET ? WHERE no=' + no;
         if (err) {
             console.log('error발생 : ' + err);
@@ -393,6 +409,13 @@ router.post('/confirmReVisit', function (req, res) {
                 var sql3 = 'SELECT * FROM complaint WHERE no=' + no;
                 conn.query(sql3, function (err, result) {
                     var complaint = result[0];
+
+                    var charger_list_for_mail = complaint.charger;
+                    if(complaint.charger.indexOf(',')!=-1){
+                        charger_list_for_mail = complaint.charger.split(',')[0]+' 외 '+(complaint.charger.split(',').length-1)+'인';
+                    };
+
+
                     mailOptions.to = complaint.customer_email;
                     mailOptions.subject = '[(주)우정비에스씨]A/S 재방문 일자가 확정 되었습니다.';
                     mailOptions.html =
@@ -422,13 +445,13 @@ router.post('/confirmReVisit', function (req, res) {
                         '</tr>' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" height="40px" align="center"><b>담당자</b></td>' +
-                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.charger + '</td>' +
+                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + charger_list_for_mail + '</td>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" align="center"><b>재방문일</b></td>' +
                         '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.revisit_date + '</td>' +
                         '</tr>' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" height="40px" align="center"><b>담당자 전화번호</b></td>' +
-                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.charger_phone + '</td>' +
+                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.charger_phone+' ('+complaint.representative_charger+')' + '</td>' +
                         '</tr>' +
                         '</table>' +
                         '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +

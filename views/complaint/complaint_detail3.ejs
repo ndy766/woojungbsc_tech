@@ -130,7 +130,7 @@
                                     <input type="text" name="charger" class="form-control required" readonly="readonly" value="<%=complaint.charger%>">
                                 </div>
                                 <div class="col-md-6 col-sm-6">
-                                    <label>재방문일 *</label>
+                                    <label>재방문일 * <small class="pull-right"><%=complaint.revisit_count%>차 재방문</small></label>
                                     <input type="text" name="visit_date" class="form-control required" readonly="readonly" value="<%=complaint.revisit_date%>">
                                 </div>
                             </div>
@@ -150,7 +150,13 @@
                     </fieldset>
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-3d btn-instagram btn-xlg btn-block">
+                                <h2>재방문 확정폼</h2>
+                                <span class="block font-lato">재방문일자 확정폼을 불러옵니다.</span>
+                            </button>
+                        </div>
+                        <div class="col-md-6">
                             <a href="/AS/complete?no=<%=complaint.no%>">
                                 <button type="button" class="btn btn-3d btn-teal btn-xlg btn-block">
                                     <h2>A/S 완료</h2>
