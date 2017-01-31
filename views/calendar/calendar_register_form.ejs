@@ -433,7 +433,6 @@
                         </div>
 
 
-
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-md-2 col-sm-2">
@@ -474,13 +473,25 @@
                                     <label>소요 시간 - <small>인원수 x 소요시간(사무실 출발 ~ 도착 기준)</small></label>
                                     <input type="number" name="work_delay" class="form-control">
                                 </div>
-                                    <label>처리 상태</label>
-                                    <div class="col-md-1 col-sm-1">
-                                    <label style="display: inline">완료<input class="form-control" type="radio" name="state" checked="checked" value="완료"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </div>
-                                    <div class="col-md-1 col-sm-1">
-                                    <label style="display: inline">미결<input class="form-control" type="radio" name="state" value="미결"></label>
-                                    </div>
+                                <label>처리 상태 *</label>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="진행중" checked="checked">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="완료">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="미결">
+                                        <i></i> 미결
+                                    </label>
+                                </div>
                                 <div class="col-md-3 col-sm-3">
                                     <label>미결 사유</label>
                                     <select name="undecided_reason" class="form-control pointer">
@@ -499,12 +510,20 @@
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-12">
-                                    <label>사진</label>
+                                    <font size="4"><label><i class="fa fa-upload"></i> 사진등록 - <small>Before/After</small></label></font>
                                     <!-- custom file upload -->
-                                        <i class="fa fa-upload"></i>
-                                        <%for(var i=0;i<3;i++){%>
-                                            <input class="files" type="file" name="file<%=i+1%>" onchange="readURL(this);"><br><img class="img-responsive" ><br>
-                                        <%}%>
+                                        <legend>BEFORE</legend>
+                                            <fieldset style="border:1px solid grey">
+                                                <input class="files" type="file" name="file1" onchange="readURL(this);"><br><img class="img-responsive" alt="BEFORE"><br>
+                                            </fieldset>
+                                        <legend>AFTER</legend>
+                                            <fieldset style="border:1px solid grey">
+                                                <input class="files" type="file" name="file2" onchange="readURL(this);"><br><img class="img-responsive" alt="AFTER"><br>
+                                            </fieldset>
+                                        <legend>ETC</legend>
+                                            <fieldset style="border:1px solid grey">
+                                                <input class="files" type="file" name="file3" onchange="readURL(this);"><br><img class="img-responsive" alt="ETC.."><br>
+                                            </fieldset>
                                 </div>
                             </div>
                         </div>

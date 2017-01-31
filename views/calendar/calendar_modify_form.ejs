@@ -505,24 +505,67 @@
                                     <input type="text" name="changed_component" class="form-control" value="<%=schedule.changed_component%>">
                                 </div>
                                 <div class="col-md-3 col-sm-3">
-                                    <label>소요 시간 - <small>(단위:시간생략)</small></label>
+                                    <label>소요 시간 - <small>인원수 x 소요시간(사무실 출발 ~ 도착 기준)</small></label>
                                     <input type="number" name="work_delay" class="form-control" value="<%=schedule.work_delay%>">
                                 </div>
                                 <label>처리 상태</label>
-                                <%if(schedule.state=='완료'){%>
-                                    <div class="col-md-1 col-sm-1">
-                                        <label style="display: inline"><input class="form-control" type="radio" name="state" checked="checked" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </div>
-                                    <div class="col-md-1 col-sm-1">
-                                        <label style="display: inline"><input class="form-control" type="radio" name="state" value="미결"> 미결</label>
-                                    </div>
+                                <%if(schedule.state=='진행중'){%>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="진행중" checked="checked">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="완료">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="미결">
+                                        <i></i> 미결
+                                    </label>
+                                </div>
+                                <%}else if(schedule.state=='완료'){%>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="진행중">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="완료" checked="checked">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="미결">
+                                        <i></i> 미결
+                                    </label>
+                                </div>
                                 <%}else{%>
-                                    <div class="col-md-1 col-sm-1">
-                                        <label style="display: inline"><input class="form-control" type="radio" name="state" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </div>
-                                    <div class="col-md-1 col-sm-1">
-                                        <label style="display: inline"><input class="form-control" type="radio" name="state" checked="checked" value="미결"> 미결</label>
-                                    </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="진행중">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="완료">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="미결" checked="checked">
+                                        <i></i> 미결
+                                    </label>
+                                </div>
                                 <%}%>
                                 <div class="col-md-3 col-sm-3">
                                     <label>미결 사유</label>
@@ -542,8 +585,25 @@
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-12">
-                                    <label>사진</label>
+                                    <label>사진 - <small>Before/After</small></label>
                                     <div id="img" align="center"></div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <font size="4"><label><i class="fa fa-upload"></i> 사진수정 - <small>Before/After</small></label></font>
+                                    <div id="img" align="center"></div>
+
+                                    <legend>BEFORE</legend>
+                                    <fieldset style="border:1px solid grey">
+                                        <input class="files" type="file" name="file1" onchange="readURL(this);"><br><img class="img-responsive" alt="BEFORE"><br>
+                                    </fieldset>
+                                    <legend>AFTER</legend>
+                                    <fieldset style="border:1px solid grey">
+                                        <input class="files" type="file" name="file2" onchange="readURL(this);"><br><img class="img-responsive" alt="AFTER"><br>
+                                    </fieldset>
+                                    <legend>ETC</legend>
+                                    <fieldset style="border:1px solid grey">
+                                        <input class="files" type="file" name="file3" onchange="readURL(this);"><br><img class="img-responsive" alt="ETC.."><br>
+                                    </fieldset>
                                 </div>
                             </div>
                         </div>
@@ -556,11 +616,12 @@
                     <div class="row">
                         <div class="col-md-12">
                             <input type="submit" value="일정 수정" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30">
+                            <a href="/calendar/delete?no=<%=schedule.no%>"><input type="button" value="일정 삭제" class="btn btn-3d btn-danger btn-xlg btn-block margin-top-30"></a>
                         </div>
                     </div>
 
                 </form>
-                <hr class="margin-top-60" />
+                <hr class="margin-top-60"/>
 
             </div>
         </div>
@@ -842,9 +903,6 @@
         }
     }
 </script>
-
-
-
 
 
 <!-- JAVASCRIPT FILES -->

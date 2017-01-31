@@ -549,43 +549,58 @@ router.post('/modify', function(req, res) {
 
 
    // file upload handling
-   form.on('part', function (part) {
-
-      //파일 받을 때
+   form.on('part', function (part, name) {
+      console.log(part.name);
       var filename;
       var size;
-
-      var flag = false;
-      console.log(part.filename);
       if (part.filename) {
-         checkDirectory(part.filename, function(error) {
-            if(error) {
-               console.log("oh no!!!", error);
-            } else {
-               //Carry on, all good, directory exists / created.
-               flag=true;
-            }
-         });
-
-
          //filename = part.filename;
          var ex = part.filename.split('.')[1];
          var directory = Math.floor(Math.random() * 10) + 1;
          var rand = Math.floor(Math.random() * 1000000) + 1;
-
-         if(flag){
-
-            filename=part.filename;
-            console.log('flag가 true : '+filename);
-         }else{
-            filename = directory + '/' + req.session.user.id + rand + '.' + ex;
-            console.log('flag가 false : '+filename);
-         }
-
+         filename = directory + '/'+req.session.user.id+rand+'.'+ex;
          size = part.byteCount;
-      } else {
+      }else{
          part.resume();
+
       }
+
+
+      // //파일 받을 때
+      // var filename;
+      // var size;
+      //
+      // var flag = false;
+      //
+      // if (part.filename) {
+      //    checkDirectory(part.filename, function(error) {
+      //       if(error) {
+      //          console.log("oh no!!!", error);
+      //       } else {
+      //          //Carry on, all good, directory exists / created.
+      //          flag=true;
+      //       }
+      //    });
+      //
+      //
+      //    //filename = part.filename;
+      //    var ex = part.filename.split('.')[1];
+      //    var directory = Math.floor(Math.random() * 10) + 1;
+      //    var rand = Math.floor(Math.random() * 1000000) + 1;
+      //
+      //    if(flag){
+      //
+      //       filename=part.filename;
+      //       console.log('flag가 true : '+filename);
+      //    }else{
+      //       filename = directory + '/' + req.session.user.id + rand + '.' + ex;
+      //       console.log('flag가 false : '+filename);
+      //    }
+      //
+      //    size = part.byteCount;
+      // } else {
+      //    part.resume();
+      // }
 
       //console.log("Write Streaming file :" + filename);
       var writeStream = fs.createWriteStream('public/schedule_image/' + filename);
@@ -705,7 +720,8 @@ router.post('/modify', function(req, res) {
                state: state,
                undecided_reason: undecided_reason,
                final_writer:final_writer,
-               final_correction_time:final_correction_time
+               final_correction_time:final_correction_time,
+               file_path:file_path.toString()
             };
 
             conn.query(sql3, schedule, function (err, result) {
@@ -740,10 +756,27 @@ router.get('/dropEvent', function(req, res){
    final_correction_time =(final_correction_time.getMonth()+1)+'월 '+ final_correction_time.getDate() + '일 '+('0'+final_correction_time.getHours()).slice(-2)+':'+('0'+final_correction_time.getMinutes()).slice(-2);
 
 
-   var sql = "UPDATE schedule SET start_date='"+start+"', end_date='"+end+"', final_writer='"+final_writer+"', final_correction_time='"+final_correction_time+"' WHERE no="+no;
+   //var sql = "UPDATE schedule SET start_date='"+start+"', end_date='"+end+"', final_writer='"+final_writer+"', final_correction_time='"+final_correction_time+"' WHERE no="+no;
+//
+   //conn.query(sql, function(err, result){
+   //   res.send();
+   //});
 
+   var sql = "SELECT * FROM schedule WHERE no='"+no+"'";
+   var schedule = {};
    conn.query(sql, function(err, result){
-      res.send();
+      schedule = result[0];
+      schedule.start_date = start;
+      schedule.end_date = end;
+      schedule.final_writer = final_writer;
+      schedule.final_correction_time = final_correction_time;
+
+      delete schedule.no;
+
+      var sql2 = "INSERT INTO schedule SET ?";
+      conn.query(sql2, schedule, function(err, result){
+         res.redirect('/');
+      });
    });
 
 });

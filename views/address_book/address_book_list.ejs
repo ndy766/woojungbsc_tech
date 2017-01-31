@@ -55,7 +55,7 @@
     <script type="text/javascript">
 
         function registerForm() {
-            var registerWindow = window.open("/addressBook/registerForm", "registerForm", "width=400, height=500, left=300, top=50");
+            var registerWindow = window.open("/addressBook/registerForm", "registerForm", "width=500, height=600, left=300, top=50");
         }
     </script>
 
@@ -269,7 +269,7 @@
 
                 <form method="post" action="/addressBook/search">
                     <div class="col-md-2 col-xs-2 margin-left-15">
-                        <select class="form-control" name="searchType">
+                        <select class="form-control pointer" name="searchType">
                             <option value="customer_name">거래처</option>
                             <option value="name">담당자</option>
                             <option value="phone">전화번호</option>
@@ -310,7 +310,7 @@
                         <td><%=address_list[i].name%></td>
                         <td><%=address_list[i].email%></td>
                         <td><%=address_list[i].phone%></td>
-                        <td><span style="color:#985f0d" class="pointer" onclick="javascript:window.open('/addressBook/modifyForm?email=<%=address_list[i].email%>','modifyForm', 'width=400, height=500, left=300, top=50');">수정</span></td>
+                        <td><span style="color:#985f0d" class="pointer" onclick="javascript:window.open('/addressBook/modifyForm?email=<%=address_list[i].email%>','modifyForm', 'width=500, height=600, left=300, top=50');">수정</span></td>
                         <td><a href="/addressBook/delete?email=<%=address_list[i].email%>" style="color:red">삭제</a></td>
                     </tr>
                     <%}%>
