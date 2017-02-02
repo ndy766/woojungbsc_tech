@@ -41,101 +41,28 @@
     <script src="/jquery/jquery-ui.min.js"></script>
 
 
+    <!--data table-->
+    <!-- CSS DATATABLES -->
+    <link href="/Smarty/assets/css/layout-datatables.css" rel="stylesheet" type="text/css"/>
+
+
+
+    <!-- JS DATATABLES -->
+    <script type="text/javascript" src="/Smarty/assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/Smarty/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script type="text/javascript" src="/Smarty/assets/plugins/select2/js/select2.full.min.js"></script>
+
     <script type="text/javascript">
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    input.nextSibling.nextSibling.setAttribute('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
+
+        function registerForm() {
+            var registerWindow = window.open("/equipment/registerForm", "", "width=500, height=600, left=300, top=50");
         }
-    </script>
-
-    <script type="text/javascript">
-        function createInput(){
-            var imgTd = document.getElementById('img');
-            var span = document.createElement('span');
-            var count = document.getElementsByClassName('files').length+1;
-            span.innerHTML = '<input class="files" type="file" onchange="readURL(this);" name="'+count+'"><input type="button" class="btn btn-success" value="+" onclick="createInput();"><br><img alt="insert image"><br>';
-            imgTd.appendChild(span);
-        }
-    </script>
-
-    <script type="text/javascript">
-        //대분류 해주는 것
-        function getCustomerListByType(event){
-            var target = event.target;
-            var type = target.value;
-            var cus_list = [];
-            $.ajax({
-                url:'/customer/getCustomerListByType',
-                type:'post',
-                data:{
-                  type:type
-                },
-                contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-                crossDomain:true,
-                cache:false,
-                success:function(data){
-                    cus_list = data;
-                    var cus_list_select = document.getElementById('cus_list');
-                    while(cus_list_select.hasChildNodes()){
-                        //모든 자식노드(option tag)를 삭제해주고
-                        cus_list_select.removeChild(cus_list_select.firstChild);
-                    };
-                    var html = '';
-                    for(var i=0;i<cus_list.length;i++){
-                        html+="<option value='"+cus_list[i].no+"'>"+cus_list[i].name+"</option>";
-                    }
-                    //다시 넣음
-                    cus_list_select.innerHTML=html;
-
-                }
-            });
-
-
-        }
-    </script>
-
-    <script type="text/javascript">
-        $(function() {
-            $( ".date_picker" ).datepicker({
-                dateFormat:'yy-mm-dd',
-                changeMonth: true,
-                dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
-                dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
-                monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
-                monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-            });
-        });
     </script>
 
 
 </head>
 
-<!--
-    AVAILABLE BODY CLASSES:
 
-    smoothscroll 			= create a browser smooth scroll
-    enable-animation		= enable WOW animations
-
-    bg-grey					= grey background
-    grain-grey				= grey grain background
-    grain-blue				= blue grain background
-    grain-green				= green grain background
-    grain-blue				= blue grain background
-    grain-orange			= orange grain background
-    grain-yellow			= yellow grain background
-
-    boxed 					= boxed layout
-    pattern1 ... patern11	= pattern background
-    menu-vertical-hide		= hidden, open on click
-
-    BACKGROUND IMAGE [together with .boxed class]
-    data-background="Smarty/assets/images/boxed_background/1.jpg"
--->
 <body class="smoothscroll enable-animation">
 
 <!-- SLIDE TOP -->
@@ -198,35 +125,7 @@
 
         </div>
     </div>
-    <!-- /Top Bar -->
 
-
-    <!--
-        AVAILABLE HEADER CLASSES
-
-        Default nav height: 96px
-        .header-md 		= 70px nav height
-        .header-sm 		= 60px nav height
-
-        .noborder 		= remove bottom border (only with transparent use)
-        .transparent	= transparent header
-        .translucent	= translucent header
-        .sticky			= sticky header
-        .static			= static header
-        .dark			= dark header
-        .bottom			= header on bottom
-
-        shadow-before-1 = shadow 1 header top
-        shadow-after-1 	= shadow 1 header bottom
-        shadow-before-2 = shadow 2 header top
-        shadow-after-2 	= shadow 2 header bottom
-        shadow-before-3 = shadow 3 header top
-        shadow-after-3 	= shadow 3 header bottom
-
-        .clearfix		= required for mobile menu, do not remove!
-
-        Example Usage:  class="clearfix sticky header-sm transparent noborder"
-    -->
     <div id="header" class="sticky shadow-after-3 clearfix">
 
         <!-- TOP NAV -->
@@ -238,37 +137,16 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
-                <!-- BUTTONS -->
-                <!--<ul class="pull-right nav nav-pills nav-second-main">-->
-
-                <!--</ul>-->
-                <!-- /BUTTONS -->
-
 
                 <!-- Logo -->
                 <a class="logo pull-left" href="/login">
                     <img src="/Smarty/assets/images/logo.png" alt="" />
                 </a>
 
-                <!--
-                    Top Nav
 
-                    AVAILABLE CLASSES:
-                    submenu-dark = dark sub menu
-                -->
                 <div class="navbar-collapse pull-right nav-main-collapse collapse submenu-dark">
                     <nav class="nav-main">
 
-                        <!--
-                            NOTE
-
-                            For a regular link, remove "dropdown" class from LI tag and "dropdown-toggle" class from the href.
-                            Direct Link Example:
-
-                            <li>
-                                <a href="#">HOME</a>
-                            </li>
-                        -->
                         <ul id="topMain" class="nav nav-pills nav-main">
                             <li class="dropdown active"><!-- HOME -->
                                 <a href="/AS/getAllList">
@@ -311,6 +189,11 @@
                                         </a>
                                     </li>
                                     <li class="dropdown">
+                                        <a href="/equipment">
+                                            <i class="et-trophy"></i> 장비명 관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
                                         <a href="/excel">
                                             <i class="et-grid"></i> 엑셀 추출
                                         </a>
@@ -337,211 +220,56 @@
     <!-- WELCOME -->
     <section class="nopadding-bottom">
         <div class="container">
+
+            <div class="row form-group">
+
+                <form method="post" action="/equipment/search">
+                    <div class="col-md-2 col-xs-2 margin-left-15">
+                        <select class="form-control pointer" name="searchType">
+                            <option value="manufacturer">제조사</option>
+                            <option value="name">장비명</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-xs-3">
+                        <input type="text" class="form-control" name="keyword">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <input type="submit" class="form-control" value="SEARCH">
+                    </div>
+                    <div class="col-md-2 col-xs-2 pull-right margin-right-15">
+                        <input type="button" class="form-control btn btn-success" value="장비 등록" onclick="registerForm();">
+                    </div>
+                </form>
+            </div>
+
             <div class="col-md-12 col-xs-12">
 
-                <div class="heading-title heading-border-bottom">
-                    <h2 class="size-20">Register</h2>
-                    <h6 class="pull-right"><%=final_correction_time%> <%=name%>님이 작성중</h6>
-                </div>
-
-                <form action="/calendar/register" method="post" enctype="multipart/form-data"  data-toastr-position="top-right">
-                    <fieldset>
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="col-md-2 col-sm-2">
-                                    <label>시작일 *</label>
-                                    <input type="text" name="start_date" value="<%=start%>" class="form-control date_picker required">
-                                </div>
-                                <div class="col-md-2 col-sm-2">
-                                    <label>종료일 *</label>
-                                    <input type="text" name="end_date" value="<%=end%>" class="form-control date_picker required">
-                                </div>
-                                <div class="col-md-2 col-sm-2">
-                                <label>업무구분 *</label>
-                                <select class="form-control pointer" name="work_type">
-                                    <%for(var i=0;i<work_type_list.length;i++){%>
-                                    <option><%=work_type_list[i].code_name%></option>
-                                    <%}%>
-                                </select>
-                                </div>
-                                <div class="col-md-2 col-sm-2">
-                                    <label>거래처 타입 *</label>
-                                    <select class="form-control pointer" id="customer_type" name="customer_type" onchange="getCustomerListByType(event);">
-                                        <option value="전체">거채처 타입</option>
-                                        <option value="병원/제약회사">병원/제약회사</option>
-                                        <option value="학교/연구소">학교/연구소</option>
-                                        <option value="기타">기타</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <label>거래처 *</label>
-                                    <select name="customer_no" class="form-control pointer required" id="cus_list">
-                                        <%for(var i=0;i<customerList.length;i++){%>
-                                        <option value="<%=customerList[i].no%>"><%=customerList[i].name%></option>
-                                        <%}%>>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="row">
-                            <div class="form-group inline-group">
-                                <div class="col-md-12 col-sm-12">
-                                <label>방문자 *</label>
-                                <%for(var i=0;i<memberList.length;i++){%>
-                                <div class="col-md-1 col-sm-2 col-xs-3">
-                                    <label style="display:inline"><input type="checkbox" class="form-control"  name="charger" style="display:inline" value="<%=memberList[i].id%>"><%=memberList[i].name%></label>
-                                </div>
-                                <%}%>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="inline-group form-group">
-
-                                <div class="col-md-3 col-sm-3">
-                                    <label>방문형태 *</label>
-                                    <label class="radio">
-                                        <input type="radio" name="visit_type" value="신규 방문" checked="checked">
-                                        <i></i> 신규 방문
-                                    </label>
-                                </div>
-                                <br>
-                                <div class="col-md-3 col-sm-3">
-                                    <label></label>
-                                    <label class="radio">
-                                        <input type="radio" name="visit_type" value="재방문">
-                                        <i></i> 재방문
-                                    </label>
-                                </div>
-                                <br class="hidden-sm hidden-md">
-
-                                <div class="col-md-6 col-sm-6">
-                                    <label>재방문 횟수 </label>
-                                    <select name="revisit_count" class="form-control pointer">
-                                        <%for(var i=0;i<10;i++){%>
-                                        <%if(i==0){%>
-                                        <option selected="selected"><%=i%></option>
-                                        <%}else{%>
-                                        <option><%=i%></option>
-                                        <%}%>
-                                        <%}%>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="col-md-2 col-sm-2">
-                                    <label>제조사</label>
-                                    <select name="manufacturer" class="form-control pointer">
-                                        <%for(var i=0;i<manufacturer_list.length;i++){%>
-                                        <option value="<%=manufacturer_list[i].code_name%>"><%=manufacturer_list[i].code_name%></option>
-                                        <%}%>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <label>제품명</label>
-                                    <input type="text" name="equipment" value="" class="form-control">
-                                </div>
-                                <div class="col-md-6 col-sm-6">
-                                    <label>시리얼넘버</label>
-                                    <input type="text" name="serial_number" value="" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="col-md-12 col-sm-12">
-                                    <label>조치 사항</label>
-                                    <textarea name="work_detail" rows="4" class="form-control"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="col-md-2 col-sm-2">
-                                    <label>교체장비/부품</label>
-                                    <input type="text" name="changed_component" class="form-control">
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <label>소요 시간 - <small>인원수 x 소요시간(사무실 출발 ~ 도착 기준)</small></label>
-                                    <input type="number" name="work_delay" class="form-control">
-                                </div>
-                                <label>처리 상태 *</label>
-                                <div class="col-md-1 col-sm-1">
-                                    <label class="radio">
-                                        <input type="radio" name="state" value="진행중" checked="checked">
-                                        <i></i> 진행중
-                                    </label>
-                                </div>
-                                <div class="col-md-1 col-sm-1">
-                                    <label class="radio">
-                                        <input type="radio" name="state" value="완료">
-                                        <i></i> 완료
-                                    </label>
-                                </div>
-                                <div class="col-md-1 col-sm-1">
-                                    <label class="radio">
-                                        <input type="radio" name="state" value="미결">
-                                        <i></i> 미결
-                                    </label>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <label>미결 사유</label>
-                                    <select name="undecided_reason" class="form-control pointer">
-                                        <%for(var i=0;i<undecided_reason_list.length;i++){%>
-                                        <%if(undecided_reason_list[i].code_name=='미결사유 선택'){%>
-                                        <option selected="selected"><%=undecided_reason_list[i].code_name%></option>
-                                        <%}else{%>
-                                        <option><%=undecided_reason_list[i].code_name%></option>
-                                        <%}%>
-                                        <%}%>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="col-md-12 col-sm-12">
-                                    <font size="4"><label><i class="fa fa-upload"></i> 사진등록 - <small>Before/After</small></label></font>
-                                    <!-- custom file upload -->
-                                        <legend>BEFORE</legend>
-                                            <fieldset style="border:1px solid grey">
-                                                <input class="files" type="file" name="file1" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                            </fieldset>
-                                        <legend>AFTER</legend>
-                                            <fieldset style="border:1px solid grey">
-                                                <input class="files" type="file" name="file2" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                            </fieldset>
-                                        <legend>ETC</legend>
-                                            <fieldset style="border:1px solid grey">
-                                                <input class="files" type="file" name="file3" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                            </fieldset>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" value="<%=start_msec%>" name="start_msec">
-                        <input type="hidden" value="<%=end_msec%>" name="end_msec">
-                    </fieldset>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input type="submit" value="일정 등록" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30">
-                        </div>
-                    </div>
-
-                </form>
-                <hr class="margin-top-60" />
-
+                <table class="table table-striped table-hover table-bordered" id="sample_editable_1">
+                    <thead>
+                    <tr>
+                        <th>순번</th>
+                        <th>장비명</th>
+                        <th>제조사</th>
+                        <th>장비 ID</th>
+                        <th>등록일</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for(var i=0;i<equipment_list.length;i++){%>
+                    <tr>
+                        <td><%=i+1%></td>
+                        <td><%=equipment_list[i].name%></td>
+                        <td><%=equipment_list[i].manufacturer%></td>
+                        <td><%=equipment_list[i].id%></td>
+                        <td><%=equipment_list[i].register_date%></td>
+                        <td><span style="color:#985f0d" class="pointer" onclick="javascript:window.open('/equipment/modifyForm?id=<%=equipment_list[i].id%>','', 'width=500, height=600, left=300, top=50');">수정</span></td>
+                        <td><a href="/equipment/delete?id=<%=equipment_list[i].id%>" style="color:red">삭제</a></td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -825,3 +553,4 @@
 
 </body>
 </html>
+

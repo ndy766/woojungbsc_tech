@@ -55,7 +55,7 @@
     <script type="text/javascript">
 
         function registerForm() {
-            var registerWindow = window.open("/addressBook/registerForm", "registerForm", "width=500, height=600, left=300, top=50");
+            var registerWindow = window.open("/addressBook/registerForm", "", "width=500, height=600, left=300, top=50");
         }
     </script>
 
@@ -310,7 +310,7 @@
                         <td><%=address_list[i].name%></td>
                         <td><%=address_list[i].email%></td>
                         <td><%=address_list[i].phone%></td>
-                        <td><span style="color:#985f0d" class="pointer" onclick="javascript:window.open('/addressBook/modifyForm?email=<%=address_list[i].email%>','modifyForm', 'width=500, height=600, left=300, top=50');">수정</span></td>
+                        <td><span style="color:#985f0d" class="pointer" onclick="javascript:window.open('/addressBook/modifyForm?email=<%=address_list[i].email%>','', 'width=500, height=600, left=300, top=50');">수정</span></td>
                         <td><a href="/addressBook/delete?email=<%=address_list[i].email%>" style="color:red">삭제</a></td>
                     </tr>
                     <%}%>

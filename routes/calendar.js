@@ -81,7 +81,7 @@ router.get('/registerForm', function(req, res){
       customerList = result;
 
       //기술부 직원 리스트를 조회해오는
-      var sql2 = "SELECT * FROM member ORDER BY position";
+      var sql2 = "SELECT * FROM member ORDER BY name";
       var memberList = [];
       conn.query(sql2, function(err, result){
          memberList = result;
@@ -103,6 +103,7 @@ router.get('/registerForm', function(req, res){
                   manufacturer_list.push(code_list[i]);
                }
             }
+
             res.render('calendar_register_form',{
                start:start,
                end:end,
@@ -360,6 +361,7 @@ router.get('/getAllSchedule', function(req , res){
    conn.query(sql, function(err, result){
       scheduleList = result;
       var event_arr = [];
+
       for(var i=0;i<scheduleList.length;i++){
          var color="";
          if(scheduleList[i].state=='완료'){
@@ -397,8 +399,18 @@ router.get('/getAllSchedule', function(req , res){
             no:scheduleList[i].no,
             borderColor:borderColor
          });
-
       }
+
+      //공휴일 정보 입력
+      var holiday_arr = [];
+      holiday_arr = holiday.getHolidayArrays();
+      for(var i=0;i<holiday_arr.length;i++){
+         event_arr.push(holiday_arr[i]);
+      }
+
+
+
+
       res.send(event_arr);
    });
 
@@ -422,7 +434,7 @@ router.get('/getScheduleByNo', function(req, res){
       customerList = result;
 
       //기술부 직원 리스트를 조회해오는
-      var sql2 = "SELECT * FROM member ORDER BY position";
+      var sql2 = "SELECT * FROM member ORDER BY name";
       var memberList = [];
       conn.query(sql2, function(err, result){
          memberList = result;
@@ -550,7 +562,7 @@ router.post('/modify', function(req, res) {
 
    // file upload handling
    form.on('part', function (part, name) {
-      console.log(part.name);
+
       var filename;
       var size;
       if (part.filename) {
@@ -747,6 +759,7 @@ router.get('/dropEvent', function(req, res){
    var no = req.query.no;
    var start = req.query.start;
    var end = req.query.end;
+   var copyOrMove = req.query.copyOrMove;
    start = new Date(parseInt(start)).toISOString().split('T')[0];
    end = new Date(parseInt(end)-86400000).toISOString().split('T')[0];
 
@@ -755,30 +768,31 @@ router.get('/dropEvent', function(req, res){
    var final_correction_time = new Date();
    final_correction_time =(final_correction_time.getMonth()+1)+'월 '+ final_correction_time.getDate() + '일 '+('0'+final_correction_time.getHours()).slice(-2)+':'+('0'+final_correction_time.getMinutes()).slice(-2);
 
+   if(copyOrMove == 'move') {
+      var sql = "UPDATE schedule SET start_date='" + start + "', end_date='" + end + "', final_writer='" + final_writer + "', final_correction_time='" + final_correction_time + "' WHERE no=" + no;
 
-   //var sql = "UPDATE schedule SET start_date='"+start+"', end_date='"+end+"', final_writer='"+final_writer+"', final_correction_time='"+final_correction_time+"' WHERE no="+no;
-//
-   //conn.query(sql, function(err, result){
-   //   res.send();
-   //});
-
-   var sql = "SELECT * FROM schedule WHERE no='"+no+"'";
-   var schedule = {};
-   conn.query(sql, function(err, result){
-      schedule = result[0];
-      schedule.start_date = start;
-      schedule.end_date = end;
-      schedule.final_writer = final_writer;
-      schedule.final_correction_time = final_correction_time;
-
-      delete schedule.no;
-
-      var sql2 = "INSERT INTO schedule SET ?";
-      conn.query(sql2, schedule, function(err, result){
-         res.redirect('/');
+      conn.query(sql, function (err, result) {
+         res.send();
       });
-   });
+   } else {
 
+      var sql = "SELECT * FROM schedule WHERE no='" + no + "'";
+      var schedule = {};
+      conn.query(sql, function (err, result) {
+         schedule = result[0];
+         schedule.start_date = start;
+         schedule.end_date = end;
+         schedule.final_writer = final_writer;
+         schedule.final_correction_time = final_correction_time;
+
+         delete schedule.no;
+
+         var sql2 = "INSERT INTO schedule SET ?";
+         conn.query(sql2, schedule, function (err, result) {
+            res.redirect('/');
+         });
+      });
+   }
 });
 
 module.exports = router;

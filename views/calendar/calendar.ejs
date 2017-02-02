@@ -98,6 +98,7 @@
 //
 //            });
 
+
             //모바일, 태블릿
             $('#calendar_mobile').fullCalendar({
                 customButtons: {
@@ -105,7 +106,7 @@
                         text: '새 일정',
                         click: function() {
                             location.href="/calendar/registerForm?registerType=plusBtn";
-                        }
+                        },
                     }
                 },
                 header:{
@@ -125,12 +126,43 @@
                     location.href='/calendar/registerForm?start='+start+'&end='+end;
                 },
                 eventClick:function(calEvent, jsEvent, view){
-                    location.href='/calendar/getScheduleByNo?no='+calEvent.no+'&start='+calEvent.start+'&end='+calEvent.end;
+                    if(calEvent.className=='holiday') return;
+
+                        $(this).css('border', '2px dashed black')
+                        location.href = '/calendar/getScheduleByNo?no=' + calEvent.no + '&start=' + calEvent.start + '&end=' + calEvent.end;
+                },
+                eventMouseover: function(calEvent, jsEvent) {
+                    if(calEvent.className=='holiday') return;
+
+                    var tooltip = '<div class="tooltipevent" style="width:100px;height:100px;background:yellow;position:absolute;z-index:10001;">' + calEvent.title + '</div>';
+                    $("body").append(tooltip);
+                    $(this).mouseover(function(e) {
+                        $(this).css('z-index', 10000);
+                        $('.tooltipevent').fadeIn('500');
+                        $('.tooltipevent').fadeTo('10', 1.9);
+                    }).mousemove(function(e) {
+                        $('.tooltipevent').css('top', e.pageY + 10);
+                        $('.tooltipevent').css('left', e.pageX + 20);
+                    });
+                },
+                eventMouseout: function(calEvent, jsEvent) {
+                    $(this).css('z-index', 8);
+                    $('.tooltipevent').remove();
+                },
+                eventDragStart:function(event, jsEvent, ui, view){
+                    if(event.className[0]=='holiday') return;
                 },
                 eventDrop:function(event, delta, revertFunc){
+                    if(event.className[0]=='holiday') return;
+                    var copyOrMove = '';
+                    if(confirm("일정을 복사 하시겠습니까?(취소 시 일정 이동)")==true){
+                        copyOrMove = 'copy';
+                    }else{
+                        copyOrMove = 'move'
+                    }
                     //location.href='/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end;
                     $.ajax({
-                        url:'/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end,
+                        url:'/calendar/dropEvent?no='+event.no+'&start='+event.start+"&end="+event.end+"&copyOrMove="+copyOrMove,
                         type:'get',
                         success:function(data){
                             location.reload();
@@ -151,12 +183,12 @@
                 },
                 viewRender: function(view){
                     //풀캘린더의 높이를 크게해주기 위함
-                    $("#calendar_mobile").fullCalendar("option", "contentHeight", (view.name === "month" && view.width>500)? NaN : 700);
+                    $("#calendar_mobile").fullCalendar("option", "contentHeight", (view.name === "month" && view.width>500)? 10 : 700);
                 }
+
 //                height:400
 
             });
-
 
         });
     </script>
@@ -265,7 +297,8 @@
                                 <li><a href="/member">직원 관리</a></li>
                                 <li><a href="/customer">거래처 관리</a></li>
                                 <li><a href="/code">데이터 관리</a></li>
-                                <li><a href="/login">주소록 관리</a></li>
+                                <li><a href="/addressBook">주소록 관리</a></li>
+                                <li><a href="/equipment">장비명 관리</a></li>
                                 <li><a href="/excel">엑셀 추출</a></li>
                             </ul>
                         </li>

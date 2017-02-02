@@ -3,11 +3,11 @@
 <!--[if IE 9]>			<html class="ie ie9"> <![endif]-->
 <!--[if gt IE 9]><!-->	<html> <!--<![endif]-->
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>WoojungBSC TECH DEPARTMENT</title>
     <meta name="keywords" content="HTML5,CSS3,Template" />
-    <meta name="description" content="" />
-    <meta name="Author" content="Dorin Grigoras [www.stepofweb.com]" />
+    <meta name="description"/>
+    <meta name="Author" content="Dorin Grigoras [www.stepofweb.com]"/>
 
     <!-- mobile settings -->
     <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" />
@@ -112,6 +112,16 @@
         });
     </script>
 
+    <script>
+        function confirmDeleteSchedule(){
+            var no = document.getElementById('no').value;
+            if(confirm("정말 삭제하시겠습니까?")==true){
+                location.href="/calendar/delete?no="+no;
+            }else{
+                return;
+            }
+        }
+    </script>
 
 </head>
 
@@ -416,8 +426,8 @@
                         <div class="row">
                             <div class="inline-group form-group">
                                 <%if(schedule.visit_type=='신규 방문'){%>
-                                <label>방문형태 *</label>
                                 <div class="col-md-3 col-sm-3">
+                                    <label>방문형태 *</label>
                                     <label class="radio">
                                         <input type="radio" name="visit_type" value="신규 방문" checked="checked">
                                         <i></i> 신규 방문
@@ -425,14 +435,15 @@
                                 </div>
                                 <br>
                                 <div class="col-md-3 col-sm-3">
+                                    <label></label>
                                     <label class="radio">
                                         <input type="radio" name="visit_type" value="재방문">
                                         <i></i> 재방문
                                     </label>
                                 </div>
                                 <%}else{%>
-                                <label>방문형태 *</label>
                                 <div class="col-md-3 col-sm-3">
+                                    <label>방문형태 *</label>
                                     <label class="radio">
                                         <input type="radio" name="visit_type" value="신규 방문">
                                         <i></i> 신규 방문
@@ -440,13 +451,14 @@
                                 </div>
                                 <br>
                                 <div class="col-md-3 col-sm-3">
+                                    <label></label>
                                     <label class="radio">
                                         <input type="radio" name="visit_type" value="재방문" checked="checked">
                                         <i></i> 재방문
                                     </label>
                                 </div>
                                 <%}%>
-                                <br>
+                                <br class="hidden-sm hidden-md">
                                 <div class="col-md-6 col-sm-6">
                                     <label>재방문 횟수 </label>
                                     <select name="revisit_count" class="form-control pointer">
@@ -500,11 +512,11 @@
 
                         <div class="row">
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3">
+                                <div class="col-md-2 col-sm-2">
                                     <label>교체장비/부품</label>
                                     <input type="text" name="changed_component" class="form-control" value="<%=schedule.changed_component%>">
                                 </div>
-                                <div class="col-md-3 col-sm-3">
+                                <div class="col-md-4 col-sm-4">
                                     <label>소요 시간 - <small>인원수 x 소요시간(사무실 출발 ~ 도착 기준)</small></label>
                                     <input type="number" name="work_delay" class="form-control" value="<%=schedule.work_delay%>">
                                 </div>
@@ -588,21 +600,21 @@
                                     <label>사진 - <small>Before/After</small></label>
                                     <div id="img" align="center"></div>
                                 </div>
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-12 col-sm-12">
                                     <font size="4"><label><i class="fa fa-upload"></i> 사진수정 - <small>Before/After</small></label></font>
                                     <div id="img" align="center"></div>
 
                                     <legend>BEFORE</legend>
                                     <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file1" onchange="readURL(this);"><br><img class="img-responsive" alt="BEFORE"><br>
+                                        <input class="files" type="file" name="file1" onchange="readURL(this);"><br><img class="img-responsive"><br>
                                     </fieldset>
                                     <legend>AFTER</legend>
                                     <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file2" onchange="readURL(this);"><br><img class="img-responsive" alt="AFTER"><br>
+                                        <input class="files" type="file" name="file2" onchange="readURL(this);"><br><img class="img-responsive"><br>
                                     </fieldset>
                                     <legend>ETC</legend>
                                     <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file3" onchange="readURL(this);"><br><img class="img-responsive" alt="ETC.."><br>
+                                        <input class="files" type="file" name="file3" onchange="readURL(this);"><br><img class="img-responsive"><br>
                                     </fieldset>
                                 </div>
                             </div>
@@ -610,13 +622,13 @@
                         <input type="hidden" value="<%=start_msec%>" name="start_msec">
                         <input type="hidden" value="<%=end_msec%>" name="end_msec">
                         <input type="hidden" value="<%=file_path_arr%>" id="arr">
-                        <input type="hidden" value="<%=schedule.no%>" name="no">
+                        <input type="hidden" value="<%=schedule.no%>" name="no" id="no">
                     </fieldset>
 
                     <div class="row">
                         <div class="col-md-12">
                             <input type="submit" value="일정 수정" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30">
-                            <a href="/calendar/delete?no=<%=schedule.no%>"><input type="button" value="일정 삭제" class="btn btn-3d btn-danger btn-xlg btn-block margin-top-30"></a>
+                            <input type="button" value="일정 삭제" class="btn btn-3d btn-danger btn-xlg btn-block margin-top-30" onclick="confirmDeleteSchedule();">
                         </div>
                     </div>
 
