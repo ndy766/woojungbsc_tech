@@ -151,7 +151,7 @@ router.post('/register', function(req, res){
    var visit_type = req.body.visit_type;
    var revisit_count = req.body.revisit_count;
    var changed_component =  req.body.changed_component;
-   var state = req.body.state;
+   var state = '완료';
    var undecided_reason=req.body.undecided_reason;
 
    //170117 파일 업로드하면서 추가된 부분
@@ -185,7 +185,7 @@ router.post('/register', function(req, res){
          work_detail=value;
       }else if(name=='work_delay'){
          work_delay=value;
-      }else if(name=='visit_type'){
+      }else if(name=='visit_type_as' || name=='visit_type_RBDS'){
          visit_type=value;
       }else if(name=='revisit_count'){
          revisit_count=value;
@@ -342,6 +342,8 @@ router.post('/register', function(req, res){
                final_correction_time:final_correction_time
             };
             conn.query(sql3, schedule, function(err, result){
+
+               console.log(schedule);
                res.redirect('/calendar');
             });
          });
@@ -502,7 +504,7 @@ router.post('/modify', function(req, res) {
    var visit_type = req.body.visit_type;
    var revisit_count = req.body.revisit_count;
    var changed_component = req.body.changed_component;
-   var state = req.body.state;
+   var state = '완료';//내근의 경우 라디오 버튼 선택창이 없으므로
    var undecided_reason = req.body.undecided_reason;
 
 
@@ -542,7 +544,7 @@ router.post('/modify', function(req, res) {
          work_detail = value;
       } else if (name == 'work_delay') {
          work_delay = value;
-      } else if (name == 'visit_type') {
+      } else if (name=='visit_type_as' || name=='visit_type_RBDS') {
          visit_type = value;
       } else if (name == 'revisit_count') {
          revisit_count = value;

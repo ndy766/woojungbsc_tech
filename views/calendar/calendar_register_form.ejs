@@ -112,6 +112,56 @@
         });
     </script>
 
+    <script type="text/javascript">
+        function checkForm(work_type){
+            var type = work_type.value;
+            var form_list = document.getElementsByClassName('calendar_form');
+            for(var i=0;i<form_list.length;i++){
+                form_list[i].setAttribute('style','display:none');
+            }
+
+            if(type=='무상유지보수' || type=='유상유지보수'){
+                document.getElementById('form_as').setAttribute('style', 'display:show');
+            }else if(type=='RBDS'){
+                document.getElementById('form_RBDS').setAttribute('style', 'display:show');
+            }else if(type=='내근업무'){
+                document.getElementById('form_inner').setAttribute('style', 'display:show');
+            }else{
+                document.getElementById('form_as').setAttribute('style', 'display:show');
+            }
+
+        }
+
+    </script>
+
+
+    <script>
+        function submitSchedule(){
+            var type = document.getElementById('work_type').value;
+            var form_type = '';
+
+            if(type=='무상유지보수' || type=='유상유지보수'){
+                form_type='form_as';
+            }else if(type=='RBDS'){
+                form_type='form_RBDS';
+            }else if(type=='내근업무'){
+                form_type='form_inner';
+            }else{
+                form_type='form_as';
+            }
+
+            var form_list = document.getElementsByClassName('calendar_form');
+            for(var i=0;i<form_list.length;i++){
+                if(form_list[i].getAttribute('id')==form_type){
+                    continue;
+                }else {
+                    form_list[i].innerHTML = '';
+                }
+            }
+            var scheduleRegisterForm = document.getElementById('scheduleRegisterForm');
+            scheduleRegisterForm.submit();
+        }
+    </script>
 
 </head>
 
@@ -344,7 +394,7 @@
                     <h6 class="pull-right"><%=final_correction_time%> <%=name%>님이 작성중</h6>
                 </div>
 
-                <form action="/calendar/register" method="post" enctype="multipart/form-data"  data-toastr-position="top-right">
+                <form action="/calendar/register" method="post" enctype="multipart/form-data"  data-toastr-position="top-right" id="scheduleRegisterForm">
                     <fieldset>
                         <div class="row">
                             <div class="form-group">
@@ -358,9 +408,13 @@
                                 </div>
                                 <div class="col-md-2 col-sm-2">
                                 <label>업무구분 *</label>
-                                <select class="form-control pointer" name="work_type">
+                                <select class="form-control pointer" name="work_type" onchange="checkForm(this)" id="work_type">
                                     <%for(var i=0;i<work_type_list.length;i++){%>
-                                    <option><%=work_type_list[i].code_name%></option>
+                                    <%if(work_type_list[i].code_name=='업무구분'){%>
+                                    <option selected="selected" value="<%=work_type_list[i].code_name%>"><%=work_type_list[i].code_name%></option>
+                                    <%}else{%>
+                                    <option value="<%=work_type_list[i].code_name%>"><%=work_type_list[i].code_name%></option>
+                                    <%}%>
                                     <%}%>
                                 </select>
                                 </div>
@@ -399,13 +453,16 @@
                             </div>
                         </div>
 
+                        <!-- form_as-->
+                        <div id="form_as" class='calendar_form' style="display:none">
+
                         <div class="row">
                             <div class="inline-group form-group">
 
                                 <div class="col-md-3 col-sm-3">
                                     <label>방문형태 *</label>
                                     <label class="radio">
-                                        <input type="radio" name="visit_type" value="신규 방문" checked="checked">
+                                        <input type="radio" name="visit_type_as" value="신규 방문" checked="checked">
                                         <i></i> 신규 방문
                                     </label>
                                 </div>
@@ -413,7 +470,7 @@
                                 <div class="col-md-3 col-sm-3">
                                     <label></label>
                                     <label class="radio">
-                                        <input type="radio" name="visit_type" value="재방문">
+                                        <input type="radio" name="visit_type_as" value="재방문">
                                         <i></i> 재방문
                                     </label>
                                 </div>
@@ -433,7 +490,6 @@
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="row">
                             <div class="form-group">
@@ -459,7 +515,7 @@
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-md-12 col-sm-12">
-                                    <label>조치 사항</label>
+                                    <label>업무 내용</label>
                                     <textarea name="work_detail" rows="4" class="form-control"></textarea>
                                 </div>
                             </div>
@@ -478,13 +534,13 @@
                                 <label>처리 상태 *</label>
                                 <div class="col-md-1 col-sm-1">
                                     <label class="radio">
-                                        <input type="radio" name="state" value="진행중" checked="checked">
+                                        <input type="radio" name="state_as" value="진행중" checked="checked">
                                         <i></i> 진행중
                                     </label>
                                 </div>
                                 <div class="col-md-1 col-sm-1">
                                     <label class="radio">
-                                        <input type="radio" name="state" value="완료">
+                                        <input type="radio" name="state_as" value="완료">
                                         <i></i> 완료
                                     </label>
                                 </div>
@@ -529,13 +585,114 @@
                                 </div>
                             </div>
                         </div>
+
+                        </div><!--form_as-->
+
+                        <!--form rbds-->
+                        <div id="form_RBDS" class='calendar_form' style="display:none">
+
+                            <div class="row">
+                                <div class="inline-group form-group">
+
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>방문형태 *</label>
+                                        <label class="radio">
+                                            <input type="radio" name="visit_type_RBDS" value="신규 방문" checked="checked">
+                                            <i></i> 신규 방문
+                                        </label>
+                                    </div>
+                                    <br>
+                                    <div class="col-md-3 col-sm-3">
+                                        <label></label>
+                                        <label class="radio">
+                                            <input type="radio" name="visit_type_RBDS" value="재방문">
+                                            <i></i> 재방문
+                                        </label>
+                                    </div>
+                                    <br class="hidden-sm hidden-md">
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12">
+                                        <label>업무 내용</label>
+                                        <textarea name="work_detail" rows="4" class="form-control">멸균구역 : </textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-4 col-sm-4">
+                                        <label>소요 시간 - <small>인원수 x 소요시간(사무실 출발 ~ 도착 기준)</small></label>
+                                        <input type="number" name="work_delay" class="form-control">
+                                    </div>
+                                    <label>처리 상태 *</label>
+                                    <div class="col-md-2 col-sm-2">
+                                        <label class="radio">
+                                            <input type="radio" name="state_RBDS" value="진행중" checked="checked">
+                                            <i></i> 진행중
+                                        </label>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <label class="radio">
+                                            <input type="radio" name="state_RBDS" value="완료">
+                                            <i></i> 완료
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12">
+                                        <font size="4"><label><i class="fa fa-upload"></i> 사진등록 - <small>Before/After</small></label></font>
+                                        <!-- custom file upload -->
+                                        <legend>BEFORE</legend>
+                                        <fieldset style="border:1px solid grey">
+                                            <input class="files" type="file" name="file4" onchange="readURL(this);"><br><img class="img-responsive"><br>
+                                        </fieldset>
+                                        <legend>AFTER</legend>
+                                        <fieldset style="border:1px solid grey">
+                                            <input class="files" type="file" name="file5" onchange="readURL(this);"><br><img class="img-responsive"><br>
+                                        </fieldset>
+                                        <legend>ETC</legend>
+                                        <fieldset style="border:1px solid grey">
+                                            <input class="files" type="file" name="file6" onchange="readURL(this);"><br><img class="img-responsive"><br>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--form_rbds-->
+
+
+                        <!--form 내근-->
+                        <div id="form_inner" class='calendar_form' style="display:none">
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12">
+                                        <label>업무 내용</label>
+                                        <textarea name="work_detail" rows="4" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--form_내근-->
+
+
                         <input type="hidden" value="<%=start_msec%>" name="start_msec">
                         <input type="hidden" value="<%=end_msec%>" name="end_msec">
                     </fieldset>
 
                     <div class="row">
                         <div class="col-md-12">
-                            <input type="submit" value="일정 등록" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30">
+                            <input type="button" value="일정 등록" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30" onclick="submitSchedule();">
                         </div>
                     </div>
 
