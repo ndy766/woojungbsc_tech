@@ -191,7 +191,7 @@ router.post('/register', function(req, res){
          revisit_count=value;
       }else if(name=='changed_component'){
          changed_component=value;
-      }else if(name=='state'){
+      }else if(name == 'state_as' || name == 'state_RBDS'){
          state=value;
       }else if(name=='undecided_reason'){
          undecided_reason = value;
@@ -550,7 +550,7 @@ router.post('/modify', function(req, res) {
          revisit_count = value;
       } else if (name == 'changed_component') {
          changed_component = value;
-      } else if (name == 'state') {
+      } else if (name == 'state_as' || name == 'state_RBDS') {
          state = value;
       } else if (name == 'undecided_reason') {
          undecided_reason = value;
