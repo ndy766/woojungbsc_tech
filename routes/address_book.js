@@ -17,11 +17,21 @@ var conn = mysql.createConnection(DBoption);
 conn.connect();
 
 
-
 router.get('/', function(req, res){
     var name = req.session.user.name;
     var sql = "SELECT * FROM address_book ORDER BY customer_name";
     var address_list = [];
+
+
+    if(req.session.user==undefined){
+        res.redirect('/?errorMessage=login_requirement');
+    };
+    //관리자만 가능하도록
+    if(req.session.user.userType=='member'){
+        res.redirect('/login');
+        return;
+    }
+
 
     conn.query(sql, function(err, result){
         address_list = result;

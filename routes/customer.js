@@ -27,7 +27,7 @@ router.get('/', function(req, res){
         return;
     }
 
-    var sql = 'select * from customer ORDER BY type';
+    var sql = 'select * from customer ORDER BY type, name';
     var customerList = [];
     conn.query(sql, function(err, result){
         customerList = result;
@@ -79,7 +79,9 @@ router.get('/delete', function(req, res){
 
     conn.query(sql, function(err, result){
         var href = '/customer/delete';
-        res.send({href:href});
+        res.send({
+            href:href
+        });
     });
 });
 
@@ -99,8 +101,9 @@ router.post('/getCustomerListByType', function(req, res){
         res.send(cus_list);
     })
 
-
 });
+
+
 
 //ajax로 autocomplete기능 구현
 router.post('/autocompleteByCustomer', function(req, res){

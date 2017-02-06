@@ -37,13 +37,18 @@ router.get('/', function(req, res){
         for(var i =0;i<memberList.length;i++){
             memberList[i].position = positionCheck.getMemberPosition(memberList[i].position);
         }
-        res.render('member_list', {memberList:memberList});
+        res.render('member_list', {
+            memberList:memberList,
+            name : req.session.user.name
+        });
     });
 
 });
 
 router.get('/registerForm', function(req, res){
-   res.render('member_registerForm',{});
+   res.render('member_registerForm',{
+       name:req.session.user.name
+   });
 
 });
 
@@ -86,7 +91,10 @@ router.get('/getDetail', function(req, res){
       var member = result[0];
 
        member.position = positionCheck.getMemberPosition(member.position);
-       res.render('member_detail', {member:member});
+       res.render('member_detail', {
+           member:member,
+           name:req.session.user.name
+       });
 
    });
 

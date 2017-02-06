@@ -1,0 +1,62 @@
+<%- layout('../layout') %>
+
+<div align=center style="position:relative; top:10%;">
+
+    <fieldset>
+        <legend>사용자 정보</legend>
+        <form action="/member/modify" method="post"><input type="hidden" name="id" value="<%=member.id%>">
+    <table align="center" width="280" class="table-bordered table-condensed table-striped" border="1">
+
+        <tr>
+            <td>이름</td><td><input type="text" name="name" value="<%=member.name%>"></td>
+        </tr>
+        <tr>
+            <td>직급</td>
+            <td>
+                <select name="position" id="memberDetail_select">
+                    <option value="0">부장</option>
+                    <option value="1">차장</option>
+                    <option value="2">과장</option>
+                    <option value="3">대리</option>
+                    <option value="4">주임</option>
+                    <option value="5" selected="selected">사원</option>
+                    <option value="6">기타</option>
+                </select>
+
+            </td>
+        </tr>
+        <tr>
+            <td>전화번호</td><td><input type="text" name="phone" value="<%=member.phone%>"></td>
+        </tr>
+        <tr>
+            <td height="40px">아이디</td><td><%=member.id%></td>
+        </tr>
+        <tr>
+            <td>비밀번호</td><td><input type="text" name="password" value="<%=member.password%>"></td>
+        </tr>
+    </table>
+    <br>
+       <button class="btn btn-warning">정보 수정하기</button>
+    </form>
+        <a href="/member/delete?id=<%=member.id%>"><button class="btn btn-danger">사용자 삭제</button></a>
+    </fieldset>
+
+    <input class="pos" type="hidden" value="<%=member.position%>">
+</div>
+
+
+
+<script>
+    //해결해야됨 => 왜 대리 위로만 스크립트가 작동하는가?
+    window.onload = function() {
+        var position_select = document.getElementById('memberDetail_select');
+        var pos = document.getElementsByClassName('pos')[0];
+        for (var i = 0; i < 7; i++) {
+            if (position_select.childNodes[i + 1].innerHTML == pos.value) {
+                position_select.childNodes[i + 1].setAttribute('selected', 'selected');
+                break;
+            }
+        }
+    }
+</script>
+

@@ -1,0 +1,44 @@
+<%- layout('../layout') %>
+
+
+<div align=center style="position:relative; top:10%;">
+
+    <fieldset>
+        <legend>사용자 정보</legend>
+        <form action="/member/register" method="post">
+    <table align="center" width="280" class="table-bordered table-condensed table-striped" border="1">
+        <tr>
+            <td>이름</td><td><input type="text" name="name"></td>
+        </tr>
+        <tr>
+            <td>직급</td>
+            <td>
+                <select name="position">
+                    <option value="0">부장</option>
+                    <option value="1">차장</option>
+                    <option value="2">과장</option>
+                    <option value="3">대리</option>
+                    <option value="4">주임</option>
+                    <option value="5">사원</option>
+                    <option value="6">기타</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>전화번호</td><td><input type="text" name="phone" placeholder="'-'를 포함해서 입력하세요."></td>
+        </tr>
+        <tr>
+            <td height="40px">아이디</td><td><input type="text" name="id" placeholder="중복되지 않도록 입력하세요."></td>
+        </tr>
+        <tr>
+            <td>비밀번호</td><td><input type="text" name="password"></td>
+        </tr>
+    </table>
+    <br>
+       <button class="btn btn-success">등록하기</button>
+    </form>
+    </fieldset>
+
+
+</div>
+

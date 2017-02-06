@@ -23,6 +23,16 @@ router.get('/', function(req, res){
     var sql = "SELECT * FROM equipment ORDER BY manufacturer, name";
     var equipment_list = [];
 
+    if(req.session.user==undefined){
+        res.redirect('/?errorMessage=login_requirement');
+    };
+    //관리자만 가능하도록
+    if(req.session.user.userType=='member'){
+        res.redirect('/login');
+        return;
+    };
+
+
     conn.query(sql, function(err, result){
         equipment_list = result;
         res.render('equipment_list',{
@@ -30,8 +40,8 @@ router.get('/', function(req, res){
             equipment_list:equipment_list
         });
     });
-
 });
+
 
 router.get('/registerForm', function(req, res){
     var msg = req.query.msg;

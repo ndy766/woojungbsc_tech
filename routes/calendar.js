@@ -392,8 +392,16 @@ router.get('/getAllSchedule', function(req , res){
             };
          };
 
+         var manufac = scheduleList[i].manufacturer;
+         if(manufac!=null && manufac!=undefined && manufac!=''){
+            manufac = " "+manufac;
+         }else{
+            manufac = "";
+         }
+
+
          event_arr.push({
-            title:scheduleList[i].charger_name + " / " +scheduleList[i].customer_name,
+            title:scheduleList[i].charger_name + " / " +scheduleList[i].customer_name + manufac,
             color:color,
             textColor : textColor,
             start : scheduleList[i].start_date,
