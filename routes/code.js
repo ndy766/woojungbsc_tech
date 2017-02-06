@@ -31,7 +31,10 @@ router.get('/', function(req, res){
     var codeList = [];
     conn.query(sql, function(err, result){
         codeList = result;
-        res.render('code_list', {codeList:codeList});
+        res.render('code_list', {
+            codeList:codeList,
+            name:req.session.user.name
+        });
     });
 
 });
@@ -79,7 +82,9 @@ router.get('/delete', function(req, res){
 
     conn.query(sql, function(err, result){
         var href = '/code/delete';
-        res.send({href:href});
+        res.send({
+            href:href
+        });
     });
 });
 

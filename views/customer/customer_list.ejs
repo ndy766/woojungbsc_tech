@@ -1,89 +1,602 @@
-<%- layout('../layout') %>
+<!DOCTYPE html>
+<!--[if IE 8]>			<html class="ie ie8"> <![endif]-->
+<!--[if IE 9]>			<html class="ie ie9"> <![endif]-->
+<!--[if gt IE 9]><!-->	<html> <!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>WoojungBSC TECH DEPARTMENT</title>
+    <meta name="keywords" content="HTML5,CSS3,Template" />
+    <meta name="description" content="" />
+    <meta name="Author" content="Dorin Grigoras [www.stepofweb.com]" />
 
-<script>
-    function modifyCustomer(event){
-        var target = event.target;
-        var no = target.parentNode.parentNode.childNodes[3].childNodes[1].innerHTML;
+    <!-- mobile settings -->
+    <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" />
+    <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 
-        var name = prompt('수정할 이름을 입력하세요');
-        var type = prompt('수정할 거래처종류를 입력하세요 (1. 병원/제약회사 2.학교/연구소 3.기타)');
+    <!-- WEB FONTS : use %7C instead of | (pipe) -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400%7CRaleway:300,400,500,600,700%7CLato:300,400,400italic,600,700" rel="stylesheet" type="text/css" />
 
-        if(name!=null && name!="" && name!=null && type!=null && type!="" && type!=null)
-        $.ajax({
-            url: '/customer/modify',
-            dataType: 'json',
-            type:'post',
-            data: {
-                no:no,
-                name:name,
-                type:type
-            },
-            success:function(data){
-                location.reload();
-            }
+    <!-- CORE CSS -->
+    <link href="/Smarty/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
-        });
-    }
+    <!--date_picker-->
+    <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
 
-    function deleteCustomer(event){
-        var target = event.target;
-        var no = target.parentNode.parentNode.childNodes[3].childNodes[1].innerHTML;
 
-        $.ajax({
-            url: '/customer/delete?no='+no,
-            dataType: 'json',
-            type:'get',
-            success:function(data){
-                location.reload();
-            }
+    <!-- THEME CSS -->
+    <link href="/Smarty/assets/css/essentials.css" rel="stylesheet" type="text/css" />
+    <link href="/Smarty/assets/css/layout.css" rel="stylesheet" type="text/css" />
 
-        })
-    }
+    <!-- PAGE LEVEL SCRIPTS -->
+    <link href="/Smarty/assets/css/header-1.css" rel="stylesheet" type="text/css" />
+    <link href="/Smarty/assets/css/color_scheme/green.css" rel="stylesheet" type="text/css" id="color_scheme" />
+    <style>
+        *{
+            font-family: 나눔고딕;
+        }
+    </style>
+    <script type="text/javascript" src="/Smarty/assets/plugins/jquery/jquery-2.2.3.min.js"></script>
+    <script src="/jquery/jquery-ui.min.js"></script>
 
-    function registerCustomer(event){
-        var name = prompt('등록할 거래처의 이름을 입력하세요');
-        var type = prompt('등록할 거래처의 종류를 입력하세요 (1. 병원/제약회사 2.학교/연구소 3.기타)')
 
-        if(name!=null && name!="" && name!=null && type!=null && type!="" && type!=null)
+    <!--data table-->
+    <!-- CSS DATATABLES -->
+    <link href="/Smarty/assets/css/layout-datatables.css" rel="stylesheet" type="text/css"/>
+
+
+
+    <!-- JS DATATABLES -->
+    <script type="text/javascript" src="/Smarty/assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/Smarty/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script type="text/javascript" src="/Smarty/assets/plugins/select2/js/select2.full.min.js"></script>
+
+
+    <script>
+        function modifyCustomer(no){
+            var no = no;
+
+            var name = prompt('수정할 이름을 입력하세요');
+            var type = prompt('수정할 거래처종류를 입력하세요 (1. 병원/제약회사 2.학교/연구소 3.기타)');
+
+            if(name!=null && name!="" && name!=null && type!=null && type!="" && type!=null)
+                $.ajax({
+                    url: '/customer/modify',
+                    dataType: 'json',
+                    type:'post',
+                    data: {
+                        no:no,
+                        name:name,
+                        type:type
+                    },
+                    success:function(data){
+                        location.reload();
+                    }
+
+                });
+        }
+
+        function deleteCustomer(no){
+
+            var no = no;
+            var flag = confirm('정말 삭제하시겠습니까?');
+            if(!flag) return;
+
             $.ajax({
-                url: '/customer/register',
+                url: '/customer/delete?no='+no,
                 dataType: 'json',
-                type:'post',
-                data: {
-                    name:name,
-                    type:type
-                },
+                type:'get',
                 success:function(data){
                     location.reload();
                 }
 
-            });
-    }
-</script>
+            })
+        }
 
-<div align=center style="position:relative; top:7%;">
-    <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
-        <tr>
-            <th>순번</th>
-            <th>고유번호</th>
-            <th>거래처명</th>
-            <th>거래처종류</th>
-            <th>비고</th>
-        </tr>
-        <%for(var i=0;i<customerList.length;i++){%>
-        <tr align="center" class="customer_tr">
-            <td><%=i+1%></td>
-            <td>C-<span><%=customerList[i].no%></span></td>
-            <td><%=customerList[i].name%></td>
-            <td><%=customerList[i].type%></td>
-            <td><button class="btn btn-warning" onclick="modifyCustomer(event);">수정</button> <button class="btn btn-danger" onclick="deleteCustomer(event);">제거</button></td>
-        </tr>
-        <%}%>
-    </table>
-    <br>
-    <div>
-        <button class="btn btn-success" onclick="registerCustomer(event);">거래처 등록</button>
+        function registerCustomer(){
+            var name = prompt('등록할 거래처의 이름을 입력하세요');
+            var type = prompt('등록할 거래처의 종류를 입력하세요 (1. 병원/제약회사 2.학교/연구소 3.기타)')
+
+            if(name!=null && name!="" && name!=null && type!=null && type!="" && type!=null)
+                $.ajax({
+                    url: '/customer/register',
+                    dataType: 'json',
+                    type:'post',
+                    data: {
+                        name:name,
+                        type:type
+                    },
+                    success:function(data){
+                        location.reload();
+                    }
+
+                });
+        }
+    </script>
+
+
+</head>
+
+
+<body class="smoothscroll enable-animation">
+
+<!-- SLIDE TOP -->
+<div id="slidetop">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <h6><i class="icon-heart"></i> 우정BSC 기술부</h6>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas metus nulla, commodo a sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa. </p>
+            </div>
+
+            <div class="col-md-4">
+                <h6><i class="icon-attachment"></i> RECENTLY VISITED</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#"><i class="fa fa-angle-right"></i> Consectetur adipiscing elit amet</a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> This is a very long text, very very very very very very very very very very very very </a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> Lorem ipsum dolor sit amet</a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> Dolor sit amet,consectetur adipiscing elit amet</a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> Consectetur adipiscing elit amet,consectetur adipiscing elit</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h6><i class="icon-envelope"></i>Contact</h6>
+                <ul class="list-unstyled">
+                    <li><b>주소:</b> 경기도 수원시 영통구 광교로 145,<br> 차세대융합기술연구원 A동8층</li>
+                    <li><b>전화번호:</b> 031-888-9369</li>
+                    <li><b>E-mail:</b> wj@woojungbsc.co.kr</li>
+                    <li><b>Fax:</b> 031-888-9368</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <a class="slidetop-toggle" href="#"><!-- toggle button --></a>
+
+</div>
+<!-- /SLIDE TOP -->
+
+
+<!-- wrapper -->
+<div id="wrapper">
+
+    <!-- Top Bar -->
+    <div id="topBar">
+        <div class="container">
+
+            <!-- right -->
+            <ul class="top-links list-inline pull-right">
+                <li class="text-welcome hidden-xs">Welcome to Woojung, <strong><%=name%>님</strong></li>
+                <li>
+                    <a class="dropdown-toggle no-text-underline" href="/login/logout"><i class="glyphicon glyphicon-off"></i>로그아웃</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <div id="header" class="sticky shadow-after-3 clearfix">
+
+        <!-- TOP NAV -->
+        <header id="topNav">
+            <div class="container">
+
+                <!-- Mobile Menu Button -->
+                <button class="btn btn-mobile" data-toggle="collapse" data-target=".nav-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+
+                <!-- Logo -->
+                <a class="logo pull-left" href="/login">
+                    <img src="/Smarty/assets/images/logo.png" alt="" />
+                </a>
+
+
+                <div class="navbar-collapse pull-right nav-main-collapse collapse submenu-dark">
+                    <nav class="nav-main">
+
+                        <ul id="topMain" class="nav nav-pills nav-main">
+                            <li class="dropdown active"><!-- HOME -->
+                                <a href="/AS/getAllList">
+                                    A/S관리
+                                </a>
+                            </li>
+                            <li class="dropdown"><!-- PAGES -->
+                                <a href="/inspection/createForm">
+                                    주기안내
+                                </a>
+                            </li>
+                            <li class="dropdown"><!-- PAGES -->
+                                <a href="/calendar">
+                                    캘린더
+                                </a>
+                            </li>
+                            <li class="dropdown"><!-- SHOP -->
+                                <a class="dropdown-toggle">
+                                    DB관리
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li class="dropdown">
+                                        <a href="/member">
+                                            <i class="et-genius"></i> 직원관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/customer">
+                                            <i class="et-newspaper"></i> 거래처 관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/code">
+                                            <i class="et-expand"></i> 데이터 관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/addressBook">
+                                            <i class="et-magnifying-glass"></i> 주소록 관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/equipment">
+                                            <i class="et-trophy"></i> 장비명 관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/excel">
+                                            <i class="et-grid"></i> 엑셀 추출
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a id="sidepanel_btn" href="#" class="fa fa-bars"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </header>
+        <!-- /Top Nav -->
+
+    </div>
+
+
+
+
+
+    <!-- WELCOME -->
+    <section class="nopadding-bottom">
+        <div class="container">
+
+            <div class="col-md-12 col-xs-12">
+                <div class="row">
+                    <div class="pull-right margin-right-20 margin-bottom-20">
+                        <button class="btn btn-success" onclick="registerCustomer()">거래처 등록</button>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="col-md-12 col-xs-12">
+
+                <table class="table table-striped table-hover table-bordered" id="sample_editable_1">
+                    <thead>
+                    <tr>
+                        <th>순번</th>
+                        <th>고유번호</th>
+                        <th>거래처명</th>
+                        <th>거래처 종류</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for(var i=0;i<customerList.length;i++){%>
+                    <tr>
+                        <td><%=i+1%></td>
+                        <td>C-<span><%=customerList[i].no%></span></td>
+                        <td><%=customerList[i].name%></td>
+                        <td><%=customerList[i].type%></td>
+                        <td><span style="color:#985f0d" class="pointer" onclick="modifyCustomer(<%=customerList[i].no%>)">수정</span></td>
+                        <td><span style="color:red" class="pointer" onclick="deleteCustomer(<%=customerList[i].no%>)">삭제</span></td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- /WELCOME -->
+
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <!-- Footer Logo -->
+                    <img class="footer-logo" src="/Smarty/assets/images/logo-footer.png" alt="" />
+
+                    <!-- Small Description -->
+                    <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+
+                    <!-- Contact Address -->
+                    <address>
+                        <ul class="list-unstyled">
+                            <li class="footer-sprite address">
+                                PO Box 21132<br>
+                                Here Weare St, Melbourne<br>
+                                Vivas 2355 Australia<br>
+                            </li>
+                            <li class="footer-sprite phone">
+                                Phone: 1-800-565-2390
+                            </li>
+                            <li class="footer-sprite email">
+                                <a href="mailto:support@yourname.com">support@yourname.com</a>
+                            </li>
+                        </ul>
+                    </address>
+                    <!-- /Contact Address -->
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <!-- Latest Blog Post -->
+                    <h4 class="letter-spacing-1">LATEST NEWS</h4>
+                    <ul class="footer-posts list-unstyled">
+                        <li>
+                            <a href="#">Donec sed odio dui. Nulla vitae elit libero, a pharetra augue</a>
+                            <small>29 June 2015</small>
+                        </li>
+                        <li>
+                            <a href="#">Nullam id dolor id nibh ultricies</a>
+                            <small>29 June 2015</small>
+                        </li>
+                        <li>
+                            <a href="#">Duis mollis, est non commodo luctus</a>
+                            <small>29 June 2015</small>
+                        </li>
+                    </ul>
+                    <!-- /Latest Blog Post -->
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <!-- Links -->
+                    <h4 class="letter-spacing-1">EXPLORE SMARTY</h4>
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Services</a></li>
+                        <li><a href="#">Our Clients</a></li>
+                        <li><a href="#">Our Pricing</a></li>
+                        <li><a href="#">Smarty Tour</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                    <!-- /Links -->
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <!-- Newsletter Form -->
+                    <h4 class="letter-spacing-1">KEEP IN TOUCH</h4>
+                    <p>Subscribe to Our Newsletter to get Important News &amp; Offers</p>
+
+                    <form class="validate" action="php/newsletter.php" method="post" data-success="Subscribed! Thank you!" data-toastr-position="bottom-right">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                            <input type="email" id="email" name="email" class="form-control required" placeholder="Enter your Email">
+                            <span class="input-group-btn">
+										<button class="btn btn-success" type="submit">Subscribe</button>
+									</span>
+                        </div>
+                    </form>
+                    <!-- /Newsletter Form -->
+
+                    <!-- Social Icons -->
+                    <div class="margin-top-20">
+                        <a href="#" class="social-icon social-icon-border social-facebook pull-left" data-toggle="tooltip" data-placement="top" title="Facebook">
+
+                            <i class="icon-facebook"></i>
+                            <i class="icon-facebook"></i>
+                        </a>
+
+                        <a href="#" class="social-icon social-icon-border social-twitter pull-left" data-toggle="tooltip" data-placement="top" title="Twitter">
+                            <i class="icon-twitter"></i>
+                            <i class="icon-twitter"></i>
+                        </a>
+
+                        <a href="#" class="social-icon social-icon-border social-gplus pull-left" data-toggle="tooltip" data-placement="top" title="Google plus">
+                            <i class="icon-gplus"></i>
+                            <i class="icon-gplus"></i>
+                        </a>
+
+                        <a href="#" class="social-icon social-icon-border social-linkedin pull-left" data-toggle="tooltip" data-placement="top" title="Linkedin">
+                            <i class="icon-linkedin"></i>
+                            <i class="icon-linkedin"></i>
+                        </a>
+
+                        <a href="#" class="social-icon social-icon-border social-rss pull-left" data-toggle="tooltip" data-placement="top" title="Rss">
+                            <i class="icon-rss"></i>
+                            <i class="icon-rss"></i>
+                        </a>
+
+                    </div>
+                    <!-- /Social Icons -->
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            <div class="container">
+                <ul class="pull-right nomargin list-inline mobile-block">
+                    <li><a href="#">Terms &amp; Conditions</a></li>
+                    <li>&bull;</li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+                &copy; All Rights Reserved, Company LTD
+            </div>
+        </div>
+    </footer>
+    <!-- /FOOTER -->
+
+</div>
+<!-- /wrapper -->
+
+
+<!--
+    SIDE PANEL
+
+        sidepanel-dark 			= dark color
+        sidepanel-light			= light color (white)
+        sidepanel-theme-color		= theme color
+
+        sidepanel-inverse		= By default, sidepanel is placed on right (left for RTL)
+                        If you add "sidepanel-inverse", will be placed on left side (right on RTL).
+-->
+<div id="sidepanel" class="sidepanel-light">
+    <a id="sidepanel_close" href="#"><!-- close -->
+        <i class="glyphicon glyphicon-remove"></i>
+    </a>
+
+    <div class="sidepanel-content">
+        <h2 class="sidepanel-title">Explore Smarty</h2>
+
+        <!-- SIDE NAV -->
+        <ul class="list-group">
+
+            <li class="list-group-item">
+                <a href="#">
+                    <i class="ico-category et-heart"></i>
+                    ABOUT US
+                </a>
+            </li>
+            <li class="list-group-item list-toggle"><!-- add "active" to stay open on page load -->
+                <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-1" class="collapsed">
+                    <i class="ico-dd icon-angle-down"><!-- Drop Down Indicator --></i>
+                    <i class="ico-category et-strategy"></i>
+                    PORTFOLIO
+                </a>
+                <ul id="collapse-1" class="list-unstyled collapse"><!-- add "in" to stay open on page load -->
+                    <li><a href="#"><i class="fa fa-angle-right"></i> 1 COLUMN</a></li>
+                    <li class="active">
+                        <span class="badge">New</span>
+                        <a href="#"><i class="fa fa-angle-right"></i> 2 COLUMNS</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> 3 COLUMNS</a></li>
+                </ul>
+            </li>
+            <li class="list-group-item list-toggle"><!-- add "active" to stay open on page load -->
+                <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-2" class="collapsed">
+                    <i class="ico-dd icon-angle-down"><!-- Drop Down Indicator --></i>
+                    <i class="ico-category et-trophy"></i>
+                    PORTFOLIO
+                </a>
+                <ul id="collapse-2" class="list-unstyled collapse"><!-- add "in" to stay open on page load -->
+                    <li><a href="#"><i class="fa fa-angle-right"></i> SLIDER</a></li>
+                    <li class="active"><a href="#"><i class="fa fa-angle-right"></i> HEADERS</a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> FOOTERS</a></li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    <i class="ico-category et-happy"></i>
+                    BLOG
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    <i class="ico-category et-beaker"></i>
+                    FEATURES
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    <i class="ico-category et-map-pin"></i>
+                    CONTACT
+                </a>
+            </li>
+
+        </ul>
+        <!-- /SIDE NAV -->
+
+        <!-- social icons -->
+        <div class="text-center margin-bottom-30">
+
+            <a href="#" class="social-icon social-icon-sm social-facebook" data-toggle="tooltip" data-placement="top" title="Facebook">
+                <i class="icon-facebook"></i>
+                <i class="icon-facebook"></i>
+            </a>
+
+            <a href="#" class="social-icon social-icon-sm social-twitter" data-toggle="tooltip" data-placement="top" title="Twitter">
+                <i class="icon-twitter"></i>
+                <i class="icon-twitter"></i>
+            </a>
+
+            <a href="#" class="social-icon social-icon-sm social-linkedin" data-toggle="tooltip" data-placement="top" title="Linkedin">
+                <i class="icon-linkedin"></i>
+                <i class="icon-linkedin"></i>
+            </a>
+
+            <a href="#" class="social-icon social-icon-sm social-rss" data-toggle="tooltip" data-placement="top" title="RSS">
+                <i class="icon-rss"></i>
+                <i class="icon-rss"></i>
+            </a>
+
+        </div>
+        <!-- /social icons -->
+
     </div>
 
 </div>
+<!-- /SIDE PANEL -->
+
+
+<!-- SCROLL TO TOP -->
+<a href="#" id="toTop"></a>
+
+
+<!-- PRELOADER -->
+<div id="preloader">
+    <div class="inner">
+        <span class="loader"></span>
+    </div>
+</div><!-- /PRELOADER -->
+
+
+<!-- JAVASCRIPT FILES -->
+<script type="text/javascript">var plugin_path = '/Smarty/assets/plugins/';</script>
+
+
+<script type="text/javascript" src="/Smarty/assets/js/scripts.js"></script>
+
+
+
+
+
+
+
+</body>
+</html>
 

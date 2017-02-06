@@ -24,7 +24,9 @@ router.get('/', function(req, res){
         res.redirect('/?errorMessage=login_requirement');
     };
 
-    res.render('excel_list', {});
+    res.render('excel_list', {
+        name:req.session.user.name
+    });
 })
 
 router.get('/complaint',function(req, res){

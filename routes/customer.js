@@ -31,7 +31,10 @@ router.get('/', function(req, res){
     var customerList = [];
     conn.query(sql, function(err, result){
         customerList = result;
-        res.render('customer_list', {customerList:customerList});
+        res.render('customer_list', {
+            customerList:customerList,
+            name:req.session.user.name
+        });
     });
 
 });
