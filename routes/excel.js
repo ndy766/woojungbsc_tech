@@ -20,6 +20,10 @@ conn.connect();
 var nodeExcel = require('excel-export');
 
 router.get('/', function(req, res){
+    if(req.session.user.userType=='member'){
+        res.redirect('/');
+    }
+
     if(req.session.user==undefined){
         res.redirect('/?errorMessage=login_requirement');
     };

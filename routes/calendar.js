@@ -4,9 +4,11 @@
 var express = require('express');
 var router = express.Router();
 
+
 //file
 var multiparty = require('multiparty');
 var fs = require('fs');
+
 
 //db
 var mysql = require('mysql');
@@ -22,6 +24,23 @@ conn.connect();
 
 //공휴일 지정
 var holiday = require('../util/holiday');
+
+
+//mail service
+var nodemailer = require('nodemailer');
+var inlineCss = require('nodemailer-juice');//for nodemailer css
+
+var transporter = nodemailer.createTransport('smtps://cscenterwoojung:woojung8302@smtp.gmail.com');
+transporter.use('compile', inlineCss());
+
+var mailOptions = {
+   from: 'WOOJUNGBSC',
+   to: '',
+   subject: '',
+   html: ''
+};
+
+
 
 
 //디렉토리 존재하는지 check하는 함수
@@ -154,6 +173,9 @@ router.post('/register', function(req, res){
    var state = '완료';
    var undecided_reason=req.body.undecided_reason;
 
+   //170207추가된 부분
+   var failure = '';
+
    //170117 파일 업로드하면서 추가된 부분
    var file_path = [];
 
@@ -195,6 +217,8 @@ router.post('/register', function(req, res){
          state=value;
       }else if(name=='undecided_reason'){
          undecided_reason = value;
+      }else if(name=='failure'){
+         failure = value;
       }
    });
 
@@ -291,16 +315,15 @@ router.post('/register', function(req, res){
       //}
 
 
-
       var sql = "SELECT * FROM customer WHERE no="+customer_no;
       var customer = {};
       conn.query(sql, function(err, result){
          customer = result[0];
          var find_helper = "";
          for(var i=0;i<tmp_arr.length;i++) {
-            if(i==tmp_arr.length-1){
+            if(i==tmp_arr.length-1) {
                find_helper += " id = '" + tmp_arr[i] + "'";
-            }else {
+            } else {
                find_helper += " id = '" + tmp_arr[i] + "' OR";
             }
          }
@@ -339,11 +362,11 @@ router.post('/register', function(req, res){
                undecided_reason:undecided_reason,
                file_path:file_path.toString(),
                final_writer:final_writer,
-               final_correction_time:final_correction_time
+               final_correction_time:final_correction_time,
+               failure:failure
             };
             conn.query(sql3, schedule, function(err, result){
 
-               console.log(schedule);
                res.redirect('/calendar');
             });
          });
@@ -417,11 +440,8 @@ router.get('/getAllSchedule', function(req , res){
       for(var i=0;i<holiday_arr.length;i++){
          event_arr.push(holiday_arr[i]);
       }
-
-
-
-
       res.send(event_arr);
+
    });
 
 });
@@ -515,6 +535,9 @@ router.post('/modify', function(req, res) {
    var state = '완료';//내근의 경우 라디오 버튼 선택창이 없으므로
    var undecided_reason = req.body.undecided_reason;
 
+   //170207 추가된 부분
+   var failure = '';
+
 
    //170118 파일 업로드하면서 추가된 부분
    var file_path = [];
@@ -566,6 +589,8 @@ router.post('/modify', function(req, res) {
          //console.log('file form으로부터 하나 읽음 ');
       } else if (name == 'no'){
          no = value;
+      }else if(name=='failure'){
+         failure = value;
       }
    });
 
@@ -743,7 +768,8 @@ router.post('/modify', function(req, res) {
                undecided_reason: undecided_reason,
                final_writer:final_writer,
                final_correction_time:final_correction_time,
-               file_path:file_path.toString()
+               file_path:file_path.toString(),
+               failure:failure
             };
 
             conn.query(sql3, schedule, function (err, result) {
@@ -804,5 +830,100 @@ router.get('/dropEvent', function(req, res){
       });
    }
 });
+
+
+
+//report 불러오는 폼
+router.get('/reportForm', function(req, res){
+   var no = req.query.no;
+   var sql = "SELECT * FROM schedule WHERE no="+no;
+   var schedule = {};
+   conn.query(sql, function(err, result){
+      schedule = result[0];
+         res.render("calendar_report_form",{
+            name:req.session.user.name,
+            schedule:schedule
+         });
+   });
+});
+
+//report 메일 발송
+router.get('/sendReport', function(req, res){
+
+   //form
+   mailOptions.to = 'ndy766@naver.com';
+   mailOptions.subject = '[(주)우정비에스씨]고객님의 A/S 정비소견서입니다.';
+   mailOptions.html =
+            '<div align="center">' +
+            '<div align="left" style="border-bottom:2px solid black"><font size="4">제    목 : 랙세척기 온도 상승 불가 건에 대한 점검 결과</font></div>'+
+            '<br><br>' +
+            '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;1. 귀사의 무궁한 발전을 기원합니다.</font></div><br><br><br>'+
+            '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;2. 다음과 같이 당사에서 점검한 제품에 대해 조치 내용을 드리오니 업무에 참조하시기 바랍니다.</font></div><br>'+
+               '<font size="3"><h1>정 비 소 견 서</h1></font>'+
+               '<table align="center" cellpadding="5" cellspacing="0" width="800px" style="border-collapse:collapse;position:relative;border:1px solid black">'+
+               '<tr height="30px">'+
+               '<td align="center" style="background-color: lightgray" width="100px">문서번호</td>'+
+               '<td width="200px">WJ 312-0214-m33</td>'+
+               '<td align="center" style="background-color: lightgray" width="100px">작성일자</td>'+
+               '<td width="200px">2016년 11월 1일</td>'+
+               '</tr>'+
+               '<tr height="30px">'+
+               '<td align="center" style="background-color: lightgray">발신인</td>'+
+               '<td>(주)우정 BSC</td>'+
+               '<td align="center" style="background-color: lightgray">발신부서</td>'+
+               '<td>기술부</td>'+
+               '</tr>'+
+               '<tr height="30px">'+
+               '<td align="center" style="background-color: lightgray">작성자</td>'+
+               '<td>김대환</td>'+
+               '<td align="center" style="background-color: lightgray">연락처</td>'+
+               '<td>031-888-9369</td>'+
+               '</tr>'+
+               '<tr height="30px">' +
+               '<td align="center" style="background-color: lightgray">수신인</td>'+
+               '<td colspan="3">서울대치과대학</td>'+
+               '</tr>'+
+               '<tr height="30px">'+
+               '<td align="center" style="background-color: lightgray">참  조</td>'+
+               '<td>김용수</td>'+
+               '<td align="center" style="background-color: lightgray">연락처</td>'+
+               '<td>010-3707-0745</td>'+
+               '</tr>'+
+               '<tr height="30px">'+
+               '<td align="center" style="background-color: lightgray">설치장소</td>'+
+               '<td>김용수</td>'+
+               '<td align="center" style="background-color: lightgray">점검일시</td>'+
+               '<td>2017년 1월 16일 ~ 2017년 1월 19일</td>'+
+               '</tr>'+
+               '<tr height="30px">'+
+               '<td align="center" style="background-color: lightgray">고장내용</td>'+
+               '<td colspan="3">세척기의 린스 탱크 온도가 올라 가지 않음</td>'+
+               '</tr>'+
+               '</tr>'+
+               '<tr height="50px">'+
+               '<td align="center" style="background-color: lightgray">고장내용</td>'+
+               '<td colspan="3">세척기의 린스 탱크 온도가 올라 가지 않음</td>'+
+               '</tr>'+
+               '<tr height="30px">'+
+               '<td align="center" style="background-color: lightgray">BEFORE</td>'+
+               '<td colspan="3"><img width="600px" height="400px" src="http://localhost:3000/images/inspection.jpg"></td>'+
+               '</tr>'+
+               '<tr height="30px">'+
+               '<td align="center" style="background-color: lightgray">AFTER</td>'+
+               '<td colspan="3"><img width="600px" height="400px" src="http://localhost:3000/images/inspection.jpg"></td>'+
+               '</tr>'+
+               '</table><br>'+
+            '</div>';
+
+         transporter.sendMail(mailOptions, function (err, result) {
+            if (err) {
+               return console.log(err);
+            }
+         });
+
+   res.redirect('/calendar');
+
+});
+
 
 module.exports = router;

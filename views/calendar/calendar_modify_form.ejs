@@ -175,7 +175,21 @@
         }
     </script>
 
+    <script>
+        function reportForm(no){
+            var flag = confirm('A/S리포트를 작성하시겠습니까?(수정사항은 "일정 수정"버튼을 클릭해야 최종 반영됩니다.');
+            if(!flag) return;
 
+            var no = no;
+            var work_type = document.getElementById('work_type').value;
+            if(work_type != '유상유지보수' && work_type != '무상유지보수'){
+                alert("A/S업무만 리포트 작성이 가능합니다.");
+                return;
+            }
+            location.href = "/calendar/reportForm?no="+no;
+        }
+
+    </script>
 </head>
 
 <!--
@@ -559,6 +573,15 @@
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-md-12 col-sm-12">
+                                    <label>알람 내용</label>
+                                    <input type="text" name="failure" value="" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
                                     <label>업무 내용</label>
                                     <textarea name="work_detail" rows="4" class="form-control"><%=schedule.work_detail%></textarea>
                                 </div>
@@ -830,6 +853,7 @@
                         <div class="col-md-12">
                             <input type="button" value="일정 수정" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30" onclick="submitSchedule();">
                             <input type="button" value="일정 삭제" class="btn btn-3d btn-danger btn-xlg btn-block margin-top-30" onclick="confirmDeleteSchedule();">
+                            <button type="button" class="btn btn-3d btn-primary btn-xlg btn-block margin-top-30" onclick="reportForm(<%=schedule.no%>);"><i class="fa fa-check"></i>리포트 작성</button>
                         </div>
                     </div>
 
