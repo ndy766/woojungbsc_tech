@@ -8,11 +8,11 @@ var router = express.Router();
 var mysql = require('mysql');
 
 var DBoption = {
-    host:'ndy766.cpaacnjpvo5o.ap-northeast-2.rds.amazonaws.com',
+    host:'woojungtech.cae5hy4xib6f.ap-northeast-2.rds.amazonaws.com',
     port:3306,
-    user:'ndy766',
-    password:'shel45951!',
-    database:'ndy766'
+    user:'woojungTech',
+    password:'woojung8302',
+    database:'woojungTech'
 };
 var conn = mysql.createConnection(DBoption);
 conn.connect();

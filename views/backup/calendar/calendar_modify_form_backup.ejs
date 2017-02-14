@@ -1,252 +1,1197 @@
-<%- layout('../layout') %>
-<script>
-    $(function() {
-        $( ".date_picker" ).datepicker({
-            dateFormat:'yy-mm-dd',
-            changeMonth: true,
-            dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
-            dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
-            monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
-            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-        });
-    });
-</script>
+<!DOCTYPE html>
+<!--[if IE 8]>			<html class="ie ie8"> <![endif]-->
+<!--[if IE 9]>			<html class="ie ie9"> <![endif]-->
+<!--[if gt IE 9]><!-->	<html> <!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <title>WoojungBSC TECH DEPARTMENT</title>
+    <meta name="keywords" content="HTML5,CSS3,Template" />
+    <meta name="description"/>
+    <meta name="Author" content="Dorin Grigoras [www.stepofweb.com]"/>
 
-<script>
-    $(function() {
-        $('#calendar').fullCalendar({
-            header:{
-                left:"month,basicWeek,basicDay",
-                center:"title",
-                right:"today prev,next"
-            },
-            editable : false,
-            eventLimit : false,
-            events:{
-                url:'/calendar/getAllSchedule',
-            },
-        });
-    });
-</script>
+    <!-- mobile settings -->
+    <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" />
+    <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 
-<script>
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                input.nextSibling.setAttribute('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
+    <!-- WEB FONTS : use %7C instead of | (pipe) -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400%7CRaleway:300,400,500,600,700%7CLato:300,400,400italic,600,700" rel="stylesheet" type="text/css" />
+
+    <!-- CORE CSS -->
+    <link href="/Smarty/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <!--date_picker-->
+    <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
+
+
+    <!-- THEME CSS -->
+    <link href="/Smarty/assets/css/essentials.css" rel="stylesheet" type="text/css" />
+    <link href="/Smarty/assets/css/layout.css" rel="stylesheet" type="text/css" />
+
+    <!-- PAGE LEVEL SCRIPTS -->
+    <link href="/Smarty/assets/css/header-1.css" rel="stylesheet" type="text/css" />
+    <link href="/Smarty/assets/css/color_scheme/green.css" rel="stylesheet" type="text/css" id="color_scheme" />
+    <style>
+        *{
+            font-family: 나눔고딕;
         }
-    }
-</script>
+    </style>
+    <script type="text/javascript" src="/Smarty/assets/plugins/jquery/jquery-2.2.3.min.js"></script>
+    <script src="/jquery/jquery-ui.min.js"></script>
 
 
-<script>
-    //대분류 해주는 것
-    function getCustomerListByType(event){
-        var target = event.target;
-        var type = target.value;
+    <script type="text/javascript">
+        function readURL(input) {
 
-        var cus_list = [];
-        $.ajax({
-            url:'/customer/getCustomerListByType?type='+type,
-            success:function(data){
-                cus_list = data;
-                var cus_list_select = document.getElementById('cus_list');
-                while(cus_list_select.hasChildNodes()){
-                    //모든 자식노드(option tag)를 삭제해주고
-                    cus_list_select.removeChild(cus_list_select.firstChild);
-                };
-                var html = '';
-                for(var i=0;i<cus_list.length;i++){
-                    html+="<option value='"+cus_list[i].no+"'>"+cus_list[i].name+"</option>";
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    input.nextSibling.innerHTML='';
+                    var img = document.createElement('img');
+                    img.setAttribute('class','img-responsive');
+                    img.setAttribute('src', e.target.result);
+                    input.nextSibling.appendChild(img);
+//                    input.nextSibling.nextSibling.setAttribute('src', e.target.result);
                 }
-                //다시 넣음
-                cus_list_select.innerHTML=html;
-
+                reader.readAsDataURL(input.files[0]);
             }
+
+        }
+    </script>
+
+    <script type="text/javascript">
+        function createInput(){
+            var imgTd = document.getElementById('img');
+            var span = document.createElement('span');
+            var count = document.getElementsByClassName('files').length+1;
+            span.innerHTML = '<input class="files" type="file" onchange="readURL(this);" name="'+count+'"><input type="button" class="btn btn-success" value="+" onclick="createInput();"><br><img alt="insert image"><br>';
+            imgTd.appendChild(span);
+        }
+    </script>
+
+    <script type="text/javascript">
+        //대분류 해주는 것
+        function getCustomerListByType(event){
+            var target = event.target;
+            var type = target.value;
+            var cus_list = [];
+            $.ajax({
+                url:'/customer/getCustomerListByType',
+                type:'post',
+                data:{
+                    type:type
+                },
+                contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+                crossDomain:true,
+                cache:false,
+                success:function(data){
+                    cus_list = data;
+                    var cus_list_select = document.getElementById('cus_list');
+                    while(cus_list_select.hasChildNodes()){
+                        //모든 자식노드(option tag)를 삭제해주고
+                        cus_list_select.removeChild(cus_list_select.firstChild);
+                    };
+                    var html = '';
+                    for(var i=0;i<cus_list.length;i++){
+                        html+="<option value='"+cus_list[i].no+"'>"+cus_list[i].name+"</option>";
+                    }
+                    //다시 넣음
+                    cus_list_select.innerHTML=html;
+
+                }
+            });
+
+
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(function() {
+            $( ".date_picker" ).datepicker({
+                dateFormat:'yy-mm-dd',
+                changeMonth: true,
+                dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+                dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
+                monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+                monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+            });
         });
+    </script>
 
+    <script>
+        function confirmDeleteSchedule(){
+            var no = document.getElementById('no').value;
+            if(confirm("정말 삭제하시겠습니까?")==true){
+                location.href="/calendar/delete?no="+no;
+            }else{
+                return;
+            }
+        }
+    </script>
 
-    }
-</script>
+    <script type="text/javascript">
+        function checkForm(work_type){
+            var type = work_type.value;
+            var form_list = document.getElementsByClassName('calendar_form');
+            for(var i=0;i<form_list.length;i++){
+                form_list[i].setAttribute('style','display:none');
+            }
 
-<div style="position:relative;top:7%">
-    <!--<div id="calendar" style="position: relative;left:50px;top:10%;width:350px;height:200px;float:left"></div>-->
-    <table align="center" width="600px" class="table-bordered table-condensed table-striped" border="1">
-        <form action="/calendar/modify" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="no" value="<%=schedule.no%>">
-            <input type="hidden" name="end_date_fake" value="<%=end_msec%>">
-            <tr>
-                <th width="24%" height="30px">구분</th>
-                <th>내용</th>
-            </tr>
-            <tr>
-                <td align="center" height="30px">일자</td>
-                <td align="center"><input class="date_picker" type="text" name="start_date" value="<%=start%>"> ~ <input class="date_picker" type="text" name="end_date" value="<%=end%>"></td>
-            </tr>
-            <tr>
-                <td align="center" height="30px">거래처</td>
-                <td align="center">
-                    <select id="customer_type" name="customer_type" style="width:120px" onchange="getCustomerListByType(event);">
-                        <option value="전체">거채처 타입</option>
-                        <option value="병원">병원</option>
-                        <option value="제약회사">제약회사</option>
-                        <option value="기타">기타</option>
-                    </select>
-                    <select name="customer_no" id="cus_list">
-                        <% for(var i = 0;i < customerList.length;i++){ %>
-                            <% if(customerList[i].no == schedule.customer_no){ %>
-                                <option value="<%= customerList[i].no %>" selected="selected"><%= customerList[i].name %></option>
-                            <% }else{ %>
-                                <option value="<%= customerList[i].no %>"><%= customerList[i].name %></option>
-                            <% } %>
-                        <% } %>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">업무구분</td>
-                <td align="center">
-                    <select name="work_type">
-                        <% for(var i = 0;i < work_type_list.length;i++){ %>
-                        <% if(work_type_list[i].code_name == schedule.work_type){ %>
-                        <option selected="selected"><%= work_type_list[i].code_name %></option>
-                        <% }else{ %>
-                        <option><%= work_type_list[i].code_name %></option>
-                        <% } %>
-                        <% } %>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">제조사</td>
-                <td align="center">
-                    <select name="manufacturer">
-                        <% for(var i = 0;i < manufacturer_list.length;i++){ %>
-                            <% if(manufacturer_list[i].code_name == schedule.manufacturer){ %>
-                                <option selected="selected"><%= manufacturer_list[i].code_name %></option>
-                            <% }else{ %>
-                                <option><%= manufacturer_list[i].code_name %></option>
-                            <% } %>
-                        <% } %>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">방문자</td>
-                <td align="center">
-                    <% for(var i = 0;i < memberList.length;i++){ %>
-                        <%if(schedule.charger.indexOf(memberList[i].id)!=-1){%>
-                            <label style="display:inline"><input type="checkbox" checked="checked" name="charger" value="<%= memberList[i].id %>"><%= memberList[i].name %></label>&nbsp;&nbsp;
-                        <%}else{%>
-                            <label style="display:inline"><input type="checkbox" name="charger" value="<%= memberList[i].id %>"><%= memberList[i].name %></label>&nbsp;&nbsp;
-                        <%}%>
-                    <% } %>
-                </td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">방문형태</td>
-                <td align="center">
-                    <%if(schedule.visit_type=='신규 방문'){%>
-                        <label style="display:inline"><input type="radio" name="visit_type" checked="checked" value="신규 방문">신규 방문</label>&nbsp;&nbsp;
-                        <label style="display:inline"><input type="radio" name="visit_type" value="재방문">재방문</label>
-                    <%}else{%>
-                        <label style="display:inline"><input type="radio" name="visit_type" value="신규 방문">신규 방문</label>&nbsp;&nbsp;
-                        <label style="display:inline"><input type="radio" name="visit_type" checked="checked" value="재방문">재방문</label>
-                    <%}%>
-                    &nbsp;&nbsp;재방문 횟수 : <select name="revisit_count">
-                        <% for(var i = 0;i < 10;i++){ %>
-                            <% if(i == schedule.revisit_count){ %>
-                                <option selected="selected"><%= i %></option>
-                            <% }else{ %>
-                                <option><%= i %></option>
-                            <% } %>
-                        <% } %>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">제품명</td>
-                <td align="center"><input type="text" name="equipment" style="width:470px" value="<%=schedule.equipment%>"></td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">시리얼넘버</td>
-                <td align="center"><input type="text" name="serial_number" style="width:470px" value="<%=schedule.serial_number%>"></td>
-            </tr>
-            <tr>
-                <td height="60px" align="center">조치사항</td>
-                <td align="center"><textarea name="work_detail" style="width:470px"><%=schedule.work_detail%></textarea></td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">교체 부품</td>
-                <td align="center"><input type="text" name="changed_component" style="width:470px" value="<%=schedule.changed_component%>"></td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">처리 상태</td>
-                <td align="center">
-                    <%if(schedule.state=='완료'){%>
-                        <label style="display: inline"><input type="radio" name="state" checked="checked" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <label style="display: inline"><input type="radio" name="state" value="미결"> 미결</label>
-                    <%}else{%>
-                        <label style="display: inline"><input type="radio" name="state" value="완료"> 완료</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <label style="display: inline"><input type="radio" name="state" checked="checked" value="미결"> 미결</label>
-                    <%}%>
-                </td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">미결 사유</td>
-                <td align="center">
-                    <select name="undecided_reason">
-                        <% for(var i = 0;i < undecided_reason_list.length;i++){ %>
-                            <% if(undecided_reason_list[i].code_name == schedule.undecided_reason){ %>
-                                <option selected="selected"><%=undecided_reason_list[i].code_name %></option>
-                            <% }else{ %>
-                                <option><%=undecided_reason_list[i].code_name %></option>
-                            <% } %>
-                        <% } %>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td height="30px" align="center">소요시간</td>
-                <td align="center"><input type="text" name="work_delay" style="width:200px;" value="<%=schedule.work_delay%>"> 시간</td>
-            </tr>
-            <tr>
-                <td height="60px" align="center">사진</td>
-                <td id="img" align="center">
-                    <!--<input type="file" name='file1' onchange="readURL(this);" value="<%=file_path_arr[0]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[0]%>">-->
-                    <!--<input type="file" name='file2' onchange="readURL(this);" value="<%=file_path_arr[1]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[1]%>">-->
-                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[2]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[2]%>">-->
-                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[3]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[3]%>">-->
-                    <!--<input type="file" name='file3' onchange="readURL(this);" value="<%=file_path_arr[4]%>"><img width="400px" height="400px" src="http://localhost:3000/schedule_image/<%=file_path_arr[4]%>">-->
-                </td>
-            </tr>
-            <tr>
-                <input type="hidden" value="<%= start_msec %>" name="start_msec">
-                <input type="hidden" value="<%= end_msec %>" name="end_msec">
-                <input type="hidden" value="<%=file_path_arr%>" id="arr">
-                <td colspan="2" height="30px" align="center">
-                    <input width="200px" class="btn btn-warning" type="submit" value="일정 수정">&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="/calendar/delete?no=<%=schedule.no%>"><input width="200px" type="button" class="btn btn-danger" value="일정 삭제"></a>
-                </td>
-            </tr>
-        </form>
-    </table>
-    <!--member 수정시 자동으로 체크상태로 놔두기 위한 hidden-->
+            if(type=='무상유지보수' || type=='유상유지보수'){
+                document.getElementById('form_as').setAttribute('style', 'display:show');
+            }else if(type=='RBDS'){
+                document.getElementById('form_RBDS').setAttribute('style', 'display:show');
+            }else if(type=='내근업무'){
+                document.getElementById('form_inner').setAttribute('style', 'display:show');
+            }else{
+                document.getElementById('form_as').setAttribute('style', 'display:show');
+            }
+
+        }
+
+    </script>
+
+    <script>
+        function submitSchedule(){
+            var type = document.getElementById('work_type').value;
+            var form_type = '';
+
+            if(type=='무상유지보수' || type=='유상유지보수'){
+                form_type='form_as';
+            }else if(type=='RBDS'){
+                form_type='form_RBDS';
+            }else if(type=='내근업무'){
+                form_type='form_inner';
+            }else{
+                form_type='form_as';
+            }
+
+            var form_list = document.getElementsByClassName('calendar_form');
+            for(var i=0;i<form_list.length;i++){
+                if(form_list[i].getAttribute('id')==form_type){
+                    continue;
+                }else {
+                    form_list[i].innerHTML = '';
+                }
+            }
+            var scheduleModifyForm = document.getElementById('scheduleModifyForm');
+            console.log(scheduleModifyForm.innerHTML);
+
+            scheduleModifyForm.submit();
+        }
+    </script>
+
+    <script>
+        function reportForm(no){
+            var flag = confirm('A/S리포트를 작성하시겠습니까?(수정사항은 "일정 수정"버튼을 클릭해야 최종 반영됩니다.');
+            if(!flag) return;
+
+            var no = no;
+            var work_type = document.getElementById('work_type').value;
+            if(work_type != '유상유지보수' && work_type != '무상유지보수'){
+                alert("A/S업무만 리포트 작성이 가능합니다.");
+                return;
+            }
+            location.href = "/calendar/reportForm?no="+no;
+        }
+
+    </script>
+</head>
+
+<!--
+    AVAILABLE BODY CLASSES:
+
+    smoothscroll 			= create a browser smooth scroll
+    enable-animation		= enable WOW animations
+
+    bg-grey					= grey background
+    grain-grey				= grey grain background
+    grain-blue				= blue grain background
+    grain-green				= green grain background
+    grain-blue				= blue grain background
+    grain-orange			= orange grain background
+    grain-yellow			= yellow grain background
+
+    boxed 					= boxed layout
+    pattern1 ... patern11	= pattern background
+    menu-vertical-hide		= hidden, open on click
+
+    BACKGROUND IMAGE [together with .boxed class]
+    data-background="Smarty/assets/images/boxed_background/1.jpg"
+-->
+<body class="smoothscroll enable-animation">
+
+<!-- SLIDE TOP -->
+<div id="slidetop">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <h6><i class="icon-heart"></i> 우정BSC 기술부</h6>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas metus nulla, commodo a sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa. </p>
+            </div>
+
+            <div class="col-md-4">
+                <h6><i class="icon-attachment"></i> RECENTLY VISITED</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#"><i class="fa fa-angle-right"></i> Consectetur adipiscing elit amet</a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> This is a very long text, very very very very very very very very very very very very </a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> Lorem ipsum dolor sit amet</a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> Dolor sit amet,consectetur adipiscing elit amet</a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> Consectetur adipiscing elit amet,consectetur adipiscing elit</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h6><i class="icon-envelope"></i>Contact</h6>
+                <ul class="list-unstyled">
+                    <li><b>주소:</b> 경기도 수원시 영통구 광교로 145,<br> 차세대융합기술연구원 A동8층</li>
+                    <li><b>전화번호:</b> 031-888-9369</li>
+                    <li><b>E-mail:</b> wj@woojungbsc.co.kr</li>
+                    <li><b>Fax:</b> 031-888-9368</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <a class="slidetop-toggle" href="#"><!-- toggle button --></a>
+
 </div>
+<!-- /SLIDE TOP -->
+
+
+<!-- wrapper -->
+<div id="wrapper">
+
+    <!-- Top Bar -->
+    <div id="topBar">
+        <div class="container">
+
+            <!-- right -->
+            <ul class="top-links list-inline pull-right">
+                <li class="text-welcome hidden-xs">Welcome to Woojung, <strong><%=name%>님</strong></li>
+                <li>
+                    <a class="dropdown-toggle no-text-underline" href="/login/logout"><i class="glyphicon glyphicon-off"></i>로그아웃</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <!-- /Top Bar -->
+
+
+    <!--
+        AVAILABLE HEADER CLASSES
+
+        Default nav height: 96px
+        .header-md 		= 70px nav height
+        .header-sm 		= 60px nav height
+
+        .noborder 		= remove bottom border (only with transparent use)
+        .transparent	= transparent header
+        .translucent	= translucent header
+        .sticky			= sticky header
+        .static			= static header
+        .dark			= dark header
+        .bottom			= header on bottom
+
+        shadow-before-1 = shadow 1 header top
+        shadow-after-1 	= shadow 1 header bottom
+        shadow-before-2 = shadow 2 header top
+        shadow-after-2 	= shadow 2 header bottom
+        shadow-before-3 = shadow 3 header top
+        shadow-after-3 	= shadow 3 header bottom
+
+        .clearfix		= required for mobile menu, do not remove!
+
+        Example Usage:  class="clearfix sticky header-sm transparent noborder"
+    -->
+    <div id="header" class="sticky shadow-after-3 clearfix">
+
+        <!-- TOP NAV -->
+        <header id="topNav">
+            <div class="container">
+
+                <!-- Mobile Menu Button -->
+                <button class="btn btn-mobile" data-toggle="collapse" data-target=".nav-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <!-- BUTTONS -->
+                <!--<ul class="pull-right nav nav-pills nav-second-main">-->
+
+                <!--</ul>-->
+                <!-- /BUTTONS -->
+
+
+                <!-- Logo -->
+                <a class="logo pull-left" href="/login">
+                    <img src="/Smarty/assets/images/logo.png" alt="" />
+                </a>
+
+                <!--
+                    Top Nav
+
+                    AVAILABLE CLASSES:
+                    submenu-dark = dark sub menu
+                -->
+                <div class="navbar-collapse pull-right nav-main-collapse collapse submenu-dark">
+                    <nav class="nav-main">
+
+                        <!--
+                            NOTE
+
+                            For a regular link, remove "dropdown" class from LI tag and "dropdown-toggle" class from the href.
+                            Direct Link Example:
+
+                            <li>
+                                <a href="#">HOME</a>
+                            </li>
+                        -->
+                        <ul id="topMain" class="nav nav-pills nav-main">
+                            <li class="dropdown active"><!-- HOME -->
+                                <a href="/AS/getAllList">
+                                    A/S관리
+                                </a>
+                            </li>
+                            <li class="dropdown"><!-- PAGES -->
+                                <a href="/inspection/createForm">
+                                    주기안내
+                                </a>
+                            </li>
+                            <li class="dropdown"><!-- PAGES -->
+                                <a href="/calendar">
+                                    캘린더
+                                </a>
+                            </li>
+                            <li class="dropdown"><!-- SHOP -->
+                                <a class="dropdown-toggle">
+                                    DB관리
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li class="dropdown">
+                                        <a href="/member">
+                                            <i class="et-genius"></i> 직원관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/customer">
+                                            <i class="et-newspaper"></i>거래처 관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/code">
+                                            <i class="et-expand"></i> 데이터 관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/addressBook">
+                                            <i class="et-magnifying-glass"></i> 주소록 관리
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="/excel">
+                                            <i class="et-grid"></i> 엑셀 추출
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a id="sidepanel_btn" href="#" class="fa fa-bars"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </header>
+        <!-- /Top Nav -->
+
+    </div>
+
+
+
+
+
+    <!-- WELCOME -->
+    <section class="nopadding-bottom">
+        <div class="container">
+            <div class="col-md-12 col-xs-12">
+
+                <div class="heading-title heading-border-bottom">
+                    <h2 class="size-20">Modify</h2>
+                    <h6 class="pull-right"><%=schedule.final_correction_time%> <%=schedule.final_writer%>님이 최종수정</h6>
+                </div>
+
+
+                <form action="/calendar/modify" method="post" enctype="multipart/form-data"  data-toastr-position="top-right" id="scheduleModifyForm">
+                    <fieldset>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-2">
+                                    <label>시작일 *</label>
+                                    <input type="text" name="start_date" value="<%=start%>" class="form-control date_picker required">
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <label>종료일 *</label>
+                                    <input type="text" name="end_date" value="<%=end%>" class="form-control date_picker required">
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <label>업무구분 *</label>
+                                    <select class="form-control pointer" name="work_type" id="work_type" onchange="checkForm(this)">
+                                        <%for(var i=0;i<work_type_list.length;i++){%>
+                                            <% if(work_type_list[i].code_name == schedule.work_type){ %>
+                                                <option selected="selected"><%= work_type_list[i].code_name %></option>
+                                            <% }else{ %>
+                                                <option><%= work_type_list[i].code_name %></option>
+                                            <% } %>
+                                        <%}%>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <label>거래처 타입 *</label>
+                                    <select class="form-control pointer" id="customer_type" name="customer_type" onchange="getCustomerListByType(event);">
+                                        <option value="전체">거채처 타입</option>
+                                        <option value="병원/제약회사">병원/제약회사</option>
+                                        <option value="학교/연구소">학교/연구소</option>
+                                        <option value="기타">기타</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <label>거래처 *</label>
+                                    <select name="customer_no" class="form-control pointer required" id="cus_list">
+                                        <%for(var i=0;i<customerList.length;i++){%>
+                                            <% if(customerList[i].no == schedule.customer_no){ %>
+                                                <option value="<%= customerList[i].no %>" selected="selected"><%= customerList[i].name %></option>
+                                            <% }else{ %>
+                                                <option value="<%= customerList[i].no %>"><%= customerList[i].name %></option>
+                                            <% } %>
+                                        <%}%>>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="form-group inline-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>방문자 *</label>
+                                    <%for(var i=0;i<memberList.length;i++){%>
+                                    <div class="col-md-1 col-sm-2 col-xs-3">
+                                        <%if(schedule.charger.indexOf(memberList[i].id)!=-1){%>
+                                            <label style="display:inline"><input type="checkbox" checked="checked" class="form-control"  name="charger" value="<%= memberList[i].id %>" style="display:inline"><%=memberList[i].name%></label>
+                                        <%}else{%>
+                                        <label style="display:inline"><input type="checkbox" class="form-control"  name="charger" value="<%= memberList[i].id %>" style="display:inline"><%=memberList[i].name%></label>
+                                        <%}%>
+                                    </div>
+                                    <%}%>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--form_as-->
+                        <div class="calendar_form" id="form_as" style="display:none">
+
+                        <div class="row">
+                            <div class="inline-group form-group">
+                                <%if(schedule.visit_type=='신규 방문'){%>
+                                <div class="col-md-3 col-sm-3">
+                                    <label>방문형태 *</label>
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type_as" value="신규 방문" checked="checked">
+                                        <i></i> 신규 방문
+                                    </label>
+                                </div>
+                                <br>
+                                <div class="col-md-3 col-sm-3">
+                                    <label></label>
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type_as" value="재방문">
+                                        <i></i> 재방문
+                                    </label>
+                                </div>
+                                <%}else{%>
+                                <div class="col-md-3 col-sm-3">
+                                    <label>방문형태 *</label>
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type_RBDS" value="신규 방문">
+                                        <i></i> 신규 방문
+                                    </label>
+                                </div>
+                                <br>
+                                <div class="col-md-3 col-sm-3">
+                                    <label></label>
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type_RBDS" value="재방문" checked="checked">
+                                        <i></i> 재방문
+                                    </label>
+                                </div>
+                                <%}%>
+                                <br class="hidden-sm hidden-md">
+                                <div class="col-md-6 col-sm-6">
+                                    <label>재방문 횟수 </label>
+                                    <select name="revisit_count" class="form-control pointer">
+                                        <%for(var i=0;i<10;i++){%>
+                                        <%if(i==schedule.revisit_count){%>
+                                        <option selected="selected"><%=i%></option>
+                                        <%}else{%>
+                                        <option><%=i%></option>
+                                        <%}%>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-2">
+                                    <label>제조사</label>
+                                    <select name="manufacturer" class="form-control pointer">
+                                        <%for(var i=0;i<manufacturer_list.length;i++){%>
+                                        <% if(manufacturer_list[i].code_name == schedule.manufacturer){ %>
+                                        <option selected="selected"><%= manufacturer_list[i].code_name %></option>
+                                        <% }else{ %>
+                                        <option><%= manufacturer_list[i].code_name %></option>
+                                        <% } %>
+                                        <%}%>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <label>제품명</label>
+                                    <input type="text" name="equipment" class="form-control" value="<%=schedule.equipment%>">
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <label>시리얼넘버</label>
+                                    <input type="text" name="serial_number" class="form-control" value="<%=schedule.serial_number%>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>알람 내용</label>
+                                    <input type="text" name="failure" value="<%=schedule.failure%>" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>업무 내용</label>
+                                    <textarea name="work_detail" rows="4" class="form-control"><%=schedule.work_detail%></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-2">
+                                    <label>교체장비/부품</label>
+                                    <input type="text" name="changed_component" class="form-control" value="<%=schedule.changed_component%>">
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <label>소요 시간 - <small>인원수 x 소요시간(사무실 출발 ~ 도착 기준)</small></label>
+                                    <input type="number" name="work_delay" class="form-control" value="<%=schedule.work_delay%>">
+                                </div>
+                                <label>처리 상태</label>
+                                <%if(schedule.state=='진행중'){%>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="진행중" checked="checked">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="완료">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="미결">
+                                        <i></i> 미결
+                                    </label>
+                                </div>
+                                <%}else if(schedule.state=='완료'){%>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="진행중">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="완료" checked="checked">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="미결">
+                                        <i></i> 미결
+                                    </label>
+                                </div>
+                                <%}else{%>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="진행중">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="완료">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <label class="radio">
+                                        <input type="radio" name="state_as" value="미결" checked="checked">
+                                        <i></i> 미결
+                                    </label>
+                                </div>
+                                <%}%>
+                                <div class="col-md-3 col-sm-3">
+                                    <label>미결 사유</label>
+                                    <select name="undecided_reason" class="form-control pointer">
+                                        <%for(var i=0;i<undecided_reason_list.length;i++){%>
+                                            <% if(undecided_reason_list[i].code_name == schedule.undecided_reason){ %>
+                                                <option selected="selected"><%=undecided_reason_list[i].code_name %></option>
+                                            <% }else{ %>
+                                                <option><%=undecided_reason_list[i].code_name %></option>
+                                            <% } %>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+
+                                <div class="col-md-12 col-sm-12">
+                                    <font size="4"><label><i class="fa fa-upload"></i> 사진수정 - <small>Before/After</small></label></font>
+
+                                    <legend>BEFORE</legend>
+                                        <input class="files" type="file" name="before" onchange="readURL(this);"><div></div>
+
+                                    <legend>AFTER</legend>
+                                        <input class="files" type="file" name="after" onchange="readURL(this);"><div></div>
+
+                                    <legend>ETC</legend>
+                                        <input class="files" type="file" name="etc" onchange="readURL(this);"><div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        </div>
+                        <!--form_as-->
+
+                        <!--form_RBDS-->
+
+                        <div class="calendar_form" id="form_RBDS" style="display:none">
+
+                        <div class="row">
+                            <div class="inline-group form-group">
+                                <%if(schedule.visit_type=='신규 방문'){%>
+                                <div class="col-md-3 col-sm-3">
+                                    <label>방문형태 *</label>
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="신규 방문" checked="checked">
+                                        <i></i> 신규 방문
+                                    </label>
+                                </div>
+                                <br>
+                                <div class="col-md-3 col-sm-3">
+                                    <label></label>
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="재방문">
+                                        <i></i> 재방문
+                                    </label>
+                                </div>
+                                <%}else{%>
+                                <div class="col-md-3 col-sm-3">
+                                    <label>방문형태 *</label>
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="신규 방문">
+                                        <i></i> 신규 방문
+                                    </label>
+                                </div>
+                                <br>
+                                <div class="col-md-3 col-sm-3">
+                                    <label></label>
+                                    <label class="radio">
+                                        <input type="radio" name="visit_type" value="재방문" checked="checked">
+                                        <i></i> 재방문
+                                    </label>
+                                </div>
+                                <%}%>
+                                <br class="hidden-sm hidden-md">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <label>업무 내용</label>
+                                    <textarea name="work_detail" rows="4" class="form-control"><%=schedule.work_detail%></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4">
+                                    <label>소요 시간 - <small>인원수 x 소요시간(사무실 출발 ~ 도착 기준)</small></label>
+                                    <input type="number" name="work_delay" class="form-control" value="<%=schedule.work_delay%>">
+                                </div>
+                                <label>처리 상태</label>
+                                <%if(schedule.state=='진행중'){%>
+                                <div class="col-md-2 col-sm-2">
+                                    <label class="radio">
+                                        <input type="radio" name="state_RBDS" value="진행중" checked="checked">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <label class="radio">
+                                        <input type="radio" name="state_RBDS" value="완료">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <%}else{%>
+                                <div class="col-md-2 col-sm-2">
+                                    <label class="radio">
+                                        <input type="radio" name="state_RBDS" value="진행중">
+                                        <i></i> 진행중
+                                    </label>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <label class="radio">
+                                        <input type="radio" name="state_RBDS" value="완료" checked="checked">
+                                        <i></i> 완료
+                                    </label>
+                                </div>
+                                <%}%>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <!--<div class="col-md-6 col-sm-12">-->
+                                    <!--<label>사진 - <small>Before/After</small></label>-->
+                                    <!--<div id="img" align="center"></div>-->
+                                <!--</div>-->
+                                <div class="col-md-12 col-sm-12">
+                                    <font size="4"><label><i class="fa fa-upload"></i> 사진수정 - <small>Before/After</small></label></font>
+
+                                    <legend>BEFORE</legend>
+                                        <input class="files" type="file" name="before2" onchange="readURL(this);"><div></div>
+
+                                    <legend>AFTER</legend>
+                                        <input class="files" type="file" name="after2" onchange="readURL(this);"><div></div>
+
+                                    <legend>ETC</legend>
+                                        <input class="files" type="file" name="etc2" onchange="readURL(this);"><div></div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        </div>
+                        <!--form_RBDS-->
+
+
+                        <!--form_inner-->
+
+                        <div class="calendar_form" id="form_inner" style="display:none">
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12">
+                                        <label>업무 내용</label>
+                                        <textarea name="work_detail" rows="4" class="form-control"><%=schedule.work_detail%></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- form_inner-->
+
+
+
+
+
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <label>사진 - <small>Before/After/Etc..</small></label>
+                                <div id="beforeAndAfter" align="center"></div>
+                                <div id="img" align="center"></div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" value="<%=start_msec%>" name="start_msec">
+                        <input type="hidden" value="<%=end_msec%>" name="end_msec">
+                        <input type="hidden" value="<%=file_path_arr%>" id="arr">
+                        <input type="hidden" value="<%=schedule.no%>" name="no" id="no">
+
+                        <input type="hidden" value="<%=schedule.work_type%>" id="form_type">
+
+                        <input type="hidden" value="<%=schedule.before_path%>" id="before">
+                        <input type="hidden" value="<%=schedule.after_path%>" id="after">
+                    </fieldset>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="button" value="일정 수정" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30" onclick="submitSchedule();">
+                            <input type="button" value="일정 삭제" class="btn btn-3d btn-danger btn-xlg btn-block margin-top-30" onclick="confirmDeleteSchedule();">
+                            <button type="button" class="btn btn-3d btn-primary btn-xlg btn-block margin-top-30" onclick="reportForm(<%=schedule.no%>);"><i class="fa fa-check"></i>리포트 작성</button>
+                        </div>
+                    </div>
+
+                </form>
+                <hr class="margin-top-60"/>
+
+            </div>
+        </div>
+    </section>
+    <!-- /WELCOME -->
+
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <!-- Footer Logo -->
+                    <img class="footer-logo" src="/Smarty/assets/images/logo-footer.png" alt="" />
+
+                    <!-- Small Description -->
+                    <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+
+                    <!-- Contact Address -->
+                    <address>
+                        <ul class="list-unstyled">
+                            <li class="footer-sprite address">
+                                PO Box 21132<br>
+                                Here Weare St, Melbourne<br>
+                                Vivas 2355 Australia<br>
+                            </li>
+                            <li class="footer-sprite phone">
+                                Phone: 1-800-565-2390
+                            </li>
+                            <li class="footer-sprite email">
+                                <a href="mailto:support@yourname.com">support@yourname.com</a>
+                            </li>
+                        </ul>
+                    </address>
+                    <!-- /Contact Address -->
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <!-- Latest Blog Post -->
+                    <h4 class="letter-spacing-1">LATEST NEWS</h4>
+                    <ul class="footer-posts list-unstyled">
+                        <li>
+                            <a href="#">Donec sed odio dui. Nulla vitae elit libero, a pharetra augue</a>
+                            <small>29 June 2015</small>
+                        </li>
+                        <li>
+                            <a href="#">Nullam id dolor id nibh ultricies</a>
+                            <small>29 June 2015</small>
+                        </li>
+                        <li>
+                            <a href="#">Duis mollis, est non commodo luctus</a>
+                            <small>29 June 2015</small>
+                        </li>
+                    </ul>
+                    <!-- /Latest Blog Post -->
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <!-- Links -->
+                    <h4 class="letter-spacing-1">EXPLORE SMARTY</h4>
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Services</a></li>
+                        <li><a href="#">Our Clients</a></li>
+                        <li><a href="#">Our Pricing</a></li>
+                        <li><a href="#">Smarty Tour</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                    <!-- /Links -->
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <!-- Newsletter Form -->
+                    <h4 class="letter-spacing-1">KEEP IN TOUCH</h4>
+                    <p>Subscribe to Our Newsletter to get Important News &amp; Offers</p>
+
+                    <form class="validate" action="php/newsletter.php" method="post" data-success="Subscribed! Thank you!" data-toastr-position="bottom-right">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                            <input type="email" id="email" name="email" class="form-control required" placeholder="Enter your Email">
+                            <span class="input-group-btn">
+										<button class="btn btn-success" type="submit">Subscribe</button>
+									</span>
+                        </div>
+                    </form>
+                    <!-- /Newsletter Form -->
+
+                    <!-- Social Icons -->
+                    <div class="margin-top-20">
+                        <a href="#" class="social-icon social-icon-border social-facebook pull-left" data-toggle="tooltip" data-placement="top" title="Facebook">
+
+                            <i class="icon-facebook"></i>
+                            <i class="icon-facebook"></i>
+                        </a>
+
+                        <a href="#" class="social-icon social-icon-border social-twitter pull-left" data-toggle="tooltip" data-placement="top" title="Twitter">
+                            <i class="icon-twitter"></i>
+                            <i class="icon-twitter"></i>
+                        </a>
+
+                        <a href="#" class="social-icon social-icon-border social-gplus pull-left" data-toggle="tooltip" data-placement="top" title="Google plus">
+                            <i class="icon-gplus"></i>
+                            <i class="icon-gplus"></i>
+                        </a>
+
+                        <a href="#" class="social-icon social-icon-border social-linkedin pull-left" data-toggle="tooltip" data-placement="top" title="Linkedin">
+                            <i class="icon-linkedin"></i>
+                            <i class="icon-linkedin"></i>
+                        </a>
+
+                        <a href="#" class="social-icon social-icon-border social-rss pull-left" data-toggle="tooltip" data-placement="top" title="Rss">
+                            <i class="icon-rss"></i>
+                            <i class="icon-rss"></i>
+                        </a>
+
+                    </div>
+                    <!-- /Social Icons -->
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            <div class="container">
+                <ul class="pull-right nomargin list-inline mobile-block">
+                    <li><a href="#">Terms &amp; Conditions</a></li>
+                    <li>&bull;</li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+                &copy; All Rights Reserved, Company LTD
+            </div>
+        </div>
+    </footer>
+    <!-- /FOOTER -->
+
+</div>
+<!-- /wrapper -->
+
+
+<!--
+    SIDE PANEL
+
+        sidepanel-dark 			= dark color
+        sidepanel-light			= light color (white)
+        sidepanel-theme-color		= theme color
+
+        sidepanel-inverse		= By default, sidepanel is placed on right (left for RTL)
+                        If you add "sidepanel-inverse", will be placed on left side (right on RTL).
+-->
+<div id="sidepanel" class="sidepanel-light">
+    <a id="sidepanel_close" href="#"><!-- close -->
+        <i class="glyphicon glyphicon-remove"></i>
+    </a>
+
+    <div class="sidepanel-content">
+        <h2 class="sidepanel-title">Explore Smarty</h2>
+
+        <!-- SIDE NAV -->
+        <ul class="list-group">
+
+            <li class="list-group-item">
+                <a href="#">
+                    <i class="ico-category et-heart"></i>
+                    ABOUT US
+                </a>
+            </li>
+            <li class="list-group-item list-toggle"><!-- add "active" to stay open on page load -->
+                <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-1" class="collapsed">
+                    <i class="ico-dd icon-angle-down"><!-- Drop Down Indicator --></i>
+                    <i class="ico-category et-strategy"></i>
+                    PORTFOLIO
+                </a>
+                <ul id="collapse-1" class="list-unstyled collapse"><!-- add "in" to stay open on page load -->
+                    <li><a href="#"><i class="fa fa-angle-right"></i> 1 COLUMN</a></li>
+                    <li class="active">
+                        <span class="badge">New</span>
+                        <a href="#"><i class="fa fa-angle-right"></i> 2 COLUMNS</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> 3 COLUMNS</a></li>
+                </ul>
+            </li>
+            <li class="list-group-item list-toggle"><!-- add "active" to stay open on page load -->
+                <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-2" class="collapsed">
+                    <i class="ico-dd icon-angle-down"><!-- Drop Down Indicator --></i>
+                    <i class="ico-category et-trophy"></i>
+                    PORTFOLIO
+                </a>
+                <ul id="collapse-2" class="list-unstyled collapse"><!-- add "in" to stay open on page load -->
+                    <li><a href="#"><i class="fa fa-angle-right"></i> SLIDER</a></li>
+                    <li class="active"><a href="#"><i class="fa fa-angle-right"></i> HEADERS</a></li>
+                    <li><a href="#"><i class="fa fa-angle-right"></i> FOOTERS</a></li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    <i class="ico-category et-happy"></i>
+                    BLOG
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    <i class="ico-category et-beaker"></i>
+                    FEATURES
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    <i class="ico-category et-map-pin"></i>
+                    CONTACT
+                </a>
+            </li>
+
+        </ul>
+        <!-- /SIDE NAV -->
+
+        <!-- social icons -->
+        <div class="text-center margin-bottom-30">
+
+            <a href="#" class="social-icon social-icon-sm social-facebook" data-toggle="tooltip" data-placement="top" title="Facebook">
+                <i class="icon-facebook"></i>
+                <i class="icon-facebook"></i>
+            </a>
+
+            <a href="#" class="social-icon social-icon-sm social-twitter" data-toggle="tooltip" data-placement="top" title="Twitter">
+                <i class="icon-twitter"></i>
+                <i class="icon-twitter"></i>
+            </a>
+
+            <a href="#" class="social-icon social-icon-sm social-linkedin" data-toggle="tooltip" data-placement="top" title="Linkedin">
+                <i class="icon-linkedin"></i>
+                <i class="icon-linkedin"></i>
+            </a>
+
+            <a href="#" class="social-icon social-icon-sm social-rss" data-toggle="tooltip" data-placement="top" title="RSS">
+                <i class="icon-rss"></i>
+                <i class="icon-rss"></i>
+            </a>
+
+        </div>
+        <!-- /social icons -->
+
+    </div>
+
+</div>
+<!-- /SIDE PANEL -->
+
+
+<!-- SCROLL TO TOP -->
+<a href="#" id="toTop"></a>
+
+
+<!-- PRELOADER -->
+<div id="preloader">
+    <div class="inner">
+        <span class="loader"></span>
+    </div>
+</div><!-- /PRELOADER -->
+
 
 <script>
+    //사진 div안에 넣어주는 부분
     var file_path_arr = document.getElementById('arr');
     var imgDiv = document.getElementById('img');
     var split = file_path_arr.value.split(',');
-    var count = 0;
+
+    //before&after
+    var beforeAndAfter = document.getElementById('beforeAndAfter');
+    var before = document.getElementById('before').value;
+    var after = document.getElementById('after').value;
+
+    console.log(before + after);
+    beforeAndAfter.innerHTML = '';
+
+
+    //before&after
+    beforeAndAfter.innerHTML += " <img class='img-responsive' width='450px' src=/schedule_image/" + before + "><br>";
+    beforeAndAfter.innerHTML +=" <img class='img-responsive' width='450px' src=/schedule_image/" +after + "><br>";
+
+
+    //etc..
     for(var i=0;i<split.length;i++){
         if(split[i]!=undefined && split[i]!=null && split[i]!=''){
-            imgDiv.innerHTML += "<img width='450px' src=/schedule_image/" + file_path_arr.value.toString().split(',')[i] + "><br>";
+            imgDiv.innerHTML += "<img class='img-responsive' width='450px' src=/schedule_image/" + file_path_arr.value.toString().split(',')[i] + "><br>";
         }
     }
 </script>
 
 
+<script>
+    //처음 로딩할 때, form 구분해줌
+    var type = document.getElementById('form_type').value;
+
+    if(type=='무상유지보수' || type=='유상유지보수'){
+        document.getElementById('form_as').setAttribute('style', 'display:show');
+    }else if(type=='RBDS'){
+        document.getElementById('form_RBDS').setAttribute('style', 'display:show');
+    }else if(type=='내근업무'){
+        document.getElementById('form_inner').setAttribute('style', 'display:show');
+    }else{
+        document.getElementById('form_as').setAttribute('style', 'display:show');
+    }
+</script>
+
+
+
+<!-- JAVASCRIPT FILES -->
+<script type="text/javascript">var plugin_path = '/Smarty/assets/plugins/';</script>
+
+
+<script type="text/javascript" src="/Smarty/assets/js/scripts.js"></script>
+
+
+
+
+
+
+
+</body>
+</html>

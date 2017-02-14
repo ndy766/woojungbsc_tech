@@ -200,13 +200,6 @@
         .fc-day-number.fc-sun.fc-past { color:#FF0000; }
     </style>
 
-    <script>
-        function searchCalendar(){
-
-        }
-    </script>
-
-
 </head>
 
 <!--
@@ -329,12 +322,25 @@
                 <!--<div class="hidden-sm hidden-xs" id="calendar"></div>-->
                 <div id="calendar_mobile"></div>
             </div>
-            <div class="row">
-                <div class="pull-right">
-                    <button class="btn-success btn-lg" onclick="searchCalendar();">검색하기</button>
-                </div>
+            <div class="row pull-right">
+                    <form method="post" action="/calendar/search">
+                        <div class="col-md-4 col-xs-4">
+                            <select class="form-control pointer" name="searchType">
+                                <option value="customer_name">거래처</option>
+                                <option value="manufacturer">제조사</option>
+                                <option value="work_type">업무구분</option>
+                                <option value="charger_name">방문자</option>
+                                <option value="work_detail">업무내용</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-xs-4">
+                            <input type="text" class="form-control" name="keyword">
+                        </div>
+                        <div class="col-md-4 col-xs-4">
+                            <input type="submit" class="form-control btn-instagram" value="SEARCH">
+                        </div>
+                    </form>
             </div>
-
 
         </div>
     </section>

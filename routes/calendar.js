@@ -13,11 +13,11 @@ var fs = require('fs');
 //db
 var mysql = require('mysql');
 var DBoption = {
-   host: 'ndy766.cpaacnjpvo5o.ap-northeast-2.rds.amazonaws.com',
-   port: 3306,
-   user: 'ndy766',
-   password: 'shel45951!',
-   database: 'ndy766'
+   host:'woojungtech.cae5hy4xib6f.ap-northeast-2.rds.amazonaws.com',
+   port:3306,
+   user:'woojungTech',
+   password:'woojung8302',
+   database:'woojungTech'
 };
 var conn = mysql.createConnection(DBoption);
 conn.connect();
@@ -466,12 +466,26 @@ router.get('/getAllSchedule', function(req , res){
 //detail page
 router.get('/getScheduleByNo', function(req, res){
    var start = req.query.start;
-   var end = parseInt(req.query.end)-86400000;
-   var start_date = new Date(parseInt(start)).toISOString().split('T')[0];
-   var end_date = new Date(parseInt(end)).toISOString().split('T')[0];
-   var end_date_fake = new Date(parseInt(parseInt(end)+86400000)).toISOString().split('T')[0];
-
+   var end = req.query.end;
+   var start_date = '';
+   var end_date = '';
    var no = req.query.no;
+
+   if(start !=null && start !=undefined && start !=''){
+      start_date = new Date(parseInt(start)).toISOString().split('T')[0];
+   }
+
+   if(end !=null && end !=undefined && end !=''){
+      end_date = new Date(parseInt(end)-86400000).toISOString().split('T')[0];
+   }
+
+   if(req.query.start_date !=null && req.query.start_date !=undefined && req.query.start_date !=''){
+      start_date = req.query.start_date;
+   }
+   if(req.query.end_date !=null && req.query.end_date !=undefined && req.query.end_date !=''){
+      end_date = req.query.end_date;
+   }
+
 
 //거래처 리스트를 조회해오는
    var sql = "SELECT * FROM customer ORDER BY name";
@@ -515,7 +529,7 @@ router.get('/getScheduleByNo', function(req, res){
                   }
                }
 
-               res.render('calendar_modify_form',{name:req.session.user.name, schedule:schedule, customerList:customerList, memberList:memberList, start:start_date, end:end_date, start_msec:req.query.start, end_msec:req.query.end, end_date_fake:end_date_fake, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list, file_path_arr:file_path_arr});
+               res.render('calendar_modify_form',{name:req.session.user.name, schedule:schedule, customerList:customerList, memberList:memberList, start:start_date, end:end_date, start_msec:req.query.start, end_msec:req.query.end, customerList:customerList, memberList:memberList, work_type_list:work_type_List, undecided_reason_list:undecided_reason_list, manufacturer_list:manufacturer_list, file_path_arr:file_path_arr});
             });
 
          });
@@ -873,12 +887,16 @@ router.post('/sendReport', function(req, res){
       equipment = '없음';
    }
 
+   conn.query(sql, function(err, result){
+
+      var sql2 = "UPDATE schedule SET ? WHERE no="+no;
 
 
-   //form
-   mailOptions.to = email;
-   mailOptions.subject = '[(주)우정비에스씨]고객님의 A/S 정비소견서입니다.';
-   mailOptions.html =
+
+      //form
+      mailOptions.to = email;
+      mailOptions.subject = '[(주)우정비에스씨]고객님의 A/S 정비소견서입니다.';
+      mailOptions.html =
             '<div align="center">' +
             '<div align="left" style="border-bottom:2px solid black"><font size="4">제    목 : '+subject+'</font></div>' +
             '<br><br>' +
@@ -886,7 +904,7 @@ router.post('/sendReport', function(req, res){
             '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;2. 다음과 같이 당사에서 점검한 장비에 대해 조치 내용을 드리오니 업무에 참조하시기 바랍니다.</font></div><br><br><br>'+
             '<div align="center">----------------------------다음----------------------------</div><br><br>' +
                '<font size="3"><h1>정 비 소 견 서</h1></font>' +
-               '<table border="1" align="center" cellpadding="5" cellspacing="0" width="600px" style="border-collapse:collapse;position:relative;border:1px solid black">'+
+               '<table border="1" align="center" cellpadding="5" cellspacing="0" width="700px" style="border-collapse:collapse;position:relative;border:1px solid black">'+
                '<tr height="30px">'+
                '<td align="center" style="background-color: lightgray" width="100px"><b>발 신 인</b></td>'+
                '<td width="200px">&nbsp;'+sender+'</td>'+
@@ -941,16 +959,33 @@ router.post('/sendReport', function(req, res){
                '</table><br>'+
             '</div>';
 
+
          transporter.sendMail(mailOptions, function (err, result) {
             if (err) {
                return console.log(err);
-            }else{
-               conn.query(sql, function(err, result){
-                  res.redirect('/calendar');
-               });
-
             }
          });
+      res.redirect('/calendar');
+   });
+});
+
+
+//검색 기능
+router.post('/search', function (req, res) {
+   var name = req.session.user.name;
+   var searchType = req.body.searchType;
+   var keyword = req.body.keyword;
+   var schedule_list = [];
+   var sql = "SELECT * FROM schedule WHERE " + searchType + " LIKE '%" + keyword + "%' ORDER BY start_date, work_type";
+
+   conn.query(sql, function(err, result){
+      schedule_list = result;
+      res.render('calendar_searchList', {
+         name:name,
+         schedule_list:schedule_list
+      });
+   });
+
 
 });
 
