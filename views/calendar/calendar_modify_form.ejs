@@ -43,13 +43,20 @@
 
     <script type="text/javascript">
         function readURL(input) {
+
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    input.nextSibling.nextSibling.setAttribute('src', e.target.result);
+                    input.nextSibling.innerHTML='';
+                    var img = document.createElement('img');
+                    img.setAttribute('class','img-responsive');
+                    img.setAttribute('src', e.target.result);
+                    input.nextSibling.appendChild(img);
+//                    input.nextSibling.nextSibling.setAttribute('src', e.target.result);
                 }
                 reader.readAsDataURL(input.files[0]);
             }
+
         }
     </script>
 
@@ -477,11 +484,15 @@
                                 <div class="col-md-12 col-sm-12">
                                     <label>방문자 *</label>
                                     <%for(var i=0;i<memberList.length;i++){%>
-                                    <div class="col-md-1 col-sm-2 col-xs-3">
+                                    <div class="col-md-2 col-sm-2 col-xs-4">
                                         <%if(schedule.charger.indexOf(memberList[i].id)!=-1){%>
-                                            <label style="display:inline"><input type="checkbox" checked="checked" class="form-control"  name="charger" value="<%= memberList[i].id %>" style="display:inline"><%=memberList[i].name%></label>
+                                        <label class="checkbox nomargin">
+                                            <input class="checked-agree" type="checkbox" checked="checked" name="charger" value="<%=memberList[i].id%>"><i></i><%=memberList[i].name%>
+                                        </label>
                                         <%}else{%>
-                                        <label style="display:inline"><input type="checkbox" class="form-control"  name="charger" value="<%= memberList[i].id %>" style="display:inline"><%=memberList[i].name%></label>
+                                        <label class="checkbox nomargin">
+                                            <input class="checked-agree" type="checkbox" name="charger" value="<%=memberList[i].id%>"><i></i><%=memberList[i].name%>
+                                        </label>
                                         <%}%>
                                     </div>
                                     <%}%>
@@ -574,7 +585,7 @@
                             <div class="form-group">
                                 <div class="col-md-12 col-sm-12">
                                     <label>알람 내용</label>
-                                    <input type="text" name="failure" value="" class="form-control">
+                                    <input type="text" name="failure" value="<%=schedule.failure%>" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -679,17 +690,14 @@
                                     <font size="4"><label><i class="fa fa-upload"></i> 사진수정 - <small>Before/After</small></label></font>
 
                                     <legend>BEFORE</legend>
-                                    <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file1" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                    </fieldset>
+                                        <input class="files" type="file" name="before" onchange="readURL(this);"><div></div>
+                                    <br>
                                     <legend>AFTER</legend>
-                                    <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file2" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                    </fieldset>
+                                        <input class="files" type="file" name="after" onchange="readURL(this);"><div></div>
+                                    <br>
                                     <legend>ETC</legend>
-                                    <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file3" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                    </fieldset>
+                                        <input class="files" type="file" name="etc" onchange="readURL(this);"><div></div>
+                                    <br>
                                 </div>
                             </div>
                         </div>
@@ -796,17 +804,16 @@
                                     <font size="4"><label><i class="fa fa-upload"></i> 사진수정 - <small>Before/After</small></label></font>
 
                                     <legend>BEFORE</legend>
-                                    <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file1" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                    </fieldset>
+                                        <input class="files" type="file" name="before2" onchange="readURL(this);"><div></div>
+                                    <br>
                                     <legend>AFTER</legend>
-                                    <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file2" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                    </fieldset>
+                                        <input class="files" type="file" name="after2" onchange="readURL(this);"><div></div>
+                                    <br>
+
                                     <legend>ETC</legend>
-                                    <fieldset style="border:1px solid grey">
-                                        <input class="files" type="file" name="file3" onchange="readURL(this);"><br><img class="img-responsive"><br>
-                                    </fieldset>
+                                        <input class="files" type="file" name="etc2" onchange="readURL(this);"><div></div>
+                                    <br>
+
                                 </div>
                             </div>
                         </div>
@@ -838,7 +845,8 @@
 
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
-                                <label>사진 - <small>Before/After</small></label>
+                                <label>사진 - <small>Before/After/Etc..</small></label>
+                                <div id="beforeAndAfter" align="center"></div>
                                 <div id="img" align="center"></div>
                             </div>
                         </div>
@@ -847,6 +855,11 @@
                         <input type="hidden" value="<%=end_msec%>" name="end_msec">
                         <input type="hidden" value="<%=file_path_arr%>" id="arr">
                         <input type="hidden" value="<%=schedule.no%>" name="no" id="no">
+
+                        <input type="hidden" value="<%=schedule.work_type%>" id="form_type">
+
+                        <input type="hidden" value="<%=schedule.before_path%>" id="before">
+                        <input type="hidden" value="<%=schedule.after_path%>" id="after">
                     </fieldset>
 
                     <div class="row">
@@ -1134,7 +1147,22 @@
     var file_path_arr = document.getElementById('arr');
     var imgDiv = document.getElementById('img');
     var split = file_path_arr.value.split(',');
-    var count = 0;
+
+    //before&after
+    var beforeAndAfter = document.getElementById('beforeAndAfter');
+    var before = document.getElementById('before').value;
+    var after = document.getElementById('after').value;
+
+    console.log(before + after);
+    beforeAndAfter.innerHTML = '';
+
+
+    //before&after
+    beforeAndAfter.innerHTML += " <img class='img-responsive' width='450px' src=/schedule_image/" + before + "><br>";
+    beforeAndAfter.innerHTML +=" <img class='img-responsive' width='450px' src=/schedule_image/" +after + "><br>";
+
+
+    //etc..
     for(var i=0;i<split.length;i++){
         if(split[i]!=undefined && split[i]!=null && split[i]!=''){
             imgDiv.innerHTML += "<img class='img-responsive' width='450px' src=/schedule_image/" + file_path_arr.value.toString().split(',')[i] + "><br>";
@@ -1142,7 +1170,7 @@
     }
 </script>
 
-<input type="hidden" value="<%=schedule.work_type%>" id="form_type">
+
 <script>
     //처음 로딩할 때, form 구분해줌
     var type = document.getElementById('form_type').value;

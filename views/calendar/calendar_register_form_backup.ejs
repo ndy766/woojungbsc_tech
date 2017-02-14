@@ -43,19 +43,15 @@
 
     <script type="text/javascript">
         function readURL(input) {
-
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    input.nextSibling.innerHTML='';
-                    var img = document.createElement('img');
-                    img.setAttribute('class','img-responsive');
-                    img.setAttribute('src', e.target.result);
-                    input.nextSibling.appendChild(img);
-//                    input.nextSibling.nextSibling.setAttribute('src', e.target.result);
+                    input.nextSibling.nextSibling.setAttribute('src', e.target.result);
                 }
                 reader.readAsDataURL(input.files[0]);
             }
+
+
 
         }
     </script>
@@ -450,11 +446,15 @@
                                 <div class="col-md-12 col-sm-12">
                                 <label>방문자 *</label>
                                 <%for(var i=0;i<memberList.length;i++){%>
-                                    <div class="col-md-2 col-sm-2 col-xs-4">
-                                    <label class="checkbox nomargin">
-                                        <input class="checked-agree" type="checkbox" name="charger" value="<%=memberList[i].id%>"><i></i><%=memberList[i].name%>
-                                    </label>
-                                    </div>
+                                <div class="col-md-1 col-sm-2 col-xs-3">
+                                    <label style="display:inline"><input type="checkbox" class="form-control"  name="charger" style="display:inline" value="<%=memberList[i].id%>"><%=memberList[i].name%></label>
+                                </div>
+
+                                <div class="hidden-md hidden-sm hidden-lg hidden-xlg">
+                                    <%if(i%3==0){%>
+                                    <br>
+                                    <%}%>
+                                </div>
                                 <%}%>
                                 </div>
                             </div>
@@ -588,20 +588,22 @@
                                     <font size="4"><label><i class="fa fa-upload"></i> 사진등록 - <small>Before/After</small></label></font>
                                     <!-- custom file upload -->
                                         <legend>BEFORE</legend>
-                                            <input class="files" type="file" name="before" onchange="readURL(this);"><div></div>
-                                        <br>
+                                            <input class="files" type="file" name="before" onchange="readURL(this);"><br>
+                                            <img style="height:100px"><br>
+
                                         <legend>AFTER</legend>
-                                            <input class="files" type="file" name="after" onchange="readURL(this);"><div></div>
-                                        <br>
+                                            <fieldset style="border:1px solid grey">
+                                                <input class="files" type="file" name="after" onchange="readURL(this);"><br><img class="img-responsive"><br>
+                                            </fieldset>
                                         <legend>ETC</legend>
-                                            <input class="files" type="file" name="etc" onchange="readURL(this);"><div></div>
-                                        <br>
+                                            <fieldset style="border:1px solid grey">
+                                                <input class="files" type="file" name="etc" onchange="readURL(this);"><br><img class="img-responsive"><br>
+                                            </fieldset>
                                 </div>
                             </div>
                         </div>
 
-                        </div>
-                        <!--form_as-->
+                        </div><!--form_as-->
 
                         <!--form rbds-->
                         <div id="form_RBDS" class='calendar_form' style="display:none">
@@ -667,14 +669,17 @@
                                         <font size="4"><label><i class="fa fa-upload"></i> 사진등록 - <small>Before/After</small></label></font>
                                         <!-- custom file upload -->
                                         <legend>BEFORE</legend>
-                                        <input class="files" type="file" name="before2" onchange="readURL(this);"><div></div>
-                                        <br>
+                                        <fieldset style="border:1px solid grey">
+                                            <input class="files" type="file" name="file4" onchange="readURL(this);"><br><img class="img-responsive"><br>
+                                        </fieldset>
                                         <legend>AFTER</legend>
-                                        <input class="files" type="file" name="after2" onchange="readURL(this);"><div></div>
-                                        <br>
+                                        <fieldset style="border:1px solid grey">
+                                            <input class="files" type="file" name="file5" onchange="readURL(this);"><br><img class="img-responsive"><br>
+                                        </fieldset>
                                         <legend>ETC</legend>
-                                        <input class="files" type="file" name="etc2" onchange="readURL(this);"><div></div>
-                                        <br>
+                                        <fieldset style="border:1px solid grey">
+                                            <input class="files" type="file" name="file6" onchange="readURL(this);"><br><img class="img-responsive"><br>
+                                        </fieldset>
                                     </div>
                                 </div>
                             </div>

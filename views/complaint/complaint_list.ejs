@@ -1,9 +1,10 @@
 <%- layout('complaint_layout') %>
 <script type="text/javascript">
-    function getAS(event){
+    function getAS(no){
 
-        var target = event.target.parentNode;//parent - tr
-        var no = target.childNodes[1].childNodes[1].innerHTML;
+//        var target = event.target.parentNode;//parent - tr
+//        var no = target.childNodes[1].childNodes[1].innerHTML;
+        var real_no = no;
         var frm = document.createElement('form');
         var hid = document.createElement('input');
         hid.setAttribute('type', 'hidden');
@@ -59,8 +60,8 @@
                 </thead>
                 <tbody>
                 <% for(var i = 0;i < complaint_list.length;i++){ %>
-                <tr class="as_list_tr" onclick="getAS(event);">
-                    <td class="as_no"><span class="wj"></span><span><%= complaint_list[i].no %></span></td>
+                <tr class="as_list_tr" onclick="getAS(<%=complaint_list[i].no%>);">
+                    <td class="as_no"><%=complaint_list[i].document_no%></td>
                     <td><%= complaint_list[i].product %></td>
                     <td class="hidden-xs"><%= complaint_list[i].content %></td>
                     <td><%= complaint_list[i].customer_name %></td>
@@ -91,11 +92,11 @@
                     <div class="row">
                     <form method="post" action="/AS/search">
                         <div class="col-md-2 col-xs-4">
-                            <select name="searchType" class="form-control">
+                            <select name="searchType" class="form-control pointer">
                                 <option value="no">접수번호</option>
                                 <option value="product">제품명</option>
                                 <option value="content">접수 내용</option>
-                                <option value="customer">접수자</option>
+                                <option value="customer_name">접수처</option>
                                 <option value="state">접수상태</option>
                             </select>
                         </div>
@@ -116,6 +117,7 @@
         </div>
     </section>
     <!-- /WELCOME -->
+
 <script>
     var wj = document.getElementsByClassName('wj');
     //    var date = new Date();

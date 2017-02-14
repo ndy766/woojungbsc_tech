@@ -306,137 +306,26 @@
                             <input type="hidden" name="no" value="<%=schedule.report_state%>" id="report_state">
 
                             <fieldset>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-12 col-sm-12">
-                                            <label>제  목 *</label>
-                                            <input type="text" name="subject" placeholder="ex) 랙세척기 온도 상승 불가 건에 대한 점검 결과" class="form-control required">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>발 신 인 *</label>
-                                            <input type="text" name="sender" value="(주)우정 BSC" class="form-control required">
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>발신부서 *</label>
-                                            <input type="text" name="sender_department" value="기술부" class="form-control required">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>작성일자 *</label>
-                                            <input type="text" id="write_date" name="write_date" value="" class="form-control required date_picker">
-                                        </div>
-                                        <div class="col-md-3 col-sm-3">
-                                            <label>점검일자(시작) *</label>
-                                            <input type="text" name="inspection_start_date" value="" class="form-control required date_picker">
-                                        </div>
-                                        <div class="col-md-3 col-sm-3">
-                                            <label>점검일자(종료) *</label>
-                                            <input type="text" name="inspection_end_date" value="" class="form-control required date_picker">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>작 성 자 *</label>
-                                            <input type="text" name="writer" value="<%=name%>" class="form-control required">
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>연락처 *</label>
-                                            <input type="text" name="writer_phone" value="031-888-9369" class="form-control required">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-12 col-sm-12">
-                                            <label>수 신 인 *</label>
-                                            <input type="text" name="customer_name" value="<%=schedule.customer_name%>" class="form-control required">
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>참  조 *</label>
-                                            <input type="text" name="receiver" value="" class="form-control required autocomplete_address_book">
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>연락처 *</label>
-                                            <input type="text" name="receiver_phone" value="" class="form-control required" id="customer_phone">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>장비명 *</label>
-                                            <input type="text" name="equipment" value="<%=schedule.equipment%>" class="form-control required">
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>설치장소 *</label>
-                                            <input type="text" name="place" value="" placeholder="ex) B1 동물실" class="form-control required">
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-12 col-sm-12">
-                                            <label>고장내용 *</label>
-                                            <input type="text" name="failure" value="<%=schedule.failure%>" class="form-control required">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-12 col-sm-12">
-                                            <label>점검 결과 *</label>
-                                            <textarea type="text" name="work_detail" class="form-control required"><%=schedule.work_detail%></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-12 col-sm-12">
-                                            <label>이메일 * <small>참조인 선택시 자동 입력</small></label>
-                                            <input type="text" name="email" id="customer_email" class="form-control required">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>BEFORE</label>
-                                            <img class="img-responsive" src="/schedule_image/<%=schedule.before_path%>">
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <label>AFTER</label>
-                                            <img class="img-responsive" src="/schedule_image/<%=schedule.after_path%>">
-                                        </div>
-                                    </div>
-                                </div>
+                                <table>
+                                    <tr>
+                                        <td>발 신 인</td>
+                                        <td><%=complaint_report.sender%></td>
+                                        <td>발신부서</td>
+                                        <td><%=complaint_report.sender_department%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>작성일자</td>
+                                        <td><%=complaint_report.writer_date%></td>
+                                        <td>점검일자</td>
+                                        <td><%=complaint_report.inspection_start_date%> ~ <%=complaint_report.inspection_end_date%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>작 성 자</td>
+                                        <td><%=complaint_report.writer%></td>
+                                        <td>연락처</td>
+                                        <td><%=complaint_report.writer_phone%></td>
+                                    </tr>
+                                </table>
 
                             </fieldset>
 
@@ -447,7 +336,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <button type="button" onclick="sendReport();" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30">
-                                        <h3>리포트 전송</h3>
+                                        <h3>리포트 메일 발송</h3>
                                         <span class="block font-lato"><small>클릭 시, 자동으로 메일이 발송됩니다.</small></span>
                                     </button>
                                 </div>

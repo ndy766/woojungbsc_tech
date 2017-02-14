@@ -41,8 +41,9 @@ var fs = require('fs');
 router.get('/getAllListHelpedPagingGroup', function (req, res) {
     // flag == 0 ◀ / flag == 1 ▶
     var flag = req.query.flag;
-    res.redirect('/AS/getAllList?flag=' + flag);
+    res.redirecst('/AS/getAllList?flag=' + flag);
 });
+
 
 /* GET home page. */
 router.get('/getAllList', function (req, res) {
@@ -125,21 +126,23 @@ router.get('/createForm', function (req, res) {
         errorMessage = req.query.errorMessage;
     };
 
+
+
     var sql = 'select * from complaint order by no desc';
-    var no = '';
+    var document_no = '';
     var stateCode = '';
     conn.query(sql, function (err, result) {
         if(result.length==0) {
-            no = '1';
+            document_no = 'WJ-312-'+new Date().getFullYear().toString().substr(2,2)+'5-1';
         }else{
-            no = result[0].no + 1;
+            document_no = 'WJ-312-'+new Date().getFullYear().toString().substr(2,2)+'5-'+(result[0].no + 1);
         }
         var sql2 = 'SELECT * FROM customer';
         var customerList = [];
         conn.query(sql2, function (err, result) {
             customerList = result;
             res.render('complaint_create_form', {
-                no: no,
+                no: document_no,
                 stateCode: stateCode,
                 errorMessage: errorMessage,
                 customerList: customerList,
@@ -152,7 +155,7 @@ router.get('/createForm', function (req, res) {
 
 router.post('/create', function (req, res) {
 
-
+    var document_no = req.body.doc_no;
     //validation check
     if(req.body.product.trim()=="" || req.body.customer_no.trim()=="" || req.body.content.trim()=="" || req.body.customer_email.trim()==""){
         res.redirect('/AS/createForm?errorMessage=formValidation');
@@ -176,7 +179,8 @@ router.post('/create', function (req, res) {
                 receipt_date: req.body.receipt_date,
                 customer_email: req.body.customer_email,
                 other_detail:req.body.other_detail,
-                customer_charger:req.body.customer_charger
+                customer_charger:req.body.customer_charger,
+                document_no:document_no
             };
 
             conn.query(sql, complaint, function (err, result) {
@@ -206,7 +210,7 @@ router.post('/create', function (req, res) {
                 '</tr>' +
                 ' <tr>' +
                 '<td style="background-color:#F6F6F6" height="40px" align="center"><b>접수번호</b></td>' +
-                '<td align="center">WJ - ' + req.body.no + '</td>' +
+                '<td align="center">' + document_no + '</td>' +
                 '<td style="background-color:#F6F6F6;" align="center"><b>접수일</b></td>' +
                 '<td align="center">' + complaint.receipt_date + '</td>' +
                 '</tr>' +
@@ -326,7 +330,7 @@ router.post('/confirmVisit', function (req, res) {
                         '</tr>' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6; border-bottom:1px #D5D5D5 solid;" height="40px" align="center"><b>접수번호</b></td>' +
-                        '<td style="border-bottom:1px #D5D5D5 solid;" align="center">WJ - ' + complaint.no + '</td>' +
+                        '<td style="border-bottom:1px #D5D5D5 solid;" align="center">' + complaint.document_no + '</td>' +
                         '<td style="background-color:#F6F6F6; border-bottom:1px #D5D5D5 solid;" align="center"><b>접수일</b></td>' +
                         '<td style="border-bottom:1px #D5D5D5 solid;" align="center">' + complaint.receipt_date + '</td>' +
                         '</tr>' +
@@ -439,7 +443,7 @@ router.post('/confirmReVisit', function (req, res) {
                         '</tr>' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;"height="40px" align="center"><b>접수번호</b></td>' +
-                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">WJ - ' + complaint.no + '</td>' +
+                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.document_no + '</td>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" align="center"><b>접수일</b></td>' +
                         '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.receipt_date + '</td>' +
                         '</tr>' +
@@ -516,7 +520,7 @@ router.get('/complete', function (req, res) {
                         '</tr>' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" height="40px" align="center"><b>접수번호</b></td>' +
-                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">WJ - ' + complaint.no + '</td>' +
+                        '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.document_no + '</td>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" align="center"><b>완료일</b></td>' +
                         '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.complete_date + '</td>' +
                         '</tr>' +
@@ -612,7 +616,7 @@ router.get('/excel', function (req, res) {
         var data = result;
         for (var i = 0; i < data.length; i++) {
             var buffer = [
-                'WJ - ' + data[i].no,
+                data[i].document_no,
                 data[i].product,
                 data[i].customer_name,
                 data[i].content,
@@ -629,8 +633,7 @@ router.get('/excel', function (req, res) {
                 data[i].customer_charger ? data[i].customer_charger:''
                 ];
             temp.push(buffer);
-        }
-        ;
+        };
 
         conf.rows = temp;
         var _result = nodeExcel.execute(conf);

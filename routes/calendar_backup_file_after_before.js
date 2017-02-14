@@ -178,10 +178,6 @@ router.post('/register', function(req, res){
    var failure = '';
    var report_state = '';
 
-   //파일 업로드 after/before/etc로 변경
-   var after = '';
-   var before = '';
-
    //170117 파일 업로드하면서 추가된 부분
    var file_path = [];
 
@@ -228,7 +224,6 @@ router.post('/register', function(req, res){
       }
    });
 
-
    // file upload handling
    form.on('part',function(part){
       var filename;
@@ -238,35 +233,28 @@ router.post('/register', function(req, res){
          var ex = part.filename.split('.')[1];
          var directory = Math.floor(Math.random() * 10) + 1;
          var rand = Math.floor(Math.random() * 1000000) + 1;
-         filename = directory + '/' + req.session.user.id + rand + '.' + ex;
+         filename = directory + '/'+req.session.user.id+rand+'.'+ex;
          size = part.byteCount;
-      } else {
+      }else{
          part.resume();
 
       }
 
       //console.log("Write Streaming file :"+filename);
-      var writeStream = fs.createWriteStream('public/schedule_image/' + filename);
+      var writeStream = fs.createWriteStream('public/schedule_image/'+filename);
       writeStream.filename = filename;
       //console.log('writestream : '+writeStream.filename);
       part.pipe(writeStream);
 
-      part.on('data', function (chunk) {
-         // console.log(filename+' read '+chunk.length + 'bytes');
+      part.on('data',function(chunk){
+        // console.log(filename+' read '+chunk.length + 'bytes');
       });
 
-      part.on('end', function () {
+      part.on('end',function(){
          //console.log(filename+' Part read complete');
          writeStream.end();
       });
-
-      if(part.name=='after' || part.name=='after2') {
-         after = filename;
-      }else if (part.name=='before' || part.name=='before2'){
-         before = filename;
-      }else{
-         file_path.push(filename);
-      }
+      file_path.push(filename);
    });
 
 
@@ -377,9 +365,7 @@ router.post('/register', function(req, res){
                final_writer:final_writer,
                final_correction_time:final_correction_time,
                failure:failure,
-               report_state:report_state,
-               after_path:after,
-               before_path:before
+               report_state:report_state
             };
             conn.query(sql3, schedule, function(err, result){
 
@@ -554,8 +540,6 @@ router.post('/modify', function(req, res) {
    //170207 추가된 부분
    var failure = '';
    var report_state = '';
-   var after = '';
-   var before = '';
 
    //170118 파일 업로드하면서 추가된 부분
    var file_path = [];
@@ -630,6 +614,43 @@ router.post('/modify', function(req, res) {
 
       }
 
+
+      // //파일 받을 때
+      // var filename;
+      // var size;
+      //
+      // var flag = false;
+      //
+      // if (part.filename) {
+      //    checkDirectory(part.filename, function(error) {
+      //       if(error) {
+      //          console.log("oh no!!!", error);
+      //       } else {
+      //          //Carry on, all good, directory exists / created.
+      //          flag=true;
+      //       }
+      //    });
+      //
+      //
+      //    //filename = part.filename;
+      //    var ex = part.filename.split('.')[1];
+      //    var directory = Math.floor(Math.random() * 10) + 1;
+      //    var rand = Math.floor(Math.random() * 1000000) + 1;
+      //
+      //    if(flag){
+      //
+      //       filename=part.filename;
+      //       console.log('flag가 true : '+filename);
+      //    }else{
+      //       filename = directory + '/' + req.session.user.id + rand + '.' + ex;
+      //       console.log('flag가 false : '+filename);
+      //    }
+      //
+      //    size = part.byteCount;
+      // } else {
+      //    part.resume();
+      // }
+
       //console.log("Write Streaming file :" + filename);
       var writeStream = fs.createWriteStream('public/schedule_image/' + filename);
       writeStream.filename = filename;
@@ -645,13 +666,7 @@ router.post('/modify', function(req, res) {
          writeStream.end();
       });
 
-      if(part.name=='after' || part.name=='after2') {
-         after = filename;
-      }else if(part.name=='before' || part.name=='before2'){
-         before = filename;
-      }else {
-         file_path.push(filename);
-      }
+      file_path.push(filename);
 
    });
 
@@ -759,9 +774,7 @@ router.post('/modify', function(req, res) {
                final_correction_time:final_correction_time,
                file_path:file_path.toString(),
                failure:failure,
-               report_state:report_state,
-               before_path:before,
-               after_path:after
+               report_state:report_state
             };
 
             conn.query(sql3, schedule, function (err, result) {
@@ -806,7 +819,6 @@ router.get('/dropEvent', function(req, res){
 
       var sql = "SELECT * FROM schedule WHERE no='" + no + "'";
       var schedule = {};
-
       conn.query(sql, function (err, result) {
          schedule = result[0];
          schedule.start_date = start;
@@ -864,15 +876,9 @@ router.post('/sendReport', function(req, res){
    var work_detail = req.body.work_detail;
    var email = req.body.email;
 
-   //beforeAndAfter
-   var before = req.body.before;
-   var after = req.body.after;
-
-
    if(equipment==null || equipment==undefined || equipment.toString().trim()==''){
       equipment = '없음';
    }
-
 
 
    //form
@@ -880,63 +886,62 @@ router.post('/sendReport', function(req, res){
    mailOptions.subject = '[(주)우정비에스씨]고객님의 A/S 정비소견서입니다.';
    mailOptions.html =
             '<div align="center">' +
-            '<div align="left" style="border-bottom:2px solid black"><font size="4">제    목 : '+subject+'</font></div>' +
+            '<div align="left" style="border-bottom:2px solid black"><font size="4">제    목 : '+subject+'</font></div>'+
             '<br><br>' +
-            '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;1. 귀사의 무궁한 발전을 기원합니다.</font></div><br><br><br>' +
-            '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;2. 다음과 같이 당사에서 점검한 장비에 대해 조치 내용을 드리오니 업무에 참조하시기 바랍니다.</font></div><br><br><br>'+
-            '<div align="center">----------------------------다음----------------------------</div><br><br>' +
-               '<font size="3"><h1>정 비 소 견 서</h1></font>' +
-               '<table border="1" align="center" cellpadding="5" cellspacing="0" width="600px" style="border-collapse:collapse;position:relative;border:1px solid black">'+
+            '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;1. 귀사의 무궁한 발전을 기원합니다.</font></div><br><br><br>'+
+            '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;2. 다음과 같이 당사에서 점검한 장비에 대해 조치 내용을 드리오니 업무에 참조하시기 바랍니다.</font></div><br>'+
+               '<font size="3"><h1>정 비 소 견 서</h1></font>'+
+               '<table border="1" align="center" cellpadding="5" cellspacing="0" width="800px" style="border-collapse:collapse;position:relative;border:1px solid black">'+
                '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray" width="100px"><b>발 신 인</b></td>'+
-               '<td width="200px">&nbsp;'+sender+'</td>'+
-               '<td align="center" style="background-color: lightgray" width="100px"><b>발신부서</b></td>'+
-               '<td width="200px">&nbsp;'+sender_department+'</td>'+
+               '<td align="center" style="background-color: lightgray" width="100px">발 신 인</td>'+
+               '<td width="200px">'+sender+'</td>'+
+               '<td align="center" style="background-color: lightgray" width="100px">발신부서</td>'+
+               '<td width="200px">'+sender_department+'</td>'+
                '</tr>'+
                '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>작성일자</b></td>'+
-               '<td>&nbsp;'+write_date+'</td>'+
-               '<td align="center" style="background-color: lightgray"><b>점검일자</b></td>'+
-               '<td>&nbsp;'+inspection_start_date+' ~ '+inspection_end_date+'</td>'+
+               '<td align="center" style="background-color: lightgray">작성일자</td>'+
+               '<td>'+write_date+'</td>'+
+               '<td align="center" style="background-color: lightgray">점검일자</td>'+
+               '<td>'+inspection_start_date+' ~ '+inspection_end_date+'</td>'+
                '</tr>'+
                '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>작 성 자</b></td>'+
-               '<td>&nbsp;'+writer+'</td>'+
-               '<td align="center" style="background-color: lightgray"><b>연락처</b></td>'+
-               '<td>&nbsp;'+writer_phone+'</td>'+
+               '<td align="center" style="background-color: lightgray">작 성 자</td>'+
+               '<td>'+writer+'</td>'+
+               '<td align="center" style="background-color: lightgray">연락처</td>'+
+               '<td>'+writer_phone+'</td>'+
                '</tr>'+
                '<tr height="30px">' +
-               '<td align="center" style="background-color: lightgray"><b>수 신 인</b></td>'+
-               '<td colspan="3">&nbsp;'+customer_name+'</td>'+
+               '<td align="center" style="background-color: lightgray">수 신 인</td>'+
+               '<td colspan="3">'+customer_name+'</td>'+
                '</tr>'+
                '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>참  조</b></td>'+
-               '<td>&nbsp;'+receiver+'</td>'+
-               '<td align="center" style="background-color: lightgray"><b>연락처</b></td>'+
-               '<td>&nbsp;'+receiver_phone+'</td>'+
+               '<td align="center" style="background-color: lightgray">참  조</td>'+
+               '<td>'+receiver+'</td>'+
+               '<td align="center" style="background-color: lightgray">연락처</td>'+
+               '<td>'+receiver_phone+'</td>'+
                '</tr>'+
                '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>장비명</b></td>'+
-               '<td>&nbsp;'+equipment+'</td>'+
-               '<td align="center" style="background-color: lightgray"><b>설치 장소</b></td>'+
-               '<td>&nbsp;'+place+'</td>'+
+               '<td align="center" style="background-color: lightgray">장비명</td>'+
+               '<td>'+equipment+'</td>'+
+               '<td align="center" style="background-color: lightgray">설치 장소</td>'+
+               '<td>'+place+'</td>'+
                '</tr>'+
                '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>알람 내용</b></td>'+
-               '<td colspan="3">&nbsp;'+failure+'</td>'+
+               '<td align="center" style="background-color: lightgray">알람 내용</td>'+
+               '<td colspan="3">'+failure+'</td>'+
                '</tr>'+
                '</tr>'+
                '<tr height="50px">'+
-               '<td align="center" style="background-color: lightgray"><b>점검 결과</b></td>'+
-               '<td colspan="3">&nbsp;'+work_detail+'</td>'+
+               '<td align="center" style="background-color: lightgray">점검 결과</td>'+
+               '<td colspan="3">'+work_detail+'</td>'+
                '</tr>'+
                '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>BEFORE</b></td>'+
-               '<td colspan="3" align="center"><img width="300px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/'+before+'"></td>'+
+               '<td align="center" style="background-color: lightgray">BEFORE</td>'+
+               '<td colspan="3"><img width="600px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com/images/inspection.jpg"></td>'+
                '</tr>'+
                '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>AFTER</b></td>'+
-               '<td colspan="3" align="center"><img width="300px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/'+after+'"></td>'+
+               '<td align="center" style="background-color: lightgray">AFTER</td>'+
+               '<td colspan="3"><img width="600px" height="400px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com/images/inspection.jpg"></td>'+
                '</tr>'+
                '</table><br>'+
             '</div>';
@@ -945,7 +950,7 @@ router.post('/sendReport', function(req, res){
             if (err) {
                return console.log(err);
             }else{
-               conn.query(sql, function(err, result){
+               conn.query(sql, function(err,result){
                   res.redirect('/calendar');
                });
 
