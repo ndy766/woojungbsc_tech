@@ -22,7 +22,9 @@ router.get('/createForm', function (req, res) {
         res.redirect('/?errorMessage=login_requirement');
     };
 
-    res.render('inspection_create_form', {});
+    res.render('inspection_create_form', {
+        name:req.session.user.name
+    });
 });
 
 router.post('/send', function (req, res) {

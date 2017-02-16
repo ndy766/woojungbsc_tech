@@ -1,0 +1,145 @@
+<%- layout('../layout') %>
+
+
+
+<script>
+    $(function() {
+        $( ".date_picker" ).datepicker({
+            dateFormat:'yy년 mm월 dd일',
+            changeMonth: true,
+            dayNames: [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+            dayNamesMin: ['일','월', '화', '수', '목', '금', '토'],
+            monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        });
+    });
+    function insertNextDate(){
+        var lastDate = document.getElementsByClassName('date_picker')[0];
+        var nextDate = document.getElementById('nextDate');
+
+        var nextDate_value = parseInt(lastDate.value.split('년')[0])+1;
+        nextDate.value = nextDate_value + '년'+lastDate.value.split('년')[1];
+
+        if(lastDate.value.split('년 ')[1]=='02월 29일'){
+            //윤년의 2월 29일의 경우
+            nextDate.value = nextDate_value + '년 02월 28일';
+        }
+    }
+</script>
+
+<div style="position:relative;width:50%;left:25%;top:7%;" align="center">
+<table>
+    <form method="post" action="/inspection/send">
+    <tr>
+        <td  style="border-bottom: 1px solid black">교정번호</td>
+        <td  style="border-bottom: 1px solid black"><input type="text" name="no"></td>
+        <td rowspan="2"><img align="right" src="/images/inspection_woojunglogo.jpg"></td>
+    </tr>
+    <tr>
+        <td style="height:40px"></td>
+        <td style="height:40px"></td>
+    </tr>
+    <tr style="border-top: 2px solid black">
+        <td>제 목</td>
+        <td colspan="2" style="position:relative;left:-18%;">Bioquell 과산화수소 증기 멸균기(HPV)의 검교정(Calibration) 일자 공지 안내문</td>
+    </tr>
+    <tr>
+        <td>수 신</td>
+        <td colspan="2" style="position:relative;left:-18%;"><input type="text" name="receiver"></td>
+    </tr>
+    <tr  style="border-bottom: 2px solid black">
+        <td>발 신</td>
+        <td style="position:relative;left:-18%;" colspan="2">(주)우정비에스씨 기술부 벨리데이션팀</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="height:30px"></td>
+    </tr>
+    <tr>
+        <td colspan="3">귀사의 무궁한 발전을 기원합니다.</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="height:10px"></td>
+    </tr>
+    <tr>
+        <td colspan="3">저희 제품을 항상 애용해 주셔서 감사합니다.</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="height:10px"></td>
+    </tr>
+    <tr>
+        <td colspan="3">사용하시고 계신 과산화수소 증기 멸균기의 검교정 기일이 만료 예정에 있어, 이에 대한 안내를 드리고자 합니다. 과산화수소증기 멸균기의 유지보수와 안전한 사용을 위해 1년에 한번의 검교정을 추천하고 있습니다. 현재 보유하고 계신 장비의 현황과 검교정 예정일을 안내드리오니, 진행여부 결정하신 후 희망 검교정 예정일 6주 전에 첨부되어있는 검교정 신청서를 제출해주시면 안내 드리도록 하겠습니다.</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="height:10px"></td>
+    </tr>
+    <tr>
+        <td colspan="3">고객 여러분들의 신뢰에 보답할 수 있도록 서비스와 유지관리를 위해 앞으로도 최선을 다하도록 하겠습니다.</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="height:10px"></td>
+    </tr>
+    <tr>
+        <td colspan="3">감사합니다.</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="height:10px"></td>
+    </tr>
+    <tr>
+        <td colspan="3" style="height:10px" align="center"><b>&lt;&nbsp;아&nbsp;&nbsp;래&nbsp;&gt;</b></td>
+    </tr>
+    <tr><td colspan="3" style="height:20px"></td></tr>
+    <tr>
+        <td colspan="3"><b>1. 보유 장비 정보</b></td>
+    </tr>
+    <tr><td colspan="3" style="height:20px"></td></tr>
+    <tr>
+        <td style="width:25%"><span style="position:relative;left:10%">1) 장비 모델명/SN# : </span></td>
+        <td colspan="2"><input type="text" name="equipAndserialNum"></td>
+    </tr>
+    <tr><td colspan="3" style="height:10px"></td></tr>
+    <tr>
+        <td style="width:25%"><span style="position:relative;left:10%">2) 마지막 검교정일 : </span></td>
+        <td colspan="2"><input class="date_picker" type="text" name="lastInspectionDate"  onchange="insertNextDate();"></td>
+    </tr>
+    <tr><td colspan="3" style="height:10px"></td></tr>
+    <tr>
+        <td style="width:25%"><span style="position:relative;left:10%">3) 차기 검교정일 &nbsp;&nbsp;&nbsp;&nbsp;: </span></td>
+        <td colspan="2"><input id="nextDate" type="text" name="nextInspectionDate"></td>
+    </tr>
+    <tr><td colspan="3" style="height:10px"></td></tr>
+    <tr>
+        <td style="width:25%"><span style="position:relative;left:10%">4) 검교정 주기 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: </span></td>
+        <td colspan="2"><input type="text" name="inspectionPeriod"></td>
+    </tr>
+    <tr><td colspan="3" style="height:20px"></td></tr>
+    <tr>
+        <td colspan="3"><b>2. 문의처</b></td>
+    </tr>
+    <tr><td colspan="3" style="height:30px"></td></tr>
+    <tr>
+        <td style="width:25%"><span style="position:relative;left:10%">1) 담당팀 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: </span></td>
+        <td colspan="2">(주)우정비에스씨 기술부 벨리데이션팀</td>
+    </tr>
+    <tr><td colspan="3" style="height:10px"></td></tr>
+    <tr>
+        <td style="width:25%"><span style="position:relative;left:10%">2) 연락처 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: </span></td>
+        <td colspan="2"><b>1522-1277</b> (우정콜센터)</td>
+    </tr>
+    <tr><td colspan="3" style="height:30px"></td></tr>
+    <tr>
+        <td colspan="3"><b><i>※ 검교정 완료 후 제출문서 : 교정 성적서, Test 결과 보고서</i></b></td>
+    </tr>
+    <tr><td colspan="3" style="height:30px"></td></tr>
+    <tr>
+        <td colspan="3">첨부 1. 검교정 신청서</td>
+    </tr>
+    <tr>
+        <td>메일주소</td>
+        <td><input type="text" name="customer_email"></td>
+        <td><input type="submit" value="메일 발송" class="btn btn-success"></td>
+    </tr>
+    </form>
+</table>
+</div>
+
+

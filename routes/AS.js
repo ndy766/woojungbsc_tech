@@ -196,7 +196,7 @@ router.post('/create', function (req, res) {
                     '<body>'+
                 '<font face="맑은고딕" color="#474747">' +
                 '<div align="center">' +
-                '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top.jpg" width="460px"><br>' +
+                '<img src="http://ec2-52-79-150-150.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top.jpg" width="460px"><br>' +
                 '<table align="center" cellpadding="5" cellspacing="0" style="border:1px #D5D5D5 solid;position:relative; border-collapse: collapse" width="460px">' +
                 ' <tr>' +
                 '<td style="border-bottom:1px #D5D5D5 solid;background-color:#F6F6F6;" height="40px" align="center"><b>접수처</b></td>' +
@@ -215,7 +215,7 @@ router.post('/create', function (req, res) {
                 '<td align="center">' + complaint.receipt_date + '</td>' +
                 '</tr>' +
                 '</table>' +
-                '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
+                '<img src="http://ec2-52-79-150-150.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
                 '</div>' +
                 '</font>'+
                 '</body>';
@@ -316,7 +316,7 @@ router.post('/confirmVisit', function (req, res) {
                     mailOptions.html =
                         '<font face="맑은고딕" color="#474747">' +
                         '<div align="center">' +
-                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top2.jpg" width="460px"><br>' +
+                        '<img src="http://ec2-52-79-150-150.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top2.jpg" width="460px"><br>' +
                         '<table  align="center" class="table-bordered" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;" width="460px">' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6; border-bottom:1px #D5D5D5 solid;" height="40px" align="center"><b>접수처</b></td>' +
@@ -345,7 +345,7 @@ router.post('/confirmVisit', function (req, res) {
                         '<td style="border-bottom:1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.charger_phone+' ('+complaint.representative_charger+')' + '</td>' +
                         '</tr>' +
                         '</table>' +
-                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
+                        '<img src="http://ec2-52-79-150-150.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
                         '</div>' +
                         '</font>';
                     transporter.sendMail(mailOptions, function (err, result) {
@@ -425,7 +425,7 @@ router.post('/confirmReVisit', function (req, res) {
                     mailOptions.html =
                         '<font face="맑은고딕" color="#474747">' +
                         '<div align="center">' +
-                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top3.jpg" width="460px"><br>' +
+                        '<img src="http://ec2-52-79-150-150.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top3.jpg" width="460px"><br>' +
                         '<table  align="center" class="table-bordered" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;" width="460px">' +
                         ' <tr>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;border-top: 1px #D5D5D5 solid;" height="40px" align="center"><b>접수처</b></td>' +
@@ -458,7 +458,7 @@ router.post('/confirmReVisit', function (req, res) {
                         '<td style="border-bottom: 1px #D5D5D5 solid;" align="center" colspan="3">' + complaint.charger_phone+' ('+complaint.representative_charger+')' + '</td>' +
                         '</tr>' +
                         '</table>' +
-                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
+                        '<img src="http://ec2-52-79-150-150.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
                         '</div>' +
                         '</font>';
                     transporter.sendMail(mailOptions, function (err, result) {
@@ -506,7 +506,7 @@ router.get('/complete', function (req, res) {
                     mailOptions.html =
                         '<font face="맑은고딕" color="#474747">' +
                         '<div align="center">' +
-                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top4.jpg" width="460px"><br>' +
+                        '<img src="http://ec2-52-79-150-150.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_top4.jpg" width="460px"><br>' +
                         '<table align="center" class="table-bordered" cellpadding="5" cellspacing="0" style="border-collapse:collapse;border:1px #D5D5D5 solid;position:relative;" width="460px">' +
                         '<tr>' +
                         '<td style="background-color:#F6F6F6;border-bottom: 1px #D5D5D5 solid;" height="40px" align="center"><b>접수처</b></td>' +
@@ -525,7 +525,7 @@ router.get('/complete', function (req, res) {
                         '<td style="border-bottom: 1px #D5D5D5 solid;" align="center">' + complaint.complete_date + '</td>' +
                         '</tr>' +
                         '</table>' +
-                        '<img src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
+                        '<img src="http://ec2-52-79-150-150.ap-northeast-2.compute.amazonaws.com:3000/images/as_mail_bottom.jpg" width="460px">' +
                         '</div>' +
                         '</font>';
                     transporter.sendMail(mailOptions, function (err, result) {

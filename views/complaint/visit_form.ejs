@@ -34,6 +34,20 @@
     });
 </script>
 
+<script>
+    function confirmVisit(){
+        var createForm = document.getElementById('visitForm');
+        var flag = confirm("정말 메일을 발송하시겠습니까?");
+        if(!flag) {
+            return;
+        }else{
+            createForm.submit();
+        }
+
+    }
+</script>
+
+
 
 
 <section class="page-header page-header-xs">
@@ -72,7 +86,7 @@
                     <h2 class="size-20">방문일자 확정 폼</h2>
                 </div>
 
-                <form action="/AS/confirmVisit" method="post">
+                <form action="/AS/confirmVisit" method="post" id="visitForm">
                     <fieldset>
                         <!-- required [php action request] -->
                         <input type="hidden" name="no" value="<%=complaint.no%>">
@@ -181,20 +195,20 @@
 
                     </fieldset>
 
+
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="submit" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30">
-                                <h2>방문일자 확정</h2>
-                                <span class="block font-lato">방문일자 확정과 동시에 안내메일이 발송됩니다.</span>
+                            <button type="button" class="btn btn-3d btn-teal btn-lg btn-block margin-top-30" onclick="confirmVisit()">
+                                <h3><i class="fa fa-save"></i> 방문일자 확정</h3>
+                                <span class="block font-lato"><small>방문일자 확정과 동시에 안내메일이 발송됩니다.</small></span>
                             </button>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12" align="center">
                             <a href="/AS/getAllList">
                                 <button type="button" class="btn btn-3d btn-google btn-block">
-                                    <h4>목록으로</h4>
+                                    <h4><i class="fa fa-reply"></i> 목록으로</h4>
                                 </button>
                             </a>
                         </div>
