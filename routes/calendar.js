@@ -1052,7 +1052,7 @@ router.post('/search', function (req, res) {
    var searchType = req.body.searchType;
    var keyword = req.body.keyword;
    var schedule_list = [];
-   var sql = "SELECT * FROM schedule WHERE " + searchType + " LIKE '%" + keyword + "%' ORDER BY start_date, work_type";
+   var sql = "SELECT * FROM schedule WHERE " + searchType + " LIKE '%" + keyword + "%' ORDER BY start_date DESC, work_type DESC";
 
 
 
