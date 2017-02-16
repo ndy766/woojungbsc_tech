@@ -3,10 +3,10 @@
 <!--[if IE 9]>			<html class="ie ie9"> <![endif]-->
 <!--[if gt IE 9]><!-->	<html> <!--<![endif]-->
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>WoojungBSC TECH DEPARTMENT</title>
-    <meta name="keywords" content="HTML5,CSS3,Template" />
-    <meta name="description" content="" />
+    <meta name="keywords" content="HTML5,CSS3,Template"/>
+    <meta name="description" content=""/>
     <meta name="Author" content="Dorin Grigoras [www.stepofweb.com]" />
 
     <!-- mobile settings -->
@@ -319,12 +319,12 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <div class="col-md-6 col-sm-6">
-                                            <label>발 신 인 *</label>
-                                            <input type="text" name="sender" value="(주)우정 BSC" class="form-control required">
+                                            <label>문서번호 *</label>
+                                            <input type="text" name="document_no" value="<%=document_no%>" class="form-control required" readonly="readonly">
                                         </div>
                                         <div class="col-md-6 col-sm-6">
-                                            <label>발신부서 *</label>
-                                            <input type="text" name="sender_department" value="기술부" class="form-control required">
+                                            <label>발 신 인 *</label>
+                                            <input type="text" name="sender" value="(주)우정BSC 기술부" class="form-control required">
                                         </div>
                                     </div>
                                 </div>
@@ -372,7 +372,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <div class="col-md-6 col-sm-6">
-                                            <label>참  조 *</label>
+                                            <label>참  조(받는사람) *</label>
                                             <input type="text" name="receiver" value="" class="form-control required autocomplete_address_book">
                                         </div>
                                         <div class="col-md-6 col-sm-6">
@@ -446,8 +446,8 @@
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button type="button" onclick="sendReport();" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30">
-                                        <h3>리포트 전송</h3>
+                                    <button type="button" onclick="sendReport();" class="btn btn-3d btn-instagram btn-xlg btn-block margin-top-30">
+                                        <h3><i class="fa fa-send"></i> 리포트 전송</h3>
                                         <span class="block font-lato"><small>클릭 시, 자동으로 메일이 발송됩니다.</small></span>
                                     </button>
                                 </div>

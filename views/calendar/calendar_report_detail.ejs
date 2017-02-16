@@ -3,10 +3,10 @@
 <!--[if IE 9]>			<html class="ie ie9"> <![endif]-->
 <!--[if gt IE 9]><!-->	<html> <!--<![endif]-->
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>WoojungBSC TECH DEPARTMENT</title>
-    <meta name="keywords" content="HTML5,CSS3,Template" />
-    <meta name="description" content="" />
+    <meta name="keywords" content="HTML5,CSS3,Template"/>
+    <meta name="description" content=""/>
     <meta name="Author" content="Dorin Grigoras [www.stepofweb.com]" />
 
     <!-- mobile settings -->
@@ -296,48 +296,159 @@
                 <!-- Useful Elements -->
                 <div class="panel panel-default">
                     <div class="panel-heading panel-heading-transparent">
-                        <h2 class="panel-title">정비소견서</h2>
+                        <h2 class="panel-title"><i class="fa fa-pencil"></i>  정비소견서 - 재작성</h2>
                     </div>
 
                     <div class="panel-body">
 
                         <form class="validate" action="/calendar/sendReport" method="post" id="report_form">
                             <input type="hidden" name="no" value="<%=schedule.no%>">
-                            <input type="hidden" name="no" value="<%=schedule.report_state%>" id="report_state">
+                            <input type="hidden" name="report_state" id="report_state" value="<%=schedule.report_state%>">
 
                             <fieldset>
-                                <table>
-                                    <tr>
-                                        <td>발 신 인</td>
-                                        <td><%=complaint_report.sender%></td>
-                                        <td>발신부서</td>
-                                        <td><%=complaint_report.sender_department%></td>
-                                    </tr>
-                                    <tr>
-                                        <td>작성일자</td>
-                                        <td><%=complaint_report.writer_date%></td>
-                                        <td>점검일자</td>
-                                        <td><%=complaint_report.inspection_start_date%> ~ <%=complaint_report.inspection_end_date%></td>
-                                    </tr>
-                                    <tr>
-                                        <td>작 성 자</td>
-                                        <td><%=complaint_report.writer%></td>
-                                        <td>연락처</td>
-                                        <td><%=complaint_report.writer_phone%></td>
-                                    </tr>
-                                </table>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-sm-12">
+                                            <label>제  목 *</label>
+                                            <input type="text" name="subject" value="<%=complaint_report.subject%>" class="form-control required">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>문서번호 *</label>
+                                            <input type="text" name="document_no" value="<%=complaint_report.document_no%>" class="form-control required" readonly="readonly">
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>발 신 인 *</label>
+                                            <input type="text" name="sender" value="<%=complaint_report.sender%>" class="form-control required">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>작성일자 *</label>
+                                            <input type="text" id="write_date" name="write_date" value="<%=complaint_report.write_date%>" class="form-control required date_picker">
+                                        </div>
+                                        <div class="col-md-3 col-sm-3">
+                                            <label>점검일자(시작) *</label>
+                                            <input type="text" name="inspection_start_date" value="<%=complaint_report.inspection_start_date%>" class="form-control required date_picker">
+                                        </div>
+                                        <div class="col-md-3 col-sm-3">
+                                            <label>점검일자(종료) *</label>
+                                            <input type="text" name="inspection_end_date" value="<%=complaint_report.inspection_end_date%>" class="form-control required date_picker">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>작 성 자 *</label>
+                                            <input type="text" name="writer" value="<%=complaint_report.writer%>" class="form-control required">
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>연락처 *</label>
+                                            <input type="text" name="writer_phone" value="<%=complaint_report.writer_phone%>" class="form-control required">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-sm-12">
+                                            <label>수 신 인 *</label>
+                                            <input type="text" name="customer_name" value="<%=complaint_report.customer_name%>" class="form-control required">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>참  조(받는 사람) *</label>
+                                            <input type="text" name="receiver" value="<%=complaint_report.receiver%>" class="form-control required autocomplete_address_book">
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>연락처 *</label>
+                                            <input type="text" name="receiver_phone" value="<%=complaint_report.receiver_phone%>" class="form-control required" id="customer_phone">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>장비명 *</label>
+                                            <input type="text" name="equipment" value="<%=complaint_report.equipment%>" class="form-control required">
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>설치장소 *</label>
+                                            <input type="text" name="place" value="<%=complaint_report.place%>" class="form-control required">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-sm-12">
+                                            <label>고장내용 *</label>
+                                            <input type="text" name="failure" value="<%=complaint_report.failure%>" class="form-control required">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-sm-12">
+                                            <label>점검 결과 *</label>
+                                            <textarea type="text" name="work_detail" class="form-control required"><%=complaint_report.work_detail%></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-sm-12">
+                                            <label>이메일 * <small>참조인 선택시 자동 입력</small></label>
+                                            <input type="text" name="email" id="customer_email" class="form-control required" value="<%=complaint_report.email%>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>BEFORE</label>
+                                            <img class="img-responsive" src="/schedule_image/<%=complaint_report.before_path%>">
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>AFTER</label>
+                                            <img class="img-responsive" src="/schedule_image/<%=complaint_report.after_path%>">
+                                        </div>
+                                    </div>
+                                </div>
 
                             </fieldset>
-
-                            <input type="hidden" name="after" id="after" value="<%=schedule.after_path%>">
-                            <input type="hidden" name="before" id="before" value="<%=schedule.before_path%>">
+                            <input type="hidden" name="afterAndBefore" value="first_value">
+                            <input type="hidden" name="after" id="after" value="<%=complaint_report.after_path%>">
+                            <input type="hidden" name="before" id="before" value="<%=complaint_report.before_path%>">
                             <input type="hidden" name="file_path" id="file_path" value="<%=schedule.file_path%>">
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button type="button" onclick="sendReport();" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30">
-                                        <h3>리포트 메일 발송</h3>
-                                        <span class="block font-lato"><small>클릭 시, 자동으로 메일이 발송됩니다.</small></span>
+                                    <button type="button" onclick="sendReport();" class="btn btn-3d btn-instagram btn-xlg btn-block margin-top-30">
+                                        <h3><i class="fa fa-send"></i> 리포트 재 전송</h3>
+                                        <span class="block font-lato"><small>클릭 시, 자동으로 메일이 재발송됩니다.</small></span>
                                     </button>
                                 </div>
                             </div>
@@ -347,7 +458,7 @@
 
                     </div>
 
-                    </div>
+                </div>
                 <!-- /Useful Elements -->
             </div>
         </div>
@@ -439,15 +550,16 @@
                             <input type="email" id="email" name="email" class="form-control required" placeholder="Enter your Email">
                             <span class="input-group-btn">
 										<button class="btn btn-success" type="submit">Subscribe</button>
-									</span>
+                            </span>
                         </div>
                     </form>
                     <!-- /Newsletter Form -->
 
+
+
                     <!-- Social Icons -->
                     <div class="margin-top-20">
                         <a href="#" class="social-icon social-icon-border social-facebook pull-left" data-toggle="tooltip" data-placement="top" title="Facebook">
-
                             <i class="icon-facebook"></i>
                             <i class="icon-facebook"></i>
                         </a>

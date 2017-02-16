@@ -847,23 +847,39 @@ router.get('/reportForm', function(req, res){
    var schedule = {};
    conn.query(sql, function(err, result){
       schedule = result[0];
+
+      var sql2 = 'SELECT * FROM complaint_report ORDER BY no DESC';
+      var document_no = '';
+
+      conn.query(sql2, function(err, result){
+         if(result.length==0) {
+            document_no = 'WJ-312-'+new Date().getFullYear().toString().substr(2,2)+'0-1';
+         }else{
+            document_no = 'WJ-312-'+new Date().getFullYear().toString().substr(2,2)+'0-'+(result[0].no + 1);
+         }
+
          res.render("calendar_report_form",{
             name:req.session.user.name,
-            schedule:schedule
+            schedule:schedule,
+            document_no:document_no
          });
+      });
+
+
    });
 });
+
 
 //report 메일 발송
 router.post('/sendReport', function(req, res){
    var report_state = 'send';
-   var no = req.body.no;
+   var no = req.body.no;//schedule no
    var sql = "UPDATE schedule SET report_state='"+report_state+"' WHERE no="+no;
 
    //input list
    var subject = req.body.subject;
    var sender = req.body.sender;
-   var sender_department = req.body.sender_department;
+   var document_no = '';
    var write_date = req.body.write_date;
    var inspection_start_date = req.body.inspection_start_date;
    var inspection_end_date = req.body.inspection_end_date;
@@ -889,85 +905,145 @@ router.post('/sendReport', function(req, res){
 
    conn.query(sql, function(err, result){
 
-      var sql2 = "UPDATE schedule SET ? WHERE no="+no;
+      var sql2 = 'SELECT * FROM complaint_report ORDER BY no DESC';
+
+      conn.query(sql2 , function(err, result){
+         if(result.length==0) {
+            document_no = 'WJ-312-'+new Date().getFullYear().toString().substr(2,2)+'0-1';
+         }else{
+            document_no = 'WJ-312-'+new Date().getFullYear().toString().substr(2,2)+'0-'+(result[0].no + 1);
+         }
+
+         var sql3 = "INSERT INTO complaint_report SET ?";
+         var complaint_report = {
+            document_no:document_no,
+            subject:subject,
+            sender:sender,
+            write_date:write_date,
+            inspection_start_date:inspection_start_date,
+            inspection_end_date:inspection_end_date,
+            writer:writer,
+            writer_phone:writer_phone,
+            customer_name:customer_name,
+            receiver:receiver,
+            receiver_phone:receiver_phone,
+            equipment:equipment,
+            place:place,
+            failure:failure,
+            work_detail:work_detail,
+            email:email,
+            before_path:before,
+            after_path:after,
+            schedule_no:no
+         };
+
+         conn.query(sql3, complaint_report, function(err, result){
+            //form
+            mailOptions.to = email;
+            mailOptions.subject = '[(주)우정비에스씨]고객님의 A/S 정비소견서입니다.';
+            mailOptions.html =
+                '<div align="center">'+
+                '<div align="left" style="border-bottom:2px solid black"><font size="4">제    목 : '+subject+'</font></div>'+
+                '<br><br>'+
+                '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;1. 귀사의 무궁한 발전을 기원합니다.</font></div><br><br><br>' +
+                '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;2. 다음과 같이 당사에서 점검한 장비에 대해 조치 내용을 드리오니 업무에 참조하시기 바랍니다.</font></div><br><br><br>'+
+                '<div align="center">----------------------------다음----------------------------</div><br><br>' +
+                '<font size="3"><h1>정 비 소 견 서</h1></font>' +
+                '<table border="1" align="center" cellpadding="5" cellspacing="0" width="700px" style="border-collapse:collapse;position:relative;border:1px solid black">'+
+                '<tr height="30px">'+
+                '<td align="center" style="background-color: lightgray" width="100px"><b>문서번호</b></td>'+
+                '<td width="200px">&nbsp;'+document_no+'</td>'+
+                '<td align="center" style="background-color: lightgray" width="100px"><b>발 신 인</b></td>'+
+                '<td width="200px">&nbsp;'+sender+'</td>'+
+                '</tr>'+
+                '<tr height="30px">'+
+                '<td align="center" style="background-color: lightgray"><b>작성일자</b></td>'+
+                '<td>&nbsp;'+write_date+'</td>'+
+                '<td align="center" style="background-color: lightgray"><b>점검일자</b></td>'+
+                '<td>&nbsp;'+inspection_start_date+' ~ '+inspection_end_date+'</td>'+
+                '</tr>'+
+                '<tr height="30px">'+
+                '<td align="center" style="background-color: lightgray"><b>작 성 자</b></td>'+
+                '<td>&nbsp;'+writer+'</td>'+
+                '<td align="center" style="background-color: lightgray"><b>연락처</b></td>'+
+                '<td>&nbsp;'+writer_phone+'</td>'+
+                '</tr>'+
+                '<tr height="30px">' +
+                '<td align="center" style="background-color: lightgray"><b>수 신 인</b></td>'+
+                '<td colspan="3">&nbsp;'+customer_name+'</td>'+
+                '</tr>'+
+                '<tr height="30px">'+
+                '<td align="center" style="background-color: lightgray"><b>참  조</b></td>'+
+                '<td>&nbsp;'+receiver+'</td>'+
+                '<td align="center" style="background-color: lightgray"><b>연락처</b></td>'+
+                '<td>&nbsp;'+receiver_phone+'</td>'+
+                '</tr>'+
+                '<tr height="30px">'+
+                '<td align="center" style="background-color: lightgray"><b>장비명</b></td>'+
+                '<td>&nbsp;'+equipment+'</td>'+
+                '<td align="center" style="background-color: lightgray"><b>설치 장소</b></td>'+
+                '<td>&nbsp;'+place+'</td>'+
+                '</tr>'+
+                '<tr height="30px">'+
+                '<td align="center" style="background-color: lightgray"><b>알람 내용</b></td>'+
+                '<td colspan="3">&nbsp;'+failure+'</td>'+
+                '</tr>'+
+                '</tr>'+
+                '<tr height="50px">'+
+                '<td align="center" style="background-color: lightgray"><b>점검 결과</b></td>'+
+                '<td colspan="3">&nbsp;'+work_detail+'</td>'+
+                '</tr>'+
+                '<tr height="30px">'+
+                '<td align="center" style="background-color: lightgray"><b>BEFORE</b></td>'+
+                '<td colspan="3" align="center"><img width="300px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/'+before+'"></td>'+
+                '</tr>'+
+                '<tr height="30px">'+
+                '<td align="center" style="background-color: lightgray"><b>AFTER</b></td>'+
+                '<td colspan="3" align="center"><img width="300px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/'+after+'"></td>'+
+                '</tr>'+
+                '</table><br>'+
+                '</div>';
 
 
-
-      //form
-      mailOptions.to = email;
-      mailOptions.subject = '[(주)우정비에스씨]고객님의 A/S 정비소견서입니다.';
-      mailOptions.html =
-            '<div align="center">' +
-            '<div align="left" style="border-bottom:2px solid black"><font size="4">제    목 : '+subject+'</font></div>' +
-            '<br><br>' +
-            '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;1. 귀사의 무궁한 발전을 기원합니다.</font></div><br><br><br>' +
-            '<div align="left"><font size="4">&nbsp;&nbsp;&nbsp;2. 다음과 같이 당사에서 점검한 장비에 대해 조치 내용을 드리오니 업무에 참조하시기 바랍니다.</font></div><br><br><br>'+
-            '<div align="center">----------------------------다음----------------------------</div><br><br>' +
-               '<font size="3"><h1>정 비 소 견 서</h1></font>' +
-               '<table border="1" align="center" cellpadding="5" cellspacing="0" width="700px" style="border-collapse:collapse;position:relative;border:1px solid black">'+
-               '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray" width="100px"><b>발 신 인</b></td>'+
-               '<td width="200px">&nbsp;'+sender+'</td>'+
-               '<td align="center" style="background-color: lightgray" width="100px"><b>발신부서</b></td>'+
-               '<td width="200px">&nbsp;'+sender_department+'</td>'+
-               '</tr>'+
-               '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>작성일자</b></td>'+
-               '<td>&nbsp;'+write_date+'</td>'+
-               '<td align="center" style="background-color: lightgray"><b>점검일자</b></td>'+
-               '<td>&nbsp;'+inspection_start_date+' ~ '+inspection_end_date+'</td>'+
-               '</tr>'+
-               '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>작 성 자</b></td>'+
-               '<td>&nbsp;'+writer+'</td>'+
-               '<td align="center" style="background-color: lightgray"><b>연락처</b></td>'+
-               '<td>&nbsp;'+writer_phone+'</td>'+
-               '</tr>'+
-               '<tr height="30px">' +
-               '<td align="center" style="background-color: lightgray"><b>수 신 인</b></td>'+
-               '<td colspan="3">&nbsp;'+customer_name+'</td>'+
-               '</tr>'+
-               '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>참  조</b></td>'+
-               '<td>&nbsp;'+receiver+'</td>'+
-               '<td align="center" style="background-color: lightgray"><b>연락처</b></td>'+
-               '<td>&nbsp;'+receiver_phone+'</td>'+
-               '</tr>'+
-               '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>장비명</b></td>'+
-               '<td>&nbsp;'+equipment+'</td>'+
-               '<td align="center" style="background-color: lightgray"><b>설치 장소</b></td>'+
-               '<td>&nbsp;'+place+'</td>'+
-               '</tr>'+
-               '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>알람 내용</b></td>'+
-               '<td colspan="3">&nbsp;'+failure+'</td>'+
-               '</tr>'+
-               '</tr>'+
-               '<tr height="50px">'+
-               '<td align="center" style="background-color: lightgray"><b>점검 결과</b></td>'+
-               '<td colspan="3">&nbsp;'+work_detail+'</td>'+
-               '</tr>'+
-               '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>BEFORE</b></td>'+
-               '<td colspan="3" align="center"><img width="300px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/'+before+'"></td>'+
-               '</tr>'+
-               '<tr height="30px">'+
-               '<td align="center" style="background-color: lightgray"><b>AFTER</b></td>'+
-               '<td colspan="3" align="center"><img width="300px" src="http://ec2-52-79-148-200.ap-northeast-2.compute.amazonaws.com:3000/schedule_image/'+after+'"></td>'+
-               '</tr>'+
-               '</table><br>'+
-            '</div>';
+            transporter.sendMail(mailOptions, function (err, result) {
+               if (err) {
+                  return console.log(err);
+               }
+            });
+            res.redirect('/calendar');
 
 
-         transporter.sendMail(mailOptions, function (err, result) {
-            if (err) {
-               return console.log(err);
-            }
+         });//insert
+      });//document_no 만들기위해
+   });//schedule send_state 변경
+});//router
+
+
+//report 수정폼 불러옴
+router.get('/reportDetail', function(req, res){
+   var no = req.query.no;
+   var sql = "SELECT * FROM complaint_report WHERE schedule_no="+no;
+   var complaint_report = {};
+
+   conn.query(sql, function(err, result){
+      complaint_report = result[0];
+      var sql2 = "SELECT * FROM schedule WHERE no="+no;
+      var schedule = {};
+
+      conn.query(sql2, function(err, result){
+         schedule=result[0];
+         res.render("calendar_report_detail",{
+            name:req.session.user.name,
+            schedule:schedule,
+            complaint_report:complaint_report
          });
-      res.redirect('/calendar');
+
+      });
    });
 });
+
+
+
 
 
 //검색 기능
@@ -978,6 +1054,8 @@ router.post('/search', function (req, res) {
    var schedule_list = [];
    var sql = "SELECT * FROM schedule WHERE " + searchType + " LIKE '%" + keyword + "%' ORDER BY start_date, work_type";
 
+
+
    conn.query(sql, function(err, result){
       schedule_list = result;
       res.render('calendar_searchList', {
@@ -986,8 +1064,9 @@ router.post('/search', function (req, res) {
       });
    });
 
-
 });
+
+
 
 
 module.exports = router;

@@ -173,10 +173,10 @@ LINES TERMINATED BY '\n'
 
 DROP TABLE complaint_report;
 CREATE TABLE complaint_report(
+	no INT(10) PRIMARY KEY AUTO_INCREMENT,
 	document_no VARCHAR(100),
     subject VARCHAR(200),
-    sender VARCHAR(100),
-    sender_department VARCHAR(150),
+    sender VARCHAR(150),
     write_date VARCHAR(150),
     inspection_start_date VARCHAR(150),
     inspection_end_date VARCHAR(150),
@@ -191,7 +191,8 @@ CREATE TABLE complaint_report(
     work_detail VARCHAR(600),
     email VARCHAR(200),
     before_path VARCHAR(150),
-    after_path VARCHAR(150)
+    after_path VARCHAR(150),
+    schedule_no VARCHAR(100)
 );
 
 

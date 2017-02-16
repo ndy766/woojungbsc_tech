@@ -184,6 +184,8 @@
 
     <script>
         function reportForm(no){
+            var report_state = document.getElementById('report_state').value;
+
             var flag = confirm('A/S리포트를 작성하시겠습니까?(수정사항은 "일정 수정"버튼을 클릭해야 최종 반영됩니다.');
             if(!flag) return;
 
@@ -193,7 +195,8 @@
                 alert("A/S업무만 리포트 작성이 가능합니다.");
                 return;
             }
-            location.href = "/calendar/reportForm?no="+no;
+
+            (report_state=='send')?(location.href="/calendar/reportDetail?no="+no) :(location.href = "/calendar/reportForm?no="+no);
         }
 
     </script>
@@ -860,13 +863,16 @@
 
                         <input type="hidden" value="<%=schedule.before_path%>" id="before">
                         <input type="hidden" value="<%=schedule.after_path%>" id="after">
+
+                        <input type="hidden" value="<%=schedule.report_state%>" id="report_state">
+
                     </fieldset>
 
                     <div class="row">
                         <div class="col-md-12">
-                            <input type="button" value="일정 수정" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30" onclick="submitSchedule();">
-                            <input type="button" value="일정 삭제" class="btn btn-3d btn-danger btn-xlg btn-block margin-top-30" onclick="confirmDeleteSchedule();">
-                            <button type="button" class="btn btn-3d btn-primary btn-xlg btn-block margin-top-30" onclick="reportForm(<%=schedule.no%>);"><i class="fa fa-check"></i>리포트 작성</button>
+                            <button type="button" class="btn btn-3d btn-teal btn-xlg btn-block margin-top-30" onclick="submitSchedule();"><i class="fa fa-check"></i>일정 수정</button>
+                            <button type="button" class="btn btn-3d btn-danger btn-xlg btn-block margin-top-30" onclick="confirmDeleteSchedule();"><i class="fa fa-trash-o"></i>일정 삭제</button>
+                            <button type="button" class="btn btn-3d btn-primary btn-xlg btn-block margin-top-30" onclick="reportForm(<%=schedule.no%>);"><i class="fa fa-wrench"></i>리포트 작성</button>
                         </div>
                     </div>
 
@@ -1153,13 +1159,17 @@
     var before = document.getElementById('before').value;
     var after = document.getElementById('after').value;
 
-    console.log(before + after);
     beforeAndAfter.innerHTML = '';
 
 
     //before&after
-    beforeAndAfter.innerHTML += " <img class='img-responsive' width='450px' src=/schedule_image/" + before + "><br>";
-    beforeAndAfter.innerHTML +=" <img class='img-responsive' width='450px' src=/schedule_image/" +after + "><br>";
+    if(before != 'null' & before != 'undefined' && before != '') {
+        beforeAndAfter.innerHTML += " <img class='img-responsive' width='450px' src=/schedule_image/" + before + "><br>";
+    }
+
+    if(after != 'null' & after !='undefined' && after != '') {
+        beforeAndAfter.innerHTML +=" <img class='img-responsive' width='450px' src=/schedule_image/" +after + "><br>";
+    }
 
 
     //etc..
