@@ -2,8 +2,9 @@
 <script type="text/javascript">
     function getAS(no){
 
-//        var target = event.target.parentNode;//parent - tr
-//        var no = target.childNodes[1].childNodes[1].innerHTML;
+//      var target = event.target.parentNode;//parent - tr
+//      var no = target.childNodes[1].childNodes[1].innerHTML;
+
         var real_no = no;
         var frm = document.createElement('form');
         var hid = document.createElement('input');
@@ -93,7 +94,7 @@
                     <form method="post" action="/AS/search">
                         <div class="col-md-2 col-xs-4">
                             <select name="searchType" class="form-control pointer">
-                                <option value="no">접수번호</option>
+                                <option value="document_no">접수번호</option>
                                 <option value="product">제품명</option>
                                 <option value="content">접수 내용</option>
                                 <option value="customer_name">접수처</option>

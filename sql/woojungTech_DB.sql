@@ -8,7 +8,9 @@ CREATE TABLE admin(
     name VARCHAR(15),
     userType VARCHAR(15) NOT NULL
 );
-INSERT INTO admin SET id='admin', password='1234', userType='admin', name='관리자';
+INSERT INTO admin SET id='admin', password='woojung8302', userType='admin', name='관리자';
+UPDATE admin SET password='woojung8302' WHERE id='admin';
+select * from admin;
 	
 
 DROP TABLE member;

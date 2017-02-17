@@ -541,7 +541,6 @@ router.get('/complete', function (req, res) {
             });
         }
     });
-
 });
 
 //검색 기능
@@ -555,6 +554,8 @@ router.post('/search', function (req, res) {
     req.session.searchingBean = searchingBean;
     res.redirect('/AS/getAllList');
 });
+
+
 
 //엑셀 추출
 router.get('/excel', function (req, res) {
